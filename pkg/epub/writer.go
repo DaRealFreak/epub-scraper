@@ -1,7 +1,7 @@
 package epub
 
 import (
-	"github.com/DaRealFreak/epub-scraper/pkg/scraper/config"
+	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/bmaupin/go-epub"
 	log "github.com/sirupsen/logrus"
 )
