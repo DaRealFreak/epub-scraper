@@ -3,20 +3,23 @@ package epub
 import (
 	"bytes"
 	"fmt"
+	"html"
+	"html/template"
+	"path/filepath"
+
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/version"
 	"github.com/bmaupin/go-epub"
-	"html"
-	"html/template"
-	"path/filepath"
 )
 
+// chapter contains all relevant of the added chapters
 type chapter struct {
 	title   string
 	content string
 }
 
+// Writer contains all information and functions to create the final .epub file
 type Writer struct {
 	Epub     *epub.Epub
 	chapters []chapter
@@ -94,11 +97,12 @@ func (w *Writer) createToC() {
 	translators := ""
 	for _, translator := range w.cfg.General.Translators {
 		translators += fmt.Sprintf(
-			`<a href="%s">%s</a><br/>`, translator.Url, html.EscapeString(translator.Name),
+			`<a href="%s">%s</a><br/>`, translator.URL, html.EscapeString(translator.Name),
 		)
 	}
 
 	contentBuffer := new(bytes.Buffer)
+	// #nosec
 	raven.CheckError(t.Execute(contentBuffer, map[string]interface{}{
 		"title":         w.cfg.General.Title,
 		"altTitle":      template.HTML(altTitle),
@@ -109,10 +113,10 @@ func (w *Writer) createToC() {
 		"repositoryUrl": version.RepositoryURL,
 	}))
 	_, err := w.Epub.AddSection(
-		string(contentBuffer.Bytes()),
+		contentBuffer.String(),
 		"Table of Contents",
 		"content.xhtml",
-		w.cfg.Assets.Css.InternalPath,
+		w.cfg.Assets.CSS.InternalPath,
 	)
 	raven.CheckError(err)
 }
@@ -131,14 +135,15 @@ func (w *Writer) writeChapters() {
 		contentBuffer := new(bytes.Buffer)
 		raven.CheckError(t.Execute(contentBuffer, map[string]interface{}{
 			"chapterTitle": chapterTitle,
-			"content":      template.HTML(savedChapter.content),
+			// #nosec
+			"content": template.HTML(savedChapter.content),
 		}))
 
 		_, err := w.Epub.AddSection(
-			string(contentBuffer.Bytes()),
+			contentBuffer.String(),
 			chapterTitle,
 			fmt.Sprintf("chapter%04d.xhtml", index+1),
-			w.cfg.Assets.Css.InternalPath,
+			w.cfg.Assets.CSS.InternalPath,
 		)
 		raven.CheckError(err)
 	}
@@ -146,14 +151,14 @@ func (w *Writer) writeChapters() {
 
 // importAssets adds the specified assets to the epub
 func (w *Writer) importAssets() {
-	if w.cfg.Assets.Css.HostPath != "" {
-		if !filepath.IsAbs(w.cfg.Assets.Css.HostPath) {
+	if w.cfg.Assets.CSS.HostPath != "" {
+		if !filepath.IsAbs(w.cfg.Assets.CSS.HostPath) {
 			// if not an absolute path we combine it with our configuration file bath
-			w.cfg.Assets.Css.HostPath = filepath.Join(w.cfg.BaseDirectory, w.cfg.Assets.Css.HostPath)
+			w.cfg.Assets.CSS.HostPath = filepath.Join(w.cfg.BaseDirectory, w.cfg.Assets.CSS.HostPath)
 		}
-		internalPath, err := w.Epub.AddCSS(w.cfg.Assets.Css.HostPath, filepath.Base(w.cfg.Assets.Css.HostPath))
+		internalPath, err := w.Epub.AddCSS(w.cfg.Assets.CSS.HostPath, filepath.Base(w.cfg.Assets.CSS.HostPath))
 		raven.CheckError(err)
-		w.cfg.Assets.Css.InternalPath = internalPath
+		w.cfg.Assets.CSS.InternalPath = internalPath
 	}
 	if w.cfg.Assets.Font.HostPath != "" {
 		if !filepath.IsAbs(w.cfg.Assets.Font.HostPath) {
@@ -177,6 +182,6 @@ func (w *Writer) importAndAddCover() {
 	raven.CheckError(err)
 
 	section := fmt.Sprintf(`<img src="%s" alt="Cover Image"/>`, internalFilePath)
-	_, err = w.Epub.AddSection(section, "Cover", "cover.xhtml", w.cfg.Assets.Css.InternalPath)
+	_, err = w.Epub.AddSection(section, "Cover", "cover.xhtml", w.cfg.Assets.CSS.InternalPath)
 	raven.CheckError(err)
 }

@@ -13,12 +13,12 @@ type General struct {
 // Translator contains the name and website of the translators
 type Translator struct {
 	Name string `yaml:"name"`
-	Url  string `yaml:"url"`
+	URL  string `yaml:"url"`
 }
 
-// Url contains the chapter specific options like the chapter url, selector and content options
-type Url struct {
-	Url             string         `yaml:"url"`
+// URL contains the chapter specific options like the chapter url, selector and content options
+type URL struct {
+	URL             string         `yaml:"url"`
 	ChapterSelector string         `yaml:"chapter-selector"`
 	ChapterContent  ChapterContent `yaml:"chapter-content"`
 }
@@ -32,12 +32,12 @@ type ChapterContent struct {
 
 // Toc contains all relevant information to extract the content of the novel chapters
 type Toc struct {
-	Urls []*Url `yaml:"urls"`
+	URLs []*URL `yaml:"urls"`
 }
 
-// Asset contains the included assets in each added section
+// Assets contains the included assets in each added section
 type Assets struct {
-	Css  Asset `yaml:"css"`
+	CSS  Asset `yaml:"css"`
 	Font Asset `yaml:"fonts"`
 }
 
