@@ -12,3 +12,6 @@ toc:
       chapter-content:
         content-selector: "#site-content div.post-content"
         author-note-end-selector: p > strong
+assets:
+  css:
+    - path: ./assets/css/stylesheet.css

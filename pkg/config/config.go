@@ -28,8 +28,22 @@ type Toc struct {
 	Urls []*Url `yaml:"urls"`
 }
 
+// Asset contains the included assets in each added section
+type Assets struct {
+	Css   []*Asset `yaml:"css"`
+	Fonts []*Asset `yaml:"fonts"`
+}
+
+// Asset contains the path on the host system and after being added the internal path of the epub
+type Asset struct {
+	HostPath     string `yaml:"path"`
+	InternalPath string
+}
+
 // NovelConfig contains the configuration of the novel scraper
 type NovelConfig struct {
-	General General `yaml:"general"`
-	Toc     Toc     `yaml:"toc"`
+	BaseDirectory string
+	General       General `yaml:"general"`
+	Toc           Toc     `yaml:"toc"`
+	Assets        Assets  `yaml:"assets"`
 }
