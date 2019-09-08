@@ -3,7 +3,8 @@ general:
   alt-title: Slow Life Frontier
   author: ざっぽん
   translators:
-    - tseirptranslations
+    - name: tseirptranslations
+      url: https://tseirptranslations.com/
   raw: https://ncode.syosetu.com/n3527ei/
   cover: https://tseirptranslations.com/wp-content/uploads/2018/04/WN-Cover.jpg
 toc:
