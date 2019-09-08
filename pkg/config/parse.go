@@ -1,14 +1,15 @@
 package config
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"path/filepath"
+
+	"gopkg.in/yaml.v2"
 )
 
 // ReadConfigurationFile tries to read the passed configuration file and parse it into a NovelConfig struct
 func ReadConfigurationFile(fileName string) (novelConfig *NovelConfig, err error) {
-	content, err := ioutil.ReadFile(fileName)
+	content, err := ioutil.ReadFile(filepath.Clean(fileName))
 	if err != nil {
 		return nil, err
 	}
