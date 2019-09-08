@@ -37,3 +37,13 @@ div.center p {
 div.left p {
     text-align: left;
 }
+
+div.small-font {
+    font-size: 75%;
+}
+
+div.bottom-align {
+    position: absolute;
+    margin-top: 75%;
+    margin-bottom: 0;
+}
