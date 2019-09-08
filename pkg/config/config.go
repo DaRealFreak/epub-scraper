@@ -30,8 +30,8 @@ type Toc struct {
 
 // Asset contains the included assets in each added section
 type Assets struct {
-	Css   []*Asset `yaml:"css"`
-	Fonts []*Asset `yaml:"fonts"`
+	Css  Asset `yaml:"css"`
+	Font Asset `yaml:"fonts"`
 }
 
 // Asset contains the path on the host system and after being added the internal path of the epub

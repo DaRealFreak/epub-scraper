@@ -14,4 +14,4 @@ toc:
         author-note-end-selector: p > strong
 assets:
   css:
-    - path: ./assets/css/stylesheet.css
+    path: ./assets/css/stylesheet.css
