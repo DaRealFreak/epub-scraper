@@ -27,10 +27,6 @@ func (s *Scraper) HandleFile(fileName string) {
 	}
 
 	writer := epub.NewWriter(cfg)
-
-	// Add a section
-	section := `<h1> Chapter x </h1>` +
-		`<p>Example chapter</p>`
-	_, err = writer.Epub.AddSection(section, "Chapter x", "", "")
+	writer.AddChapter("Ruti is cute", "Hello world!")
 	writer.WriteEPUB()
 }
