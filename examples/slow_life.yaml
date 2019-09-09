@@ -10,7 +10,7 @@ general:
 toc:
   urls:
     - url: https://tseirptranslations.com/slow-life-frontier-toc
-      chapter-selector: '#site-content div.post-content a[href*="tseirptranslations.com"]:not([target="_blank"]):not([rel="nofollow"])'
+      chapter-selector: '#site-content div.post-content a[href*="tseirptranslations.com"]:not([target="_blank"]):not([rel="nofollow"]):not([href*="uploads"])'
       chapter-content:
         content-selector: "#site-content div.post-content"
         author-note-end-selector: p > strong
