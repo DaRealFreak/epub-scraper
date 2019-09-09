@@ -7,17 +7,17 @@ general:
   translators:
     - name: tseirptranslations
       url: "https://tseirptranslations.com/"
-toc:
-  urls:
-    - add-chapter-prefix: false
-      url: "https://tseirptranslations.com/slow-life-frontier-toc"
-      chapter-selector: "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
-      chapter-content:
-        author-note-end-selector:
-          - 'span[id*="more-"]'
-        content-selector: "#site-content div.post-content"
-        footer-start-selector:
-          - "p > b"
+chapters:
+  - toc:
+    add-chapter-prefix: false
+    url: "https://tseirptranslations.com/slow-life-frontier-toc"
+    chapter-selector: "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
+    chapter-content:
+      author-note-end-selector:
+        - 'span[id*="more-"]'
+      content-selector: "#site-content div.post-content"
+      footer-start-selector:
+        - "p > b"
 assets:
   css:
     path: ./assets/css/stylesheet.css
