@@ -15,8 +15,9 @@ import (
 
 // chapter contains all relevant of the added chapters
 type chapter struct {
-	title   string
-	content string
+	title     string
+	content   string
+	addPrefix bool
 }
 
 // Writer contains all information and functions to create the final .epub file
@@ -54,8 +55,8 @@ func (w *Writer) WriteEPUB() {
 }
 
 // AddChapter adds a chapter to the to our current list
-func (w *Writer) AddChapter(title string, content string) {
-	w.chapters = append(w.chapters, chapter{title: title, content: content})
+func (w *Writer) AddChapter(title string, content string, addPrefix bool) {
+	w.chapters = append(w.chapters, chapter{title: title, content: content, addPrefix: addPrefix})
 }
 
 // createToC creates a table of contents page to jump directly to chapters
@@ -81,10 +82,15 @@ func (w *Writer) createToC() {
 
 	toc := ""
 	for index, savedChapter := range w.chapters {
+		chapterTitle := savedChapter.title
+		// add prefix if requested (optional since many add it already in the ToC)
+		if savedChapter.addPrefix {
+			chapterTitle = fmt.Sprintf("Chapter %d - %s", index+1, chapterTitle)
+		}
 		toc += fmt.Sprintf(
 			`<p><a href="chapter%04d.xhtml">%s</a></p>`,
 			index+1,
-			fmt.Sprintf("Chapter %d - %s", index+1, savedChapter.title),
+			chapterTitle,
 		)
 	}
 
@@ -124,7 +130,11 @@ func (w *Writer) createToC() {
 // writeChapters writes all appended chapters to the epub file
 func (w *Writer) writeChapters() {
 	for index, savedChapter := range w.chapters {
-		chapterTitle := fmt.Sprintf("Chapter %d - %s", index+1, savedChapter.title)
+		chapterTitle := savedChapter.title
+		// add prefix if requested (optional since many add it already in the ToC)
+		if savedChapter.addPrefix {
+			chapterTitle = fmt.Sprintf("Chapter %d - %s", index+1, chapterTitle)
+		}
 		t := template.Must(template.New("").Parse(`
 			<div class="left" style="text-align:left;text-indent:0;">
 				<h3>{{.chapterTitle}}</h3>

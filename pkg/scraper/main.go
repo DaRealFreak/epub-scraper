@@ -29,21 +29,24 @@ func (s *Scraper) HandleFile(fileName string) {
 	}
 
 	writer := epub.NewWriter(cfg)
-
-	log.SetLevel(log.DebugLevel)
-
 	// iterate through every ToC URL and append the extracted chapters
-	for _, tocURL := range cfg.Toc.URLs {
-		res, err := s.session.Get(tocURL.URL)
+	for _, toc := range cfg.Toc.URLs {
+		res, err := s.session.Get(toc.URL)
 		raven.CheckError(err)
 		doc := s.session.GetDocument(res)
-		doc.Find(tocURL.ChapterSelector).Each(func(i int, selection *goquery.Selection) {
+		doc.Find(toc.ChapterSelector).Each(func(i int, selection *goquery.Selection) {
 			chapterURL, exists := selection.Attr("href")
 			if !exists {
 				log.Warning("no chapter URL found")
 			}
-			writer.AddChapter(selection.Text(), s.getChapterContent(chapterURL, tocURL.ChapterContent))
+			// nolint: scopelint
+			writer.AddChapter(
+				selection.Text(),
+				s.getChapterContent(chapterURL, toc.ChapterContent),
+				toc.AddChapterPrefix,
+			)
 		})
 	}
+	// finally save the generated epub to the file system
 	writer.WriteEPUB()
 }

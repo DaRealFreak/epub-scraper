@@ -18,9 +18,10 @@ type Translator struct {
 
 // URL contains the chapter specific options like the chapter url, selector and content options
 type URL struct {
-	URL             string         `yaml:"url"`
-	ChapterSelector string         `yaml:"chapter-selector"`
-	ChapterContent  ChapterContent `yaml:"chapter-content"`
+	URL              string         `yaml:"url"`
+	ChapterSelector  string         `yaml:"chapter-selector"`
+	ChapterContent   ChapterContent `yaml:"chapter-content"`
+	AddChapterPrefix bool           `yaml:"add-chapter-prefix"`
 }
 
 // ChapterContent contains the content selector and the author note end selector
