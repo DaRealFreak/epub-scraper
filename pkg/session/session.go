@@ -13,13 +13,15 @@ import (
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/time/rate"
 )
 
 // Session is an extension to the implemented SessionInterface for HTTP sessions
 type Session struct {
-	Client     *http.Client
-	MaxRetries int
-	ctx        context.Context
+	Client      *http.Client
+	RateLimiter *rate.Limiter
+	MaxRetries  int
+	ctx         context.Context
 }
 
 // NewSession initializes a new session and sets all the required headers etc
@@ -27,9 +29,10 @@ func NewSession() *Session {
 	jar, _ := cookiejar.New(nil)
 
 	app := Session{
-		Client:     &http.Client{Jar: jar},
-		MaxRetries: 5,
-		ctx:        context.Background(),
+		Client:      &http.Client{Jar: jar},
+		RateLimiter: rate.NewLimiter(rate.Every(1500*time.Millisecond), 1),
+		MaxRetries:  5,
+		ctx:         context.Background(),
 	}
 	return &app
 }
@@ -39,6 +42,7 @@ func (s *Session) Get(uri string) (response *http.Response, err error) {
 	// access the passed url and return the data or the error which persisted multiple retries
 	// post the request with the retries option
 	for try := 1; try <= s.MaxRetries; try++ {
+		s.ApplyRateLimit()
 		log.Debug(fmt.Sprintf("opening GET uri \"%s\" (try: %d)", uri, try))
 		response, err = s.Client.Get(uri)
 		switch {
@@ -58,6 +62,7 @@ func (s *Session) Get(uri string) (response *http.Response, err error) {
 func (s *Session) Post(uri string, data url.Values) (response *http.Response, err error) {
 	// post the request with the retries option
 	for try := 1; try <= s.MaxRetries; try++ {
+		s.ApplyRateLimit()
 		log.Debug(fmt.Sprintf("opening POST uri \"%s\" (try: %d)", uri, try))
 		response, err = s.Client.PostForm(uri, data)
 		switch {
@@ -86,4 +91,14 @@ func (s *Session) GetDocument(response *http.Response) *goquery.Document {
 	document, err := goquery.NewDocumentFromReader(reader)
 	raven.CheckError(err)
 	return document
+}
+
+// ApplyRateLimit waits for the leaky bucket to fill again
+func (s *Session) ApplyRateLimit() {
+	// if no rate limiter is defined we don't have to wait
+	if s.RateLimiter != nil {
+		// wait for request to stay within the rate limit
+		err := s.RateLimiter.Wait(s.ctx)
+		raven.CheckError(err)
+	}
 }
