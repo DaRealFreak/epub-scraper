@@ -13,15 +13,38 @@ func (s *Scraper) getChapterContent(chapterURL string, content config.ChapterCon
 	raven.CheckError(err)
 
 	doc := s.session.GetDocument(res)
-	html, err := doc.Find(content.ContentSelector).First().Html()
+	chapterContent, err := doc.Find(content.ContentSelector).First().Html()
 	raven.CheckError(err)
 
-	contentDoc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
+	for _, authorNoteSelector := range content.AuthorNoteEndSelector {
+		chapterContent = s.removeAuthorBlock(chapterContent, authorNoteSelector)
+	}
+
+	for _, authorNoteSelector := range content.FooterStartSelector {
+		chapterContent = s.removeFooterBlock(chapterContent, authorNoteSelector)
+	}
+
+	return chapterContent
+}
+
+func (s *Scraper) removeAuthorBlock(chapterContent string, selector string) string {
+	contentDoc, err := goquery.NewDocumentFromReader(strings.NewReader(chapterContent))
 	raven.CheckError(err)
-	contentDoc.Find(content.AuthorNoteEndSelector).Each(func(i int, selection *goquery.Selection) {
+	contentDoc.Find(selector).Each(func(i int, selection *goquery.Selection) {
 		afterAuthor, err := selection.Html()
 		raven.CheckError(err)
-		html = strings.Join(strings.Split(html, afterAuthor)[1:], "")
+		chapterContent = strings.Join(strings.Split(chapterContent, afterAuthor)[1:], "")
 	})
-	return html
+	return chapterContent
+}
+
+func (s *Scraper) removeFooterBlock(chapterContent string, selector string) string {
+	contentDoc, err := goquery.NewDocumentFromReader(strings.NewReader(chapterContent))
+	raven.CheckError(err)
+	contentDoc.Find(selector).Each(func(i int, selection *goquery.Selection) {
+		afterAuthor, err := selection.Html()
+		raven.CheckError(err)
+		chapterContent = strings.Split(chapterContent, afterAuthor)[0]
+	})
+	return chapterContent
 }
