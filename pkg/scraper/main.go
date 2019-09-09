@@ -55,7 +55,8 @@ func (s *Scraper) HandleFile(fileName string) {
 		})
 	}
 	// finally save the generated epub to the file system
-	writer.WriteEPUB()
+	writer.WriteEpub()
+	writer.PolishEpub()
 }
 
 // fixHTMLCode uses the net/html library to render the broken HTML code which mostly fixes broken HTML

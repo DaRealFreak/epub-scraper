@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html"
 	"html/template"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
@@ -46,12 +47,20 @@ func (w *Writer) createEpub() {
 	w.Epub.SetAuthor(w.cfg.General.Author)
 }
 
-// WriteEPUB writes the generated epub to the file system
-func (w *Writer) WriteEPUB() {
+// WriteEpub writes the generated epub to the file system
+func (w *Writer) WriteEpub() {
 	w.createToC()
 	w.writeChapters()
 	// save the .epub file to the drive
 	raven.CheckError(w.Epub.Write(w.cfg.General.Title + ".epub"))
+}
+
+// PolishEpub uses calibres ebook-polish command to compress images and fix possible errors
+// which occurred to me multiple times using the bmaupin/go-epub library
+func (w *Writer) PolishEpub() {
+	path, err := filepath.Abs(w.cfg.General.Title + ".epub")
+	raven.CheckError(err)
+	raven.CheckError(exec.Command("ebook-polish", "-U", "-i", path, path).Run())
 }
 
 // AddChapter adds a chapter to the to our current list
