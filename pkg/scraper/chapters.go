@@ -31,7 +31,7 @@ func (s *Scraper) removeAuthorBlock(chapterContent string, selector string) stri
 	contentDoc, err := goquery.NewDocumentFromReader(strings.NewReader(chapterContent))
 	raven.CheckError(err)
 	contentDoc.Find(selector).Each(func(i int, selection *goquery.Selection) {
-		afterAuthor, err := selection.Html()
+		afterAuthor, err := selection.Parent().Html()
 		raven.CheckError(err)
 		chapterContent = strings.Join(strings.Split(chapterContent, afterAuthor)[1:], "")
 	})
@@ -42,9 +42,9 @@ func (s *Scraper) removeFooterBlock(chapterContent string, selector string) stri
 	contentDoc, err := goquery.NewDocumentFromReader(strings.NewReader(chapterContent))
 	raven.CheckError(err)
 	contentDoc.Find(selector).Each(func(i int, selection *goquery.Selection) {
-		afterAuthor, err := selection.Html()
+		afterFooter, err := selection.Parent().Html()
 		raven.CheckError(err)
-		chapterContent = strings.Split(chapterContent, afterAuthor)[0]
+		chapterContent = strings.Split(chapterContent, afterFooter)[0]
 	})
 	return chapterContent
 }
