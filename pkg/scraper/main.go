@@ -1,23 +1,30 @@
 package scraper
 
 import (
+	"bytes"
+	"strings"
+
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/epub"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/session"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/microcosm-cc/bluemonday"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/html"
 )
 
 // Scraper is the main functionality struct
 type Scraper struct {
-	session *session.Session
+	session   *session.Session
+	sanitizer *bluemonday.Policy
 }
 
 // NewScraper returns a new scraper struct
 func NewScraper() *Scraper {
 	return &Scraper{
-		session: session.NewSession(),
+		session:   session.NewSession(),
+		sanitizer: bluemonday.UGCPolicy(),
 	}
 }
 
@@ -49,4 +56,15 @@ func (s *Scraper) HandleFile(fileName string) {
 	}
 	// finally save the generated epub to the file system
 	writer.WriteEPUB()
+}
+
+// fixHTMLCode uses the net/html library to render the broken HTML code which mostly fixes broken HTML
+func (s *Scraper) fixHTMLCode(htmlCode string) string {
+	reader := strings.NewReader(htmlCode)
+	root, err := html.Parse(reader)
+	raven.CheckError(err)
+
+	var b bytes.Buffer
+	raven.CheckError(html.Render(&b, root))
+	return b.String()
 }

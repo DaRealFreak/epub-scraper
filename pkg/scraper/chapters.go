@@ -8,6 +8,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+// getChapterContent returns the chapter content of the passed URL based on the passed ChapterContent settings
 func (s *Scraper) getChapterContent(chapterURL string, content config.ChapterContent) string {
 	res, err := s.session.Get(chapterURL)
 	raven.CheckError(err)
@@ -24,9 +25,12 @@ func (s *Scraper) getChapterContent(chapterURL string, content config.ChapterCon
 		chapterContent = s.removeFooterBlock(chapterContent, authorNoteSelector)
 	}
 
+	chapterContent = s.fixHTMLCode(chapterContent)
+	chapterContent = s.sanitizer.Sanitize(chapterContent)
 	return chapterContent
 }
 
+// removeAuthorBlock removes the author block of the extracted chapter content based on the selector
 func (s *Scraper) removeAuthorBlock(chapterContent string, selector string) string {
 	contentDoc, err := goquery.NewDocumentFromReader(strings.NewReader(chapterContent))
 	raven.CheckError(err)
@@ -38,6 +42,7 @@ func (s *Scraper) removeAuthorBlock(chapterContent string, selector string) stri
 	return chapterContent
 }
 
+// removeFooterBlock removes the footer block of the extracted chapter content based on the selector
 func (s *Scraper) removeFooterBlock(chapterContent string, selector string) string {
 	contentDoc, err := goquery.NewDocumentFromReader(strings.NewReader(chapterContent))
 	raven.CheckError(err)
