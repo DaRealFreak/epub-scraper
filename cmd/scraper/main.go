@@ -2,23 +2,25 @@ package scraper
 
 import (
 	"fmt"
-	"log"
 	"os"
 
+	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/scraper"
 	"github.com/DaRealFreak/epub-scraper/pkg/update"
 	"github.com/DaRealFreak/epub-scraper/pkg/version"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 // Scraper returns the CLI Scraper struct
 type Scraper struct {
-	rootCmd *cobra.Command
+	logLevel string
+	rootCmd  *cobra.Command
 }
 
 // NewScraper returns the pointer to an initialized CLI Scraper struct
 func NewScraper() *Scraper {
-	return &Scraper{
+	app := &Scraper{
 		rootCmd: &cobra.Command{
 			Use:   "scraper",
 			Short: "Scraper scraps novels from websites and generates a ready to read .epub file.",
@@ -60,6 +62,18 @@ func NewScraper() *Scraper {
 			},
 		},
 	}
+
+	app.rootCmd.PersistentFlags().StringVarP(
+		&app.logLevel,
+		"verbosity",
+		"v",
+		log.InfoLevel.String(),
+		"log level (debug, info, warn, error, fatal, panic)",
+	)
+
+	// parse all configurations before executing the main command
+	cobra.OnInitialize(app.initScraper)
+	return app
 }
 
 // Execute executes the root command, entry point for the CLI application
@@ -70,4 +84,15 @@ func (cli *Scraper) Execute() {
 	if err := cli.rootCmd.Execute(); err != nil {
 		os.Exit(-1)
 	}
+}
+
+// initScraper initializes everything the CLI application needs
+func (cli *Scraper) initScraper() {
+	// setup sentry for error logging
+	raven.SetupSentry()
+
+	// set log level
+	lvl, err := log.ParseLevel(cli.logLevel)
+	raven.CheckError(err)
+	log.SetLevel(lvl)
 }
