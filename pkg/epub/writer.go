@@ -66,7 +66,7 @@ func (w *Writer) createToC() {
 		<div>
             <h3>{{.title}}</h3>
             {{.altTitle}}
-			<div class="center">
+			<div class="left">
 				<p><a href="{{.rawUrl}}">Original Webnovel</a> by {{.author}}</p>
     			{{.toc}}
 			</div>
@@ -191,7 +191,5 @@ func (w *Writer) importAndAddCover() {
 	internalFilePath, err := w.Epub.AddImage(w.cfg.General.Cover, "cover"+filepath.Ext(w.cfg.General.Cover))
 	raven.CheckError(err)
 
-	section := fmt.Sprintf(`<img src="%s" alt="Cover Image"/>`, internalFilePath)
-	_, err = w.Epub.AddSection(section, "Cover", "cover.xhtml", w.cfg.Assets.CSS.InternalPath)
-	raven.CheckError(err)
+	w.Epub.SetCover(internalFilePath, w.cfg.Assets.CSS.InternalPath)
 }
