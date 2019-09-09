@@ -1,19 +1,22 @@
-general:
-  title: I Was Kicked out of the Hero’s Party Because I Wasn’t a True Companion so I Decided to Have a Slow Life at the Frontier
-  alt-title: Slow Life Frontier
-  author: ざっぽん
-  translators:
-    - name: tseirptranslations
-      url: https://tseirptranslations.com/
-  raw: https://ncode.syosetu.com/n3527ei/
-  cover: https://tseirptranslations.com/wp-content/uploads/2018/04/WN-Cover.jpg
-toc:
-  urls:
-    - url: https://tseirptranslations.com/slow-life-frontier-toc
-      chapter-selector: '#site-content div.post-content a[href*="tseirptranslations.com"]:not([target="_blank"]):not([rel="nofollow"]):not([href*="uploads"])'
-      chapter-content:
-        content-selector: "#site-content div.post-content"
-        author-note-end-selector: p > strong
 assets:
   css:
     path: ./assets/css/stylesheet.css
+general:
+  alt-title: "Slow Life Frontier"
+  author: ざっぽん
+  cover: "https://tseirptranslations.com/wp-content/uploads/2018/04/WN-Cover.jpg"
+  raw: "https://ncode.syosetu.com/n3527ei/"
+  title: "I Was Kicked out of the Hero’s Party Because I Wasn’t a True Companion so I Decided to Have a Slow Life at the Frontier"
+  translators:
+    - name: tseirptranslations
+      url: "https://tseirptranslations.com/"
+toc:
+  urls:
+    - chapter-content:
+        author-note-end-selector:
+          - "p > strong"
+        content-selector: "#site-content div.post-content"
+        footer-start-selector:
+          - "p > b"
+      chapter-selector: "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
+      url: "https://tseirptranslations.com/slow-life-frontier-toc"

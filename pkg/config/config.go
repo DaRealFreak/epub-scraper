@@ -26,8 +26,9 @@ type URL struct {
 // ChapterContent contains the content selector and the author note end selector
 // nearly always at the start of the chapter, so start f.e. on the title
 type ChapterContent struct {
-	ContentSelector       string `yaml:"content-selector"`
-	AuthorNoteEndSelector string `yaml:"author-note-end-selector"`
+	ContentSelector       string   `yaml:"content-selector"`
+	AuthorNoteEndSelector []string `yaml:"author-note-end-selector"`
+	FooterStartSelector   []string `yaml:"footer-start-selector"`
 }
 
 // Toc contains all relevant information to extract the content of the novel chapters
