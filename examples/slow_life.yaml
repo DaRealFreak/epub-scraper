@@ -14,7 +14,7 @@ toc:
       chapter-selector: "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
       chapter-content:
         author-note-end-selector:
-          - "p > strong"
+          - 'span[id*="more-"]'
         content-selector: "#site-content div.post-content"
         footer-start-selector:
           - "p > b"
