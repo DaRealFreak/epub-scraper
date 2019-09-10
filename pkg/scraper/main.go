@@ -2,13 +2,12 @@ package scraper
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
-	"github.com/DaRealFreak/epub-scraper/pkg/epub"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/session"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/microcosm-cc/bluemonday"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/html"
@@ -35,6 +34,8 @@ func (s *Scraper) HandleFile(fileName string) {
 		log.Fatal(err)
 	}
 
+	fmt.Println(cfg)
+	/*
 	writer := epub.NewWriter(cfg)
 	// iterate through every ToC URL and append the extracted chapters
 	for _, toc := range cfg.Toc.URLs {
@@ -57,6 +58,7 @@ func (s *Scraper) HandleFile(fileName string) {
 	// finally save the generated epub to the file system
 	writer.WriteEpub()
 	writer.PolishEpub()
+	*/
 }
 
 // fixHTMLCode uses the net/html library to render the broken HTML code which mostly fixes broken HTML

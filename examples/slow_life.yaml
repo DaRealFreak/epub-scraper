@@ -9,15 +9,16 @@ general:
       url: "https://tseirptranslations.com/"
 chapters:
   - toc:
-    add-chapter-prefix: false
-    url: "https://tseirptranslations.com/slow-life-frontier-toc"
-    chapter-selector: "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
-    chapter-content:
-      author-note-end-selector:
-        - 'span[id*="more-"]'
-      content-selector: "#site-content div.post-content"
-      footer-start-selector:
-        - "p > b"
+      url: "https://tseirptranslations.com/slow-life-frontier-toc"
+      chapter-selectors:
+        - "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
+      chapter-content:
+        add-prefix: true
+        content-selector: "#site-content div.post-content"
+        author-note-end-selector:
+          - 'span[id*="more-"]'
+        footer-start-selector:
+          - "p > b"
 assets:
   css:
     path: ./assets/css/stylesheet.css

@@ -13,67 +13,44 @@ general:
       url: "https://yado-inn.com"
 sites:
   - dns: "yado-inn.com"
-    title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
-    add-chapter-prefix: true
     chapter-content:
+      add-prefix: true
+      title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
       content-selector: "article > div.entry-content > p:not([style])"
   - dns: "fishytranslation.blog"
-    title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
-    add-chapter-prefix: true
     chapter-content:
+      add-prefix: true
+      title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
       content-selector: "article > div.entry-content > h2"
       footer-start-selector:
         - "p[style=\"text-align:center;\"]"
   - dns: "rtd.moe"
-    title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
-    add-chapter-prefix: false
+    pagination:
+      reverse-posts: true
+      next-page-selector: "div.pagination.nav-links > div.nav-previous"
     chapter-content:
-      content-selector: "article > div[id*=\"post\"] > div > div#content"
+      add-prefix: false
+      title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
+      content-selector: "#site-content div.post-content"
+      author-note-end-selector:
+        - 'span[id*="more-"]'
       footer-start-selector:
-        - "div.wp-post-navigation"
+        - "p > b"
 chapters:
+  - toc:
+      url: "https://yado-inn.com/op-waifus/"
+      chapter-selectors:
+        - "article[id*=\"post\"] > div.entry-content > p > a[href*=\"yado-inn.com\"]"
   - chapter:
-      - url: "https://yado-inn.com/op-waifus-chapter-1/"
-      - url: "https://yado-inn.com/op-waifus-chapter-2/"
-      - url: "https://yado-inn.com/op-waifus-chapter-3/"
-      - url: "https://yado-inn.com/op-waifus-chapter-4/"
-      - url: "https://yado-inn.com/op-waifus-chapter-5/"
-      - url: "https://yado-inn.com/op-waifus-chapter-6/"
-      - url: "https://yado-inn.com/op-waifus-chapter-7/"
-      - url: "https://yado-inn.com/op-waifus-chapter-8/"
-      - url: "https://yado-inn.com/op-waifus-chapter-9/"
-      - url: "https://yado-inn.com/op-waifus-chapter-10/"
-      - url: "https://yado-inn.com/op-waifus-chapter-11/"
-      - url: "https://yado-inn.com/op-waifus-chapter-12/"
-      - url: "https://yado-inn.com/op-waifus-chapter-13/"
-      - url: "https://yado-inn.com/op-waifus-chapter-14/"
-      - url: "https://yado-inn.com/op-waifus-chapter-15/"
-      - url: "https://yado-inn.com/op-waifus-chapter-16/"
-      - url: "https://yado-inn.com/op-waifus-chapter-17/"
-      - url: "https://fishytranslation.blog/op-waifus-chapter-18-translation/"
-      - url: "https://fishytranslation.blog/op-waifus-chapter-19-translation/"
-      # ToDo: add support for pagination: https://rtd.moe/category/op-waifu/page/2/
-      - url: "https://rtd.moe/op-waifu/op-waifu-20-triple-structure-first-joint-work-of-three-people/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-21-cutting-the-battery-supply-of-gargoyles-and-demolishing-them/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-22-receiving-a-residence-included-an-optional-contract/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-23-the-first-fusion-magic-proposal-and-attempt/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-24-capturing-the-dungeon-first-half-sending-the-monsters-flying/"
-      - url: "https://rtd.moe/uncategorized/op-waifu-25-capturing-the-dungeon-second-half-goblins-are-mown-down/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-26-the-most-wicked-sword-vs-the-strongest-big-sister/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-27-the-cursed-sword-was-unexpectedly-fiendish-so-weve-tried-doing-a-downgrade/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-28-an-unwanted-pursuer-showed-up-so-we-requested-an-outside-help/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-29-quest-introduction-to-the-count-who-wants-to-become-a-hero/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-30-just-when-i-thought-that-my-wives-were-cheat-characters-i-suddenly-discovered-that-i-became-a-cheat-character-myself/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-31-nagi-cecyl-and-a-white-knot-festival-first-part/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-32-nagi-cecyl-and-a-white-knot-festival-latter-part/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-33-the-number-of-skills-has-increased-during-the-trip-so-i-came-up-with-a-new-combo/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-34-after-a-heartwarming-rest-with-the-slaves-in-the-onsen-town-a-bigwig-contacted-us/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-35-the-legend-of-a-sea-dragon-and-the-spiritual-connection/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-36-from-nagi-to-cecyl-a-modest-wish/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-37-awaken-the-second-form-of-op-waifu-cecyl/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-38-cheat-persuasion-and-uninvited-guests/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-39-dealing-with-the-claim-and-a-witness-of-legend/"
-      - url: "https://rtd.moe/op-waifu/op-waifu-40-invoking-quick-structure-handling-the-warning/"
+      url: "https://fishytranslation.blog/op-waifus-chapter-18-translation/"
+  - chapter:
+      url: "https://fishytranslation.blog/op-waifus-chapter-19-translation/"
+  - toc:
+      url: "https://rtd.moe/category/op-waifu/"
+      chapter-selectors:
+        # the chapter selectors are iterated through, so possible to follow from novelupdates -> blog post -> chapter
+        # if a selector returns 0 results we assume the page got skipped: novelupdates(1) -> blog post (0) -> chapter
+        - "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
 assets:
   css:
     path: ./assets/css/stylesheet.css
