@@ -1,8 +1,12 @@
 package scraper
 
-import "github.com/DaRealFreak/epub-scraper/pkg/config"
+import (
+	"github.com/DaRealFreak/epub-scraper/pkg/config"
+)
 
 func (s *Scraper) handleToC(toc *config.Toc) {
+	var chapterUrls []string
+	s.extractChaptersFromPage(toc.URL, toc.ChapterSelectors, *toc.ChapterContent.ContentSelector, &chapterUrls)
 	/*
 		open URL
 		if pagination {
