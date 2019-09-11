@@ -60,6 +60,7 @@ func (w *Writer) WriteEpub() {
 func (w *Writer) PolishEpub() {
 	path, err := filepath.Abs(w.cfg.General.Title + ".epub")
 	raven.CheckError(err)
+	// #nosec
 	raven.CheckError(exec.Command("ebook-polish", "-U", "-i", path, path).Run())
 }
 
