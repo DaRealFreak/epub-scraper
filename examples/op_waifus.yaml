@@ -12,19 +12,19 @@ general:
     - name: "Yado Inn"
       url: "https://yado-inn.com"
 sites:
-  - dns: "yado-inn.com"
+  - host: "yado-inn.com"
     chapter-content:
       add-prefix: true
       title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
       content-selector: "article > div.entry-content > p:not([style])"
-  - dns: "fishytranslation.blog"
+  - host: "fishytranslation.blog"
     chapter-content:
       add-prefix: true
       title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
       content-selector: "article > div.entry-content > h2"
       footer-start-selector:
         - "p[style=\"text-align:center;\"]"
-  - dns: "rtd.moe"
+  - host: "rtd.moe"
     pagination:
       reverse-posts: true
       next-page-selector: "div.pagination.nav-links > div.nav-previous"
