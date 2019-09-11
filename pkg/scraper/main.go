@@ -41,7 +41,7 @@ func (s *Scraper) HandleFile(fileName string) {
 	writer := epub.NewWriter(cfg)
 	for _, source := range cfg.Chapters {
 		if source.Toc != nil {
-			s.handleToC(source.Toc)
+			s.handleToc(source.Toc)
 		} else if source.Chapter != nil {
 			s.handleChapter(source.Chapter)
 		}
