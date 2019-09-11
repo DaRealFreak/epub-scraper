@@ -27,7 +27,7 @@ sites:
   - host: "rtd.moe"
     pagination:
       reverse-posts: true
-      next-page-selector: "div.pagination.nav-links > div.nav-previous"
+      next-page-selector: "div.pagination.nav-links > div.nav-previous > a[href*=\"rtd.moe\"]"
     chapter-content:
       add-prefix: false
       title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
@@ -42,6 +42,8 @@ chapters:
       chapter-selectors:
         - "article[id*=\"post\"] > div.entry-content > p > a[href*=\"yado-inn.com\"]"
   - chapter:
+      url: "https://yado-inn.com/op-waifus/op-waifus-chapter-17/"
+  - chapter:
       url: "https://fishytranslation.blog/op-waifus-chapter-18-translation/"
   - chapter:
       url: "https://fishytranslation.blog/op-waifus-chapter-19-translation/"
@@ -50,7 +52,7 @@ chapters:
       chapter-selectors:
         # the chapter selectors are iterated through, so possible to follow from novelupdates -> blog post -> chapter
         # if a selector returns 0 results we assume the page got skipped: novelupdates(1) -> blog post (0) -> chapter
-        - "#site-content div.post-content a[href*=\"tseirptranslations.com\"]:not([target=\"_blank\"]):not([rel=\"nofollow\"]):not([href*=\"uploads\"])"
+        - "article.post.excerpt > div.readMore > a[href*=\"rtd.moe\"]"
 assets:
   css:
     path: ./assets/css/stylesheet.css
