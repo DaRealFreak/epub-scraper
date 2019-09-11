@@ -9,19 +9,19 @@ import (
 )
 
 // getChapterContent returns the chapter content of the passed URL based on the passed ChapterContent settings
-func (s *Scraper) getChapterContent(chapterURL string, content config.ChapterContent) string {
+func (s *Scraper) getChapterContent(chapterURL string, content *config.ChapterContent) string {
 	res, err := s.session.Get(chapterURL)
 	raven.CheckError(err)
 
 	doc := s.session.GetDocument(res)
-	chapterContent, err := doc.Find(content.ContentSelector).First().Html()
+	chapterContent, err := doc.Find(*content.ContentSelector).First().Html()
 	raven.CheckError(err)
 
-	for _, authorNoteSelector := range content.AuthorNoteEndSelector {
+	for _, authorNoteSelector := range *content.AuthorNoteEndSelector {
 		chapterContent = s.removeAuthorBlock(chapterContent, authorNoteSelector)
 	}
 
-	for _, authorNoteSelector := range content.FooterStartSelector {
+	for _, authorNoteSelector := range *content.FooterStartSelector {
 		chapterContent = s.removeFooterBlock(chapterContent, authorNoteSelector)
 	}
 

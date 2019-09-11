@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
+	"github.com/DaRealFreak/epub-scraper/pkg/epub"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/session"
 	"github.com/microcosm-cc/bluemonday"
@@ -35,30 +36,30 @@ func (s *Scraper) HandleFile(fileName string) {
 	}
 
 	fmt.Println(cfg)
-	/*
 	writer := epub.NewWriter(cfg)
-	// iterate through every ToC URL and append the extracted chapters
-	for _, toc := range cfg.Toc.URLs {
-		res, err := s.session.Get(toc.URL)
-		raven.CheckError(err)
-		doc := s.session.GetDocument(res)
-		doc.Find(toc.ChapterSelector).Each(func(i int, selection *goquery.Selection) {
-			chapterURL, exists := selection.Attr("href")
-			if !exists {
-				log.Warning("no chapter URL found")
-			}
-			// nolint: scopelint
-			writer.AddChapter(
-				selection.Text(),
-				s.getChapterContent(chapterURL, toc.ChapterContent),
-				toc.AddChapterPrefix,
-			)
-		})
-	}
+	/*
+		// iterate through every ToC URL and append the extracted chapters
+		for _, toc := range cfg.Toc.URLs {
+			res, err := s.session.Get(toc.URL)
+			raven.CheckError(err)
+			doc := s.session.GetDocument(res)
+			doc.Find(toc.ChapterSelector).Each(func(i int, selection *goquery.Selection) {
+				chapterURL, exists := selection.Attr("href")
+				if !exists {
+					log.Warning("no chapter URL found")
+				}
+				// nolint: scopelint
+				writer.AddChapter(
+					selection.Text(),
+					s.getChapterContent(chapterURL, toc.ChapterContent),
+					toc.AddChapterPrefix,
+				)
+			})
+		}
+	*/
 	// finally save the generated epub to the file system
 	writer.WriteEpub()
 	writer.PolishEpub()
-	*/
 }
 
 // fixHTMLCode uses the net/html library to render the broken HTML code which mostly fixes broken HTML
