@@ -16,21 +16,23 @@ import (
 
 // Scraper is the main functionality struct
 type Scraper struct {
-	session   *session.Session
-	sanitizer *bluemonday.Policy
+	configParser *config.Parser
+	session      *session.Session
+	sanitizer    *bluemonday.Policy
 }
 
 // NewScraper returns a new scraper struct
 func NewScraper() *Scraper {
 	return &Scraper{
-		session:   session.NewSession(),
-		sanitizer: bluemonday.UGCPolicy(),
+		configParser: config.NewParser(),
+		session:      session.NewSession(),
+		sanitizer:    bluemonday.UGCPolicy(),
 	}
 }
 
 // HandleFile handles a single passed configuration file
 func (s *Scraper) HandleFile(fileName string) {
-	cfg, err := config.ReadConfigurationFile(fileName)
+	cfg, err := s.configParser.ReadConfigurationFile(fileName)
 	if err != nil {
 		log.Fatal(err)
 	}
