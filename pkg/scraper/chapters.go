@@ -31,12 +31,12 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 	chapterContent, err := doc.Find(*content.ContentSelector).First().Html()
 	raven.CheckError(err)
 
-	for _, authorNoteSelector := range *content.PrefixSelectors {
-		chapterContent = s.removePrefix(chapterContent, authorNoteSelector)
+	for _, prefixSelector := range *content.PrefixSelectors {
+		chapterContent = s.removePrefix(chapterContent, prefixSelector)
 	}
 
-	for _, authorNoteSelector := range *content.SuffixSelectors {
-		chapterContent = s.removeSuffix(chapterContent, authorNoteSelector)
+	for _, suffixSelector := range *content.SuffixSelectors {
+		chapterContent = s.removeSuffix(chapterContent, suffixSelector)
 	}
 
 	chapterContent = s.fixHTMLCode(chapterContent)
@@ -75,18 +75,21 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 	titleContent, err := doc.Html()
 	raven.CheckError(err)
 
-	for _, authorNoteSelector := range *content.PrefixSelectors {
-		titleContent = s.removePrefix(titleContent, authorNoteSelector)
+	// ToDo: use document.Find(sel).First().NextAll() instead of ripping apart the HTML
+	for _, prefixSelector := range *content.PrefixSelectors {
+		titleContent = s.removePrefix(titleContent, prefixSelector)
 	}
 
-	for _, authorNoteSelector := range *content.SuffixSelectors {
-		titleContent = s.removeSuffix(titleContent, authorNoteSelector)
+	for _, suffixSelector := range *content.SuffixSelectors {
+		titleContent = s.removeSuffix(titleContent, suffixSelector)
 	}
 
 	doc, err = goquery.NewDocumentFromReader(strings.NewReader(titleContent))
 	raven.CheckError(err)
 
 	title := doc.Find(*content.TitleSelector).First().Text()
+
+	// cleanup title if cleanup regular expression is given in the configuration
 	if content.CleanupRegex != "" {
 		re := regexp.MustCompile(content.CleanupRegex)
 		matches := re.FindStringSubmatch(title)

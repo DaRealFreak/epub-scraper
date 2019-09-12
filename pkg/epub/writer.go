@@ -12,6 +12,7 @@ import (
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/version"
 	"github.com/bmaupin/go-epub"
+	log "github.com/sirupsen/logrus"
 )
 
 // chapter contains all relevant of the added chapters
@@ -39,7 +40,7 @@ func NewWriter(cfg *config.NovelConfig) *Writer {
 	return writer
 }
 
-// createEpub creates epub writer and sets the initial variables from the cfg
+// createEpub creates epub writer and sets the available metadata taken from the configuration
 func (w *Writer) createEpub() {
 	w.Epub = epub.NewEpub(w.cfg.General.Title)
 
@@ -66,9 +67,10 @@ func (w *Writer) PolishEpub() {
 	raven.CheckError(exec.Command("ebook-polish", "-U", "-i", path, path).Run())
 }
 
-// AddChapter adds a chapter to the to our current list
+// AddChapter adds a chapter to the to our current chapter list
 func (w *Writer) AddChapter(title string, content string, addPrefix bool) {
 	w.chapters = append(w.chapters, chapter{title: title, content: content, addPrefix: addPrefix})
+	log.Infof("added chapter: %s (content length: %d)", title, len(content))
 }
 
 // createToC creates a table of contents page to jump directly to chapters

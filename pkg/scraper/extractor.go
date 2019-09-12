@@ -7,17 +7,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type ChapterData struct {
-	addPrefix bool
-	title     string
-	content   string
-}
-
 // handleToc handles passed Table of Content configurations to extract the Chapter data
 func (s *Scraper) handleToc(toc *config.Toc) (chapters []*ChapterData) {
 	// extract all chapters recursively from the passed ToC URL
 	var chapterUrls []string
-	s.extractTocPages(toc.URL, toc, &chapterUrls)
+	s.parseTocPage(toc.URL, toc, &chapterUrls)
 
 	if *toc.Pagination.ReversePosts {
 		for i, j := 0, len(chapterUrls)-1; i < j; i, j = i+1, j-1 {
@@ -31,9 +25,10 @@ func (s *Scraper) handleToc(toc *config.Toc) (chapters []*ChapterData) {
 	return chapters
 }
 
-// extractTocPages extracts further ToC pages based on the pagination settings
+// parseTocPage extracts chapters from the passed ToC URL
+// if a pagination is set it'll follow the pagination as long as the next page can be found.
 // it'll automatically skip if the redirected URL equals the current URL
-func (s *Scraper) extractTocPages(url string, toc *config.Toc, chapterUrls *[]string) {
+func (s *Scraper) parseTocPage(url string, toc *config.Toc, chapterUrls *[]string) {
 	res, err := s.session.Get(url)
 	raven.CheckError(err)
 	doc := s.session.GetDocument(res)
@@ -49,15 +44,14 @@ func (s *Scraper) extractTocPages(url string, toc *config.Toc, chapterUrls *[]st
 			}
 			// prevent infinite loop to same page
 			if url != tocPage {
-				s.extractTocPages(tocPage, toc, chapterUrls)
+				s.parseTocPage(tocPage, toc, chapterUrls)
 			}
 		})
 	}
-
 }
 
-// extractChaptersFromPage extracts all available chapters from the passed ToC URl
-// and recursively follows possible redirects
+// extractChaptersFromPage extracts all available chapters from the passed document
+// and recursively follows possible redirects for child selectors
 // if the last level does not return any matches it'll add the closest level where the chapter content can be found
 func (s *Scraper) extractChaptersFromPage(
 	doc *goquery.Document, chapterSelectors []string, contentSelector string, chapterURLs *[]string,

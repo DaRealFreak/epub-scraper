@@ -42,7 +42,7 @@ func (p *Parser) mergeSourceConfigSiteConfig(novelConfig *NovelConfig) {
 		if source.Toc != nil {
 			tocURL, err := url.Parse(source.Toc.URL)
 			raven.CheckError(err)
-			site := p.getSiteConfigurationFromURL(tocURL.Host, novelConfig)
+			site := p.getSiteConfigurationForHost(tocURL.Host, novelConfig)
 			p.updatePagination(&source.Toc.Pagination, &site.Pagination)
 			p.updateTitleContent(&source.Toc.TitleContent, &site.TitleContent)
 			p.updateChapterContent(&source.Toc.ChapterContent, &site.ChapterContent)
@@ -50,14 +50,16 @@ func (p *Parser) mergeSourceConfigSiteConfig(novelConfig *NovelConfig) {
 		if source.Chapter != nil {
 			tocURL, err := url.Parse(source.Chapter.URL)
 			raven.CheckError(err)
-			site := p.getSiteConfigurationFromURL(tocURL.Host, novelConfig)
+			site := p.getSiteConfigurationForHost(tocURL.Host, novelConfig)
 			p.updateTitleContent(&source.Chapter.TitleContent, &site.TitleContent)
 			p.updateChapterContent(&source.Chapter.ChapterContent, &site.ChapterContent)
 		}
 	}
 }
 
-func (p *Parser) getSiteConfigurationFromURL(host string, novelConfig *NovelConfig) *SiteConfiguration {
+// getSiteConfigurationForHost retrieves the site configuration for the passed host
+// will return an empty site configuration with nil values if no site configuration for host exists
+func (p *Parser) getSiteConfigurationForHost(host string, novelConfig *NovelConfig) *SiteConfiguration {
 	for _, site := range novelConfig.Sites {
 		if host == site.Host {
 			// pin variable for scope linting

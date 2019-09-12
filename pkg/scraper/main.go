@@ -20,6 +20,13 @@ type Scraper struct {
 	sanitizer    *bluemonday.Policy
 }
 
+// ChapterData contains all relevant chapter data for writing them into the epub
+type ChapterData struct {
+	addPrefix bool
+	title     string
+	content   string
+}
+
 // NewScraper returns a new scraper struct
 func NewScraper() *Scraper {
 	return &Scraper{
