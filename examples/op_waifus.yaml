@@ -12,12 +12,12 @@ general:
   language: "english"
   raw: "https://ncode.syosetu.com/n6475dd/"
   translators:
-    - name: "Raising the Dead"
-      url: "https://tseirptranslations.com/"
-    - name: "FishyTranslation"
-      url: "https://fishytranslation.blog"
     - name: "Yado Inn"
       url: "https://yado-inn.com"
+    - name: "FishyTranslation"
+      url: "https://fishytranslation.blog"
+    - name: "Raising the Dead"
+      url: "https://rtd.moe/"
 sites:
   - host: "yado-inn.com"
     title-content:
