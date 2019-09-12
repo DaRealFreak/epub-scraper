@@ -1,7 +1,7 @@
 package scraper
 
 import (
-	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
@@ -72,7 +72,7 @@ func (s *Scraper) removeSuffix(chapterContent string, selector string) string {
 
 // getChapterTitle returns the chapter title of the passed URL based on the passed ChapterContent settings
 func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleContent) string {
-	titleContent, err := doc.Find(*content.TitleSelector).First().Html()
+	titleContent, err := doc.Html()
 	raven.CheckError(err)
 
 	for _, authorNoteSelector := range *content.PrefixSelectors {
@@ -86,6 +86,23 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 	doc, err = goquery.NewDocumentFromReader(strings.NewReader(titleContent))
 	raven.CheckError(err)
 
-	fmt.Println(doc.Text())
-	return doc.Text()
+	title := doc.Find(*content.TitleSelector).First().Text()
+	if content.CleanupRegex != "" {
+		re := regexp.MustCompile(content.CleanupRegex)
+		matches := re.FindStringSubmatch(title)
+
+		paramsMap := make(map[string]string)
+		for i, name := range re.SubexpNames() {
+			if i > 0 && i <= len(matches) {
+				paramsMap[name] = matches[i]
+			}
+		}
+
+		if val, ok := paramsMap["Title"]; ok {
+			title = val
+		} else {
+			log.Fatal("capture group \"Title\" is required for the title cleanup pattern")
+		}
+	}
+	return title
 }
