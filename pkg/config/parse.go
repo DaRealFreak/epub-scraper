@@ -38,26 +38,33 @@ func (p *Parser) ReadConfigurationFile(fileName string) (novelConfig *NovelConfi
 // or sets the default values in case neither the chapter nor the site configuration has a value set
 func (p *Parser) mergeSourceConfigSiteConfig(novelConfig *NovelConfig) {
 	for _, source := range novelConfig.Chapters {
-		for _, site := range novelConfig.Sites {
-			if source.Toc != nil {
-				tocURL, err := url.Parse(source.Toc.URL)
-				raven.CheckError(err)
-				if tocURL.Host == site.Host {
-					p.updatePagination(&source.Toc.Pagination, &site.Pagination)
-					p.updateTitleContent(&source.Toc.TitleContent, &site.TitleContent)
-					p.updateChapterContent(&source.Toc.ChapterContent, &site.ChapterContent)
-				}
-			}
-			if source.Chapter != nil {
-				tocURL, err := url.Parse(source.Chapter.URL)
-				raven.CheckError(err)
-				if tocURL.Host == site.Host {
-					p.updateTitleContent(&source.Chapter.TitleContent, &site.TitleContent)
-					p.updateChapterContent(&source.Chapter.ChapterContent, &site.ChapterContent)
-				}
-			}
+
+		if source.Toc != nil {
+			tocURL, err := url.Parse(source.Toc.URL)
+			raven.CheckError(err)
+			site := p.getSiteConfigurationFromURL(tocURL.Host, novelConfig)
+			p.updatePagination(&source.Toc.Pagination, &site.Pagination)
+			p.updateTitleContent(&source.Toc.TitleContent, &site.TitleContent)
+			p.updateChapterContent(&source.Toc.ChapterContent, &site.ChapterContent)
+		}
+		if source.Chapter != nil {
+			tocURL, err := url.Parse(source.Chapter.URL)
+			raven.CheckError(err)
+			site := p.getSiteConfigurationFromURL(tocURL.Host, novelConfig)
+			p.updateTitleContent(&source.Chapter.TitleContent, &site.TitleContent)
+			p.updateChapterContent(&source.Chapter.ChapterContent, &site.ChapterContent)
 		}
 	}
+}
+
+func (p *Parser) getSiteConfigurationFromURL(host string, novelConfig *NovelConfig) *SiteConfiguration {
+	for _, site := range novelConfig.Sites {
+		if host == site.Host {
+			return &site
+		}
+	}
+	// return empty configuration with nil values
+	return &SiteConfiguration{}
 }
 
 // updatePagination updates specifically the Pagination struct of the chapter/site configuration
