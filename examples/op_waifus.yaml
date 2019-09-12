@@ -52,10 +52,10 @@ sites:
     chapter-content:
       content-selector: "article > div[id*=\"post\"] > div.single_post > div#content"
       prefix-selectors:
-        - "hr"
+        - "hr, h2#mce_0, hr.wp-block-separator"
         - "h3, h2, h1"
       suffix-selectors:
-        - "p > b"
+        - "div.wp-post-navigation"
 chapters:
   - toc:
       url: "https://yado-inn.com/op-waifus/"
