@@ -16,7 +16,7 @@ type TitleContent struct {
 	TitleSelector   *string   `yaml:"title-selector"`
 	PrefixSelectors *[]string `yaml:"prefix-selectors"`
 	SuffixSelectors *[]string `yaml:"suffix-selectors"`
-	CleanupRegex    *string   `yaml:"cleanup-regex"`
+	CleanupRegex    string    `yaml:"cleanup-regex"`
 }
 
 // ChapterContent contains the content selector and the author note end selector

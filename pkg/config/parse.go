@@ -132,11 +132,7 @@ func (p *Parser) updateTitleContent(sourceConfig *TitleContent, siteConfig *Titl
 		}
 		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
 	}
-	if sourceConfig.CleanupRegex == nil {
-		if siteConfig.CleanupRegex == nil {
-			var siteConfigDefault string
-			siteConfig.CleanupRegex = &siteConfigDefault
-		}
+	if sourceConfig.CleanupRegex == "" && siteConfig.CleanupRegex != "" {
 		sourceConfig.CleanupRegex = siteConfig.CleanupRegex
 	}
 }
