@@ -5,7 +5,9 @@ type General struct {
 	Title       string        `yaml:"title"`
 	AltTitle    string        `yaml:"alt-title"`
 	Author      string        `yaml:"author"`
+	Description string        `yaml:"description"`
 	Cover       string        `yaml:"cover"`
+	Language    string        `yaml:"language"`
 	Raw         string        `yaml:"raw"`
 	Translators []*Translator `yaml:"translators"`
 }

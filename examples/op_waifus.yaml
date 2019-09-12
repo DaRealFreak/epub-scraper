@@ -2,8 +2,15 @@ general:
   title: "Being Able to Edit Skills in Another World, I Gained OP Waifus"
   alt-title: "Isekai de Skill wo Kaitai shitara Cheat na Yome ga Zoushoku Shimashita: Gainen Kousa no Structure"
   author: 千月さかき
-  raw: "https://ncode.syosetu.com/n6475dd/"
+  description: |
+    Nagi who was summoned to another world acquired the「Skill Structure」skill.
+    Nagi felt the hints of black job from the king’s request 「To defeat the devil king」. He leaves the castle and starts his journey with a slave girl.
+    The small demon girl Cecyl, the melee-fighter beast girl Rita , Aine the onee-chan maid, Regii the cursed sword.
+    Rafiria the warm and fluffy elf and Iris the sea dragon shrine maiden.
+    Nagi rewrites the girls’ skills and made them into 「cheat characters」one after another.
   cover: "https://cdn.novelupdates.com/images/2017/09/810ho4w6AqL.jpg"
+  language: "english"
+  raw: "https://ncode.syosetu.com/n6475dd/"
   translators:
     - name: "Raising the Dead"
       url: "https://tseirptranslations.com/"
@@ -18,7 +25,7 @@ sites:
       title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
       content-selector: "article > div.entry-content"
       author-note-end-selector:
-        - 'hr'
+        - "hr"
         - "p[style=\"text-align:left;\"] > strong, strong, b"
   - host: "fishytranslation.blog"
     chapter-content:
@@ -38,7 +45,7 @@ sites:
       title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
       content-selector: "article > div[id*=\"post\"] > div.single_post > div#content"
       author-note-end-selector:
-        - 'hr'
+        - "hr"
         - "h3, h2, h1"
       footer-start-selector:
         - "p > b"
@@ -47,6 +54,8 @@ chapters:
       url: "https://yado-inn.com/op-waifus/"
       chapter-selectors:
         - "article[id*=\"post\"] > div.entry-content > p > a[href*=\"yado-inn.com\"]"
+        # some links in the ToC link to the post linking to the chapter instead of directly to the chapter
+        # so we check for an additional redirect (else it'll check the levels above for a content-selector match)
         - "article[id*=\"post\"] > div.entry-content > p:not([style]) > a[href*=\"chapter\"]"
   - chapter:
       url: "https://yado-inn.com/op-waifus/op-waifus-chapter-17/"
@@ -57,8 +66,6 @@ chapters:
   - toc:
       url: "https://rtd.moe/category/op-waifu/"
       chapter-selectors:
-        # the chapter selectors are iterated through, so possible to follow from novelupdates -> blog post -> chapter
-        # if a selector returns 0 results we assume the page got skipped: novelupdates(1) -> blog post (0) -> chapter
         - "article.post.excerpt > div.readMore > a[href*=\"rtd.moe\"]"
 assets:
   css:

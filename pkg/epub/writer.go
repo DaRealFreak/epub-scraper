@@ -43,8 +43,10 @@ func NewWriter(cfg *config.NovelConfig) *Writer {
 func (w *Writer) createEpub() {
 	w.Epub = epub.NewEpub(w.cfg.General.Title)
 
-	// Set the author
+	// Set the meta data used for libraries in readers
 	w.Epub.SetAuthor(w.cfg.General.Author)
+	w.Epub.SetDescription(w.cfg.General.Description)
+	w.Epub.SetLang(w.cfg.General.Language)
 }
 
 // WriteEpub writes the generated epub to the file system
