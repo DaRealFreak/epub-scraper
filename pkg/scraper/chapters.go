@@ -49,7 +49,7 @@ func (s *Scraper) removeFooterBlock(chapterContent string, selector string) stri
 	raven.CheckError(err)
 	selection := contentDoc.Find(selector).First()
 	if selection.Length() > 0 {
-		afterFooter, err := selection.Parent().Html()
+		afterFooter, err := goquery.OuterHtml(selection)
 		raven.CheckError(err)
 		chapterContent = strings.Split(chapterContent, afterFooter)[0]
 	}
