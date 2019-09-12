@@ -16,12 +16,17 @@ sites:
     chapter-content:
       add-prefix: true
       title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
-      content-selector: "article > div.entry-content > p:not([style])"
+      content-selector: "article > div.entry-content"
+      author-note-end-selector:
+        - 'hr'
+        - "p[style=\"text-align:left;\"] > strong, strong, b"
   - host: "fishytranslation.blog"
     chapter-content:
       add-prefix: true
-      title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
-      content-selector: "article > div.entry-content > h2"
+      title-selector: "article > div.entry-content > h1, article > div.entry-content > h2"
+      content-selector: "article > div.entry-content"
+      author-note-end-selector:
+        - "h1, h2"
       footer-start-selector:
         - "p[style=\"text-align:center;\"]"
   - host: "rtd.moe"
@@ -31,9 +36,10 @@ sites:
     chapter-content:
       add-prefix: false
       title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
-      content-selector: "#site-content div.post-content"
+      content-selector: "article > div[id*=\"post\"] > div.single_post > div#content"
       author-note-end-selector:
-        - 'span[id*="more-"]'
+        - 'hr'
+        - "h3, h2, h1"
       footer-start-selector:
         - "p > b"
 chapters:
@@ -41,6 +47,7 @@ chapters:
       url: "https://yado-inn.com/op-waifus/"
       chapter-selectors:
         - "article[id*=\"post\"] > div.entry-content > p > a[href*=\"yado-inn.com\"]"
+        - "article[id*=\"post\"] > div.entry-content > p:not([style]) > a[href*=\"chapter\"]"
   - chapter:
       url: "https://yado-inn.com/op-waifus/op-waifus-chapter-17/"
   - chapter:
