@@ -7,8 +7,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type ChapterData struct {
+	title   string
+	content string
+}
+
 // handleToc handles passed Table of Content configurations to extract the Chapter data
-func (s *Scraper) handleToc(toc *config.Toc) {
+func (s *Scraper) handleToc(toc *config.Toc) (chapters []*ChapterData) {
 	// extract ToC pages from the pagination configuration
 	// the ToC URL is always set as the first page
 	tocPages := []string{toc.URL}
@@ -29,18 +34,23 @@ func (s *Scraper) handleToc(toc *config.Toc) {
 	}
 
 	for _, chapterURL := range chapterUrls {
-		s.extractChapterContent(chapterURL, toc.ChapterContent)
+		chapters = append(chapters, s.extractChapterContent(chapterURL, toc.ChapterContent))
 	}
+	return chapters
 }
 
 // handleChapter handles a single chapter configurations to extract the Chapter data
-func (s *Scraper) handleChapter(chapter *config.Chapter) {
-	s.extractChapterContent(chapter.URL, chapter.ChapterContent)
+func (s *Scraper) handleChapter(chapter *config.Chapter) (chapterData *ChapterData) {
+	return s.extractChapterContent(chapter.URL, chapter.ChapterContent)
 }
 
 // extractChapterContent extracts the Chapter data from the passed final chapter URL (no more redirects, only content)
-func (s *Scraper) extractChapterContent(chapterURL string, config config.ChapterContent) {
+func (s *Scraper) extractChapterContent(chapterURL string, config config.ChapterContent) *ChapterData {
 	log.Infof("extracting content from URL: %s", chapterURL)
+	return &ChapterData{
+		title:   chapterURL,
+		content: s.getChapterContent(chapterURL, &config),
+	}
 }
 
 // extractTocPages extracts further ToC pages based on the pagination settings

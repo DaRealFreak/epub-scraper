@@ -2,7 +2,6 @@ package scraper
 
 import (
 	"bytes"
-	"fmt"
 	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
@@ -37,13 +36,16 @@ func (s *Scraper) HandleFile(fileName string) {
 		log.Fatal(err)
 	}
 
-	fmt.Println(cfg)
 	writer := epub.NewWriter(cfg)
 	for _, source := range cfg.Chapters {
 		if source.Toc != nil {
-			s.handleToc(source.Toc)
+			chapters := s.handleToc(source.Toc)
+			for _, chapter := range chapters {
+				writer.AddChapter(chapter.title, chapter.content, true)
+			}
 		} else if source.Chapter != nil {
-			s.handleChapter(source.Chapter)
+			chapter := s.handleChapter(source.Chapter)
+			writer.AddChapter(chapter.title, chapter.content, true)
 		}
 	}
 	// finally save the generated epub to the file system
