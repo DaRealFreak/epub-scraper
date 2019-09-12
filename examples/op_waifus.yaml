@@ -22,10 +22,10 @@ sites:
   - host: "yado-inn.com"
     title-content:
       add-prefix: true
-      title-selector: "article > div.entry-content > strong, article > div.entry-content > p[style=\"text-align:left;\"] > strong, article > div.entry-content > b"
-      cleanup-regex: "^(?:(C\\d+: {0,1}|Chapter {0,1}\\d+: {0,1})?)(?<Title>.*)"
+      title-selector: "strong, b"
+      cleanup-regex: '^(?:(C\d+: ?|Chapter ?\d+ ?: ?)?)(?P<Title>.*)'
       prefix-selectors:
-        - "hr"
+        - "article > div.entry-content > hr"
     chapter-content:
       content-selector: "article > div.entry-content"
       prefix-selectors:
@@ -46,10 +46,9 @@ sites:
       reverse-posts: true
       next-page-selector: "div.pagination.nav-links > div.nav-previous > a[href*=\"rtd.moe\"]"
     title-content:
-      add-prefix: false
+      add-prefix: true
       title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
-      prefix-selectors:
-        - "hr"
+      cleanup-regex: '^(?:(OP Waifu: #\d+ ?))(?P<Title>.*)'
     chapter-content:
       content-selector: "article > div[id*=\"post\"] > div.single_post > div#content"
       prefix-selectors:
