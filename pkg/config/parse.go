@@ -44,6 +44,7 @@ func (p *Parser) mergeSourceConfigSiteConfig(novelConfig *NovelConfig) {
 				raven.CheckError(err)
 				if tocURL.Host == site.Host {
 					p.updatePagination(&source.Toc.Pagination, &site.Pagination)
+					p.updateTitleContent(&source.Toc.TitleContent, &site.TitleContent)
 					p.updateChapterContent(&source.Toc.ChapterContent, &site.ChapterContent)
 				}
 			}
@@ -51,6 +52,7 @@ func (p *Parser) mergeSourceConfigSiteConfig(novelConfig *NovelConfig) {
 				tocURL, err := url.Parse(source.Chapter.URL)
 				raven.CheckError(err)
 				if tocURL.Host == site.Host {
+					p.updateTitleContent(&source.Chapter.TitleContent, &site.TitleContent)
 					p.updateChapterContent(&source.Chapter.ChapterContent, &site.ChapterContent)
 				}
 			}
@@ -78,6 +80,30 @@ func (p *Parser) updatePagination(sourceConfig *Pagination, siteConfig *Paginati
 
 // updateChapterContent updates specifically the ChapterContent struct of the chapter/site configuration
 func (p *Parser) updateChapterContent(sourceConfig *ChapterContent, siteConfig *ChapterContent) {
+	if sourceConfig.ContentSelector == nil {
+		if siteConfig.ContentSelector == nil {
+			var siteConfigDefault string
+			siteConfig.ContentSelector = &siteConfigDefault
+		}
+		sourceConfig.ContentSelector = siteConfig.ContentSelector
+	}
+	if sourceConfig.PrefixSelectors == nil {
+		if siteConfig.PrefixSelectors == nil {
+			var siteConfigDefault []string
+			siteConfig.PrefixSelectors = &siteConfigDefault
+		}
+		sourceConfig.PrefixSelectors = siteConfig.PrefixSelectors
+	}
+	if sourceConfig.SuffixSelectors == nil {
+		if siteConfig.SuffixSelectors == nil {
+			var siteConfigDefault []string
+			siteConfig.SuffixSelectors = &siteConfigDefault
+		}
+		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
+	}
+}
+
+func (p *Parser) updateTitleContent(sourceConfig *TitleContent, siteConfig *TitleContent) {
 	if sourceConfig.AddPrefix == nil {
 		if siteConfig.AddPrefix == nil {
 			var siteConfigDefault bool
@@ -92,25 +118,25 @@ func (p *Parser) updateChapterContent(sourceConfig *ChapterContent, siteConfig *
 		}
 		sourceConfig.TitleSelector = siteConfig.TitleSelector
 	}
-	if sourceConfig.ContentSelector == nil {
-		if siteConfig.ContentSelector == nil {
+	if sourceConfig.PrefixSelectors == nil {
+		if siteConfig.PrefixSelectors == nil {
+			var siteConfigDefault []string
+			siteConfig.PrefixSelectors = &siteConfigDefault
+		}
+		sourceConfig.PrefixSelectors = siteConfig.PrefixSelectors
+	}
+	if sourceConfig.SuffixSelectors == nil {
+		if siteConfig.SuffixSelectors == nil {
+			var siteConfigDefault []string
+			siteConfig.SuffixSelectors = &siteConfigDefault
+		}
+		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
+	}
+	if sourceConfig.CleanupRegex == nil {
+		if siteConfig.CleanupRegex == nil {
 			var siteConfigDefault string
-			siteConfig.ContentSelector = &siteConfigDefault
+			siteConfig.CleanupRegex = &siteConfigDefault
 		}
-		sourceConfig.ContentSelector = siteConfig.ContentSelector
-	}
-	if sourceConfig.AuthorNoteEndSelector == nil {
-		if siteConfig.AuthorNoteEndSelector == nil {
-			var siteConfigDefault []string
-			siteConfig.AuthorNoteEndSelector = &siteConfigDefault
-		}
-		sourceConfig.AuthorNoteEndSelector = siteConfig.AuthorNoteEndSelector
-	}
-	if sourceConfig.FooterStartSelector == nil {
-		if siteConfig.FooterStartSelector == nil {
-			var siteConfigDefault []string
-			siteConfig.FooterStartSelector = &siteConfigDefault
-		}
-		sourceConfig.FooterStartSelector = siteConfig.FooterStartSelector
+		sourceConfig.CleanupRegex = siteConfig.CleanupRegex
 	}
 }

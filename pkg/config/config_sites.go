@@ -6,5 +6,6 @@ package config
 type SiteConfiguration struct {
 	Host           string         `yaml:"host"`
 	Pagination     Pagination     `yaml:"pagination"`
+	TitleContent   TitleContent   `yaml:"title-content"`
 	ChapterContent ChapterContent `yaml:"chapter-content"`
 }

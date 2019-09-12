@@ -8,8 +8,9 @@ import (
 )
 
 type ChapterData struct {
-	title   string
-	content string
+	addPrefix bool
+	title     string
+	content   string
 }
 
 // handleToc handles passed Table of Content configurations to extract the Chapter data
@@ -34,23 +35,14 @@ func (s *Scraper) handleToc(toc *config.Toc) (chapters []*ChapterData) {
 	}
 
 	for _, chapterURL := range chapterUrls {
-		chapters = append(chapters, s.extractChapterContent(chapterURL, toc.ChapterContent))
+		chapters = append(chapters, s.extractChapterData(chapterURL, toc.TitleContent, toc.ChapterContent))
 	}
 	return chapters
 }
 
 // handleChapter handles a single chapter configurations to extract the Chapter data
 func (s *Scraper) handleChapter(chapter *config.Chapter) (chapterData *ChapterData) {
-	return s.extractChapterContent(chapter.URL, chapter.ChapterContent)
-}
-
-// extractChapterContent extracts the Chapter data from the passed final chapter URL (no more redirects, only content)
-func (s *Scraper) extractChapterContent(chapterURL string, config config.ChapterContent) *ChapterData {
-	log.Infof("extracting content from URL: %s", chapterURL)
-	return &ChapterData{
-		title:   chapterURL,
-		content: s.getChapterContent(chapterURL, &config),
-	}
+	return s.extractChapterData(chapter.URL, chapter.TitleContent, chapter.ChapterContent)
 }
 
 // extractTocPages extracts further ToC pages based on the pagination settings

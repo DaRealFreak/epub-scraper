@@ -20,34 +20,42 @@ general:
       url: "https://yado-inn.com"
 sites:
   - host: "yado-inn.com"
-    chapter-content:
+    title-content:
       add-prefix: true
-      title-selector: "article > div.entry-content > p[style=\"text-align:left;\"]"
+      title-selector: "article > div.entry-content > strong, article > div.entry-content > p[style=\"text-align:left;\"] > strong, article > div.entry-content > b"
+      cleanup-regex: "^(?:(C\\d+: {0,1}|Chapter {0,1}\\d+: {0,1})?)(?<Title>.*)"
+      prefix-selectors:
+        - "hr"
+    chapter-content:
       content-selector: "article > div.entry-content"
-      author-note-end-selector:
+      prefix-selectors:
         - "hr"
         - "p[style=\"text-align:left;\"] > strong, strong, b"
   - host: "fishytranslation.blog"
-    chapter-content:
+    title-content:
       add-prefix: true
       title-selector: "article > div.entry-content > h1, article > div.entry-content > h2"
+    chapter-content:
       content-selector: "article > div.entry-content"
-      author-note-end-selector:
+      prefix-selectors:
         - "h1, h2"
-      footer-start-selector:
+      suffix-selectors:
         - "p[style=\"text-align:center;\"]"
   - host: "rtd.moe"
     pagination:
       reverse-posts: true
       next-page-selector: "div.pagination.nav-links > div.nav-previous > a[href*=\"rtd.moe\"]"
-    chapter-content:
+    title-content:
       add-prefix: false
       title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
+      prefix-selectors:
+        - "hr"
+    chapter-content:
       content-selector: "article > div[id*=\"post\"] > div.single_post > div#content"
-      author-note-end-selector:
+      prefix-selectors:
         - "hr"
         - "h3, h2, h1"
-      footer-start-selector:
+      suffix-selectors:
         - "p > b"
 chapters:
   - toc:

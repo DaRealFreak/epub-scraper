@@ -41,11 +41,11 @@ func (s *Scraper) HandleFile(fileName string) {
 		if source.Toc != nil {
 			chapters := s.handleToc(source.Toc)
 			for _, chapter := range chapters {
-				writer.AddChapter(chapter.title, chapter.content, true)
+				writer.AddChapter(chapter.title, chapter.content, chapter.addPrefix)
 			}
 		} else if source.Chapter != nil {
 			chapter := s.handleChapter(source.Chapter)
-			writer.AddChapter(chapter.title, chapter.content, true)
+			writer.AddChapter(chapter.title, chapter.content, chapter.addPrefix)
 		}
 	}
 	// finally save the generated epub to the file system

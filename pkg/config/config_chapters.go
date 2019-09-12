@@ -12,6 +12,7 @@ type Toc struct {
 	URL              string   `yaml:"url"`
 	ChapterSelectors []string `yaml:"chapter-selectors"`
 	Pagination       `yaml:"pagination"`
+	TitleContent     `yaml:"title-content"`
 	ChapterContent   `yaml:"chapter-content"`
 }
 
@@ -19,5 +20,6 @@ type Toc struct {
 // also implements the ChapterContent struct
 type Chapter struct {
 	URL            string `yaml:"url"`
+	TitleContent   `yaml:"title-content"`
 	ChapterContent `yaml:"chapter-content"`
 }
