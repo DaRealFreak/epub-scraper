@@ -60,6 +60,8 @@ func (p *Parser) mergeSourceConfigSiteConfig(novelConfig *NovelConfig) {
 func (p *Parser) getSiteConfigurationFromURL(host string, novelConfig *NovelConfig) *SiteConfiguration {
 	for _, site := range novelConfig.Sites {
 		if host == site.Host {
+			// pin variable for scope linting
+			site := site
 			return &site
 		}
 	}
