@@ -5,6 +5,7 @@ import (
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
+	"net/url"
 )
 
 // handleToc handles passed Table of Content configurations to extract the Chapter data
@@ -28,8 +29,10 @@ func (s *Scraper) handleToc(toc *config.Toc) (chapters []*ChapterData) {
 // parseTocPage extracts chapters from the passed ToC URL
 // if a pagination is set it'll follow the pagination as long as the next page can be found.
 // it'll automatically skip if the redirected URL equals the current URL
-func (s *Scraper) parseTocPage(url string, toc *config.Toc, chapterUrls *[]string) {
-	res, err := s.session.Get(url)
+func (s *Scraper) parseTocPage(tocURL string, toc *config.Toc, chapterUrls *[]string) {
+	base, err := url.Parse(tocURL)
+	raven.CheckError(err)
+	res, err := s.session.Get(base.String())
 	raven.CheckError(err)
 	doc := s.session.GetDocument(res)
 	// extract and append chapter URLs from the current page
@@ -42,8 +45,13 @@ func (s *Scraper) parseTocPage(url string, toc *config.Toc, chapterUrls *[]strin
 			if !exists {
 				log.Fatal("chapter selectors have to select a link!")
 			}
+			// resolve reference to parse relative strings
+			u, err := url.Parse(tocPage)
+			raven.CheckError(err)
+			tocPage = base.ResolveReference(u).String()
+
 			// prevent infinite loop to same page
-			if url != tocPage {
+			if tocURL != tocPage {
 				s.parseTocPage(tocPage, toc, chapterUrls)
 			}
 		})

@@ -38,7 +38,6 @@ func (p *Parser) ReadConfigurationFile(fileName string) (novelConfig *NovelConfi
 // or sets the default values in case neither the chapter nor the site configuration has a value set
 func (p *Parser) mergeSourceConfigSiteConfig(novelConfig *NovelConfig) {
 	for _, source := range novelConfig.Chapters {
-
 		if source.Toc != nil {
 			tocURL, err := url.Parse(source.Toc.URL)
 			raven.CheckError(err)
