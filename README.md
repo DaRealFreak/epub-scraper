@@ -45,6 +45,8 @@ chapters:
         content-selector: [string][required]
 ```
 
+You can also find multiple real usage example configurations in the [examples](examples) folder.
+
 ### General
 Metadata and Table of Content related information for the generated Epub file.
 
