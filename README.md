@@ -193,7 +193,8 @@ chapters:
       prefix-selectors: [list of strings]
       # possibility to narrow down title selection by cutting of suffix
       # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
-      suffix-selectors: [list of strings]```
+      suffix-selectors: [list of strings]
+```
 
 ### Assets
 The assets section contains information about the assets included in the generated .epub file.
