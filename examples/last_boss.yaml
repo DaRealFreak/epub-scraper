@@ -1,0 +1,33 @@
+general:
+  title: "A Wild Last Boss Appeared"
+  alt-title: "Yasei no Rasubosu ga Arawareta!"
+  author: 炎頭
+  description: |
+    It was in the year 2800 of the Midgard calendar. Back then, there was a Overlord who once reigned supreme and had reached the very brink of subduing the world.
+    Her name was Ruphas Mafahl, a great woman dreaded as the Black-Winged Overlord.
+    She was too strong, too fast, and too beautiful…
+    However, she was defeated by Heroes who opposed her ferocity, and her ambition was brought to an end.
+    ――or so went the story of our protagonist’s in-game character, whose body he now possesses for some reason in a world 200 years after Ruphas’ downfall. Follow our protagonist as he becomes unnecessarily feared by his surroundings and unnecessarily worshiped by his former subordinates as he―or now she―cheerfully travels around this fantasy world.
+  cover: "https://cdn.novelupdates.com/images/2016/05/yaseilastboss01.jpg"
+  language: "english"
+  raw: "https://ncode.syosetu.com/n2211cx/"
+  translators:
+    - name: "twomorefreethoughts"
+      url: "https://twomorefreethoughts.com"
+    - name: "Hand of Vecna"
+      url: "https://handofvecna.blogspot.com"
+    - name: "Shurim’s 3am translations"
+      url: "https://shurimtranslation.com"
+sites:
+  - host: "www.novelupdates.com"
+    pagination:
+      reverse-posts: true
+      next-page-selector: "div.w-blog-content div.digg_pagination > a.next_page[href]"
+chapters:
+  - toc:
+      url: "https://www.novelupdates.com/series/a-wild-last-boss-appeared/"
+      chapter-selectors:
+        - "table#myTable > tbody > tr > td > a.chp-release[href]"
+assets:
+  css:
+    path: ./assets/css/stylesheet.css
