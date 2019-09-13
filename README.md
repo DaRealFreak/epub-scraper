@@ -134,66 +134,66 @@ chapters:
       url: [string][required]
       # CSS selector to the chapter link, has to point to an element with an "href" attribute
       chapter-selectors: [list of strings][required]
-    # optional configuration in case the Table of Content has multiple pages
-    pagination:
-      # should extracted chapters be reversed?
-      # allows newest -> oldest navigation to work with unknown amount of pages
-      reverse-posts: [boolean]
-      # CSS selector to the next page, has to point to an element with an "href" attribute
-      next-page-selector: [string]
-    # required configurations to extract the chapter titles
-    title-content:
-      # will add a "Chapter [index+1] - " to the title if true
-      add-prefix: [boolean]
-      # CSS selector for the title
-      title-selector: [string][required]
-      # possibility to narrow down title selection by cutting of prefix
-      # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
-      prefix-selectors: [list of strings]
-      # possibility to narrow down title selection by cutting of suffix
-      # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
-      suffix-selectors: [list of strings]
-      # option to clean up the extracted title using regular expressions
-      cleanup-regex: [string]
-    # required configuration to extract the chapter content
-    chapter-content:
-      # CSS selector for the chapter content
-      content-selector: [string][required]
-      # possibility to narrow down title selection by cutting of prefix
-      # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
-      prefix-selectors: [list of strings]
-      # possibility to narrow down title selection by cutting of suffix
-      # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
-      suffix-selectors: [list of strings]
+      # optional configuration in case the Table of Content has multiple pages
+      pagination:
+        # should extracted chapters be reversed?
+        # allows newest -> oldest navigation to work with unknown amount of pages
+        reverse-posts: [boolean]
+        # CSS selector to the next page, has to point to an element with an "href" attribute
+        next-page-selector: [string]
+      # required configurations to extract the chapter titles
+      title-content:
+        # will add a "Chapter [index+1] - " to the title if true
+        add-prefix: [boolean]
+        # CSS selector for the title
+        title-selector: [string][required]
+        # possibility to narrow down title selection by cutting of prefix
+        # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
+        prefix-selectors: [list of strings]
+        # possibility to narrow down title selection by cutting of suffix
+        # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
+        suffix-selectors: [list of strings]
+        # option to clean up the extracted title using regular expressions
+        cleanup-regex: [string]
+      # required configuration to extract the chapter content
+      chapter-content:
+        # CSS selector for the chapter content
+        content-selector: [string][required]
+        # possibility to narrow down title selection by cutting of prefix
+        # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
+        prefix-selectors: [list of strings]
+        # possibility to narrow down title selection by cutting of suffix
+        # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
+        suffix-selectors: [list of strings]
 
   # chapter element, direct link to the chapter
   - chapter:
       # direct link to the chapter, no redirects possible contrary to ToC elements
       url: [string][required]
-    # required configurations to extract the chapter titles
-    title-content:
-      # will add a "Chapter [index+1] - " to the title if true
-      add-prefix: [boolean]
-      # CSS selector for the title
-      title-selector: [string][required]
-      # possibility to narrow down title selection by cutting of prefix
-      # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
-      prefix-selectors: [list of strings]
-      # possibility to narrow down title selection by cutting of suffix
-      # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
-      suffix-selectors: [list of strings]
-      # option to clean up the extracted title using regular expressions
-      cleanup-regex: [string]
-    # required configuration to extract the chapter content
-    chapter-content:
-      # CSS selector for the chapter content
-      content-selector: [string][required]
-      # possibility to narrow down title selection by cutting of prefix
-      # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
-      prefix-selectors: [list of strings]
-      # possibility to narrow down title selection by cutting of suffix
-      # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
-      suffix-selectors: [list of strings]
+      # required configurations to extract the chapter titles
+      title-content:
+        # will add a "Chapter [index+1] - " to the title if true
+        add-prefix: [boolean]
+        # CSS selector for the title
+        title-selector: [string][required]
+        # possibility to narrow down title selection by cutting of prefix
+        # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
+        prefix-selectors: [list of strings]
+        # possibility to narrow down title selection by cutting of suffix
+        # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
+        suffix-selectors: [list of strings]
+        # option to clean up the extracted title using regular expressions
+        cleanup-regex: [string]
+      # required configuration to extract the chapter content
+      chapter-content:
+        # CSS selector for the chapter content
+        content-selector: [string][required]
+        # possibility to narrow down title selection by cutting of prefix
+        # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
+        prefix-selectors: [list of strings]
+        # possibility to narrow down title selection by cutting of suffix
+        # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
+        suffix-selectors: [list of strings]
 ```
 
 ### Assets
