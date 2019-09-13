@@ -27,7 +27,7 @@ func (u *Checker) CheckForAvailableUpdates() {
 	updateAvailable, err := u.isUpdateAvailable()
 	raven.CheckError(err)
 	if updateAvailable {
-		fmt.Println("new version detected, run \"watcher update\" to update your application.")
+		fmt.Println("new version detected, run \"epub-scraper update\" to update your application.")
 	}
 }
 

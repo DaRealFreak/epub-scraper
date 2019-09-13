@@ -71,6 +71,9 @@ func NewScraper() *Scraper {
 		"log level (debug, info, warn, error, fatal, panic)",
 	)
 
+	// add sub commands
+	app.addUpdateCommand()
+
 	// parse all configurations before executing the main command
 	cobra.OnInitialize(app.initScraper)
 	return app
@@ -95,4 +98,19 @@ func (cli *Scraper) initScraper() {
 	lvl, err := log.ParseLevel(cli.logLevel)
 	raven.CheckError(err)
 	log.SetLevel(lvl)
+}
+
+// addUpdateCommand adds the update sub command
+func (cli *Scraper) addUpdateCommand() {
+	// general add option
+	addCmd := &cobra.Command{
+		Use:   "update",
+		Short: "update the application",
+		Long:  "function for the user to update the application",
+		Run: func(cmd *cobra.Command, args []string) {
+			err := update.NewUpdateChecker().UpdateApplication()
+			raven.CheckError(err)
+		},
+	}
+	cli.rootCmd.AddCommand(addCmd)
 }
