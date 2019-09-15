@@ -1,7 +1,6 @@
 package scraper
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
@@ -57,8 +56,6 @@ func NewScraper() *Scraper {
 						app.HandleFile(s)
 					}
 				}
-
-				fmt.Print(args)
 			},
 		},
 	}
