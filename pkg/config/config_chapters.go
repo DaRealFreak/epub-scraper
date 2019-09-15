@@ -6,20 +6,24 @@ type Source struct {
 	Chapter *Chapter `yaml:"chapter"`
 }
 
+// SourceContent contains all configurations required for any type of source
+type SourceContent struct {
+	TitleContent   `yaml:"title-content"`
+	ChapterContent `yaml:"chapter-content"`
+}
+
 // Toc is the struct for a table of content, requires the URL and the ChapterSelectors
 // and implements the Pagination struct and the ChapterContent struct
 type Toc struct {
 	URL             string `yaml:"url"`
 	ChapterSelector string `yaml:"chapter-selector"`
 	Pagination      `yaml:"pagination"`
-	TitleContent    `yaml:"title-content"`
-	ChapterContent  `yaml:"chapter-content"`
+	SourceContent
 }
 
 // Chapter is the struct for a single chapter, requires on the URL
 // also implements the ChapterContent struct
 type Chapter struct {
-	URL            string `yaml:"url"`
-	TitleContent   `yaml:"title-content"`
-	ChapterContent `yaml:"chapter-content"`
+	URL string `yaml:"url"`
+	SourceContent
 }
