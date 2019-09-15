@@ -12,7 +12,6 @@ import (
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/version"
 	"github.com/bmaupin/go-epub"
-	log "github.com/sirupsen/logrus"
 )
 
 // chapter contains all relevant of the added chapters
@@ -70,7 +69,6 @@ func (w *Writer) PolishEpub() {
 // AddChapter adds a chapter to the to our current chapter list
 func (w *Writer) AddChapter(title string, content string, addPrefix bool) {
 	w.chapters = append(w.chapters, chapter{title: title, content: content, addPrefix: addPrefix})
-	log.Infof("added chapter: %s (content length: %d)", title, len(content))
 }
 
 // createToC creates a table of contents page to jump directly to chapters
