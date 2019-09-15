@@ -18,12 +18,12 @@ type Toc struct {
 	URL             string `yaml:"url"`
 	ChapterSelector string `yaml:"chapter-selector"`
 	Pagination      `yaml:"pagination"`
-	SourceContent
+	SourceContent   `yaml:",inline"`
 }
 
 // Chapter is the struct for a single chapter, requires on the URL
 // also implements the ChapterContent struct
 type Chapter struct {
-	URL string `yaml:"url"`
-	SourceContent
+	URL           string `yaml:"url"`
+	SourceContent `yaml:",inline"`
 }
