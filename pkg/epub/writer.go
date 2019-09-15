@@ -12,6 +12,7 @@ import (
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/version"
 	"github.com/bmaupin/go-epub"
+	log "github.com/sirupsen/logrus"
 )
 
 // chapter contains all relevant of the added chapters
@@ -45,8 +46,11 @@ func (w *Writer) createEpub() {
 
 	// Set the meta data used for libraries in readers
 	w.Epub.SetAuthor(w.cfg.General.Author)
+	log.Infof("set author to: %s", w.cfg.General.Author)
 	w.Epub.SetDescription(w.cfg.General.Description)
+	log.Infof("set description to: %s", w.cfg.General.Description)
 	w.Epub.SetLang(w.cfg.General.Language)
+	log.Infof("set language to: %s", w.cfg.General.Language)
 }
 
 // WriteEpub writes the generated epub to the file system
@@ -54,16 +58,18 @@ func (w *Writer) WriteEpub() {
 	w.createToC()
 	w.writeChapters()
 	// save the .epub file to the drive
-	raven.CheckError(w.Epub.Write(w.cfg.General.Title + ".epub"))
+	raven.CheckError(w.Epub.Write(filepath.Clean(w.cfg.General.Title + ".epub")))
+	log.Infof("epub saved to %s", filepath.Clean(w.cfg.General.Title+".epub"))
 }
 
 // PolishEpub uses calibres ebook-polish command to compress images and fix possible errors
 // which occurred to me multiple times using the bmaupin/go-epub library
 func (w *Writer) PolishEpub() {
-	path, err := filepath.Abs(w.cfg.General.Title + ".epub")
+	path, err := filepath.Abs(filepath.Clean(w.cfg.General.Title + ".epub"))
 	raven.CheckError(err)
 	// #nosec
 	raven.CheckError(exec.Command("ebook-polish", "-U", "-i", path, path).Run())
+	log.Infof("generated epub got successfully polished")
 }
 
 // AddChapter adds a chapter to the to our current chapter list
@@ -181,6 +187,7 @@ func (w *Writer) importAssets() {
 		internalPath, err := w.Epub.AddCSS(w.cfg.Assets.CSS.HostPath, filepath.Base(w.cfg.Assets.CSS.HostPath))
 		raven.CheckError(err)
 		w.cfg.Assets.CSS.InternalPath = internalPath
+		log.Infof("imported CSS file: %s", w.cfg.Assets.CSS.HostPath)
 	}
 	if w.cfg.Assets.Font.HostPath != "" {
 		if !filepath.IsAbs(w.cfg.Assets.Font.HostPath) {
@@ -190,6 +197,7 @@ func (w *Writer) importAssets() {
 		internalPath, err := w.Epub.AddFont(w.cfg.Assets.Font.HostPath, filepath.Base(w.cfg.Assets.Font.HostPath))
 		raven.CheckError(err)
 		w.cfg.Assets.Font.InternalPath = internalPath
+		log.Infof("imported font file: %s", w.cfg.Assets.Font.HostPath)
 	}
 }
 
@@ -204,4 +212,5 @@ func (w *Writer) importAndAddCover() {
 	raven.CheckError(err)
 
 	w.Epub.SetCover(internalFilePath, w.cfg.Assets.CSS.InternalPath)
+	log.Infof("set cover to: %s", w.cfg.General.Cover)
 }
