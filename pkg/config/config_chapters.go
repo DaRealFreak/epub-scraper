@@ -9,11 +9,11 @@ type Source struct {
 // Toc is the struct for a table of content, requires the URL and the ChapterSelectors
 // and implements the Pagination struct and the ChapterContent struct
 type Toc struct {
-	URL              string   `yaml:"url"`
-	ChapterSelectors []string `yaml:"chapter-selectors"`
-	Pagination       `yaml:"pagination"`
-	TitleContent     `yaml:"title-content"`
-	ChapterContent   `yaml:"chapter-content"`
+	URL             string `yaml:"url"`
+	ChapterSelector string `yaml:"chapter-selector"`
+	Pagination      `yaml:"pagination"`
+	TitleContent    `yaml:"title-content"`
+	ChapterContent  `yaml:"chapter-content"`
 }
 
 // Chapter is the struct for a single chapter, requires on the URL

@@ -1,5 +1,7 @@
 package config
 
+import "net/url"
+
 // NovelConfig contains the configuration of the novel scraper
 type NovelConfig struct {
 	BaseDirectory string
@@ -31,4 +33,18 @@ type ChapterContent struct {
 type Pagination struct {
 	ReversePosts     *bool   `yaml:"reverse-posts"`
 	NextPageSelector *string `yaml:"next-page-selector"`
+}
+
+// GetSiteConfigFromURL retrieves the site configuration for the passed URL
+// will return an empty site configuration with nil values if no site configuration for host exists
+func (s *NovelConfig) GetSiteConfigFromURL(url *url.URL) *SiteConfiguration {
+	for _, site := range s.Sites {
+		if url.Host == site.Host {
+			// pin variable for scope linting
+			site := site
+			return &site
+		}
+	}
+	// return empty configuration with nil values
+	return &SiteConfiguration{}
 }
