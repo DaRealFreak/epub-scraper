@@ -1,7 +1,6 @@
 package scraper
 
 import (
-	"fmt"
 	"net/url"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
@@ -12,31 +11,26 @@ import (
 
 // tocContent contains all relevant information for extracting chapter data
 type tocContent struct {
-	toc         *config.Toc
-	cfg         *config.NovelConfig
-	chapterUrls []string
+	toc      *config.Toc
+	cfg      *config.NovelConfig
+	chapters []*ChapterData
 }
 
 // handleToc handles passed Table of Content configurations to extract the Chapter data
 func (s *Scraper) handleToc(toc *config.Toc, cfg *config.NovelConfig) (chapters []*ChapterData) {
 	content := &tocContent{
-		toc:         toc,
-		cfg:         cfg,
-		chapterUrls: []string{},
+		toc:      toc,
+		cfg:      cfg,
+		chapters: []*ChapterData{},
 	}
 	s.navigateThroughToc(toc.URL, content)
 
 	if *toc.Pagination.ReversePosts {
-		for i, j := 0, len(content.chapterUrls)-1; i < j; i, j = i+1, j-1 {
-			content.chapterUrls[i], content.chapterUrls[j] = content.chapterUrls[j], content.chapterUrls[i]
+		for i, j := 0, len(content.chapters)-1; i < j; i, j = i+1, j-1 {
+			content.chapters[i], content.chapters[j] = content.chapters[j], content.chapters[i]
 		}
 	}
-
-	fmt.Println(content.chapterUrls)
-	for _, chapterURL := range content.chapterUrls {
-		chapters = append(chapters, s.extractChapterData(chapterURL, toc.TitleContent, toc.ChapterContent))
-	}
-	return chapters
+	return content.chapters
 }
 
 // navigateThroughToc navigates through the table of content and extracts chapter links
@@ -81,51 +75,7 @@ func (s *Scraper) extractChapters(base *url.URL, doc *goquery.Document, content 
 		u, err := url.Parse(chapterURL)
 		raven.CheckError(err)
 		chapterURL = base.ResolveReference(u).String()
-		chapterURL = s.resolveRedirects(chapterURL, content)
-		log.Infof("adding chapter URL to list: %s", chapterURL)
-		content.chapterUrls = append(content.chapterUrls, chapterURL)
+		chapterData := s.extractChapterData(chapterURL, content.cfg, content.toc.SourceContent)
+		content.chapters = append(content.chapters, chapterData)
 	})
-}
-
-// resolveRedirects calls the passed URL to check for any 30x status codes (redirect)
-// and resolves the redirect instructions from the configuration
-func (s *Scraper) resolveRedirects(chapterURL string, content *tocContent) (resolvedChapterURL string) {
-	res, err := s.session.Get(chapterURL)
-	raven.CheckError(err)
-	// follow redirects for f.e. exit links from novelupdates
-	chapterURL = res.Request.URL.String()
-	// retrieve site config for the host of the chapter url
-	siteConfig := content.cfg.GetSiteConfigFromURL(res.Request.URL)
-	// if we have redirects resolve them
-	if len(siteConfig.Redirects) > 0 {
-		doc := s.session.GetDocument(res)
-		for _, redirect := range siteConfig.Redirects {
-			log.Debugf("resolving redirects for URL: %s", chapterURL)
-			// iterate through every redirect and update the link
-			redirectLink, exists := doc.Find(redirect).First().Attr("href")
-			// no redirect found use the URL from before
-			if !exists {
-				log.Debugf("could not find redirect for selector: %s", redirect)
-				break
-			}
-			// request the found redirect link and update the document
-			res, err := s.session.Get(redirectLink)
-			raven.CheckError(err)
-			doc = s.session.GetDocument(res)
-			// update chapter URL from the request URL in case we get redirected
-			chapterURL = res.Request.URL.String()
-			log.Debugf("got redirected to url: %s", chapterURL)
-			// break in case we got redirected to a different host
-			if res.Request.Host != siteConfig.Host {
-				break
-			}
-		}
-		parsedURL, err := url.Parse(chapterURL)
-		raven.CheckError(err)
-		// if the redirected URL has a different host resolve the redirects from the new host too
-		if parsedURL.Host != siteConfig.Host {
-			return s.resolveRedirects(chapterURL, content)
-		}
-	}
-	return chapterURL
 }

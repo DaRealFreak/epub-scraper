@@ -53,8 +53,8 @@ func (s *Scraper) HandleFile(fileName string) {
 		} else if source.Chapter != nil {
 			chapter := s.extractChapterData(
 				source.Chapter.URL,
-				source.Chapter.TitleContent,
-				source.Chapter.ChapterContent,
+				cfg,
+				source.Chapter.SourceContent,
 			)
 			writer.AddChapter(chapter.title, chapter.content, chapter.addPrefix)
 		}

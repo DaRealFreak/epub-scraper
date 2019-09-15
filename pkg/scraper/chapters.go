@@ -1,6 +1,7 @@
 package scraper
 
 import (
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -10,20 +11,60 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// extractChapterData extracts the Chapter data from the passed final chapter URL (no more redirects, only content)
+// extractChapterData follows the redirects from the URL and the configuration
+// and extracts the chapter title/content from the final URL
 func (s *Scraper) extractChapterData(
-	chapterURL string, titleConfig config.TitleContent, chapterConfig config.ChapterContent,
-) *ChapterData {
-	log.Infof("extracting title and content from URL: %s", chapterURL)
+	chapterURL string, cfg *config.NovelConfig, srcCfg config.SourceContent,
+) (chapterData *ChapterData) {
 	res, err := s.session.Get(chapterURL)
 	raven.CheckError(err)
 	doc := s.session.GetDocument(res)
-
-	return &ChapterData{
-		addPrefix: *titleConfig.AddPrefix,
-		title:     s.getChapterTitle(doc, &titleConfig),
-		content:   s.getChapterContent(doc, &chapterConfig),
+	// follow redirects for f.e. exit links from novelupdates
+	if chapterURL != res.Request.URL.String() {
+		log.Debugf("got redirected to url: %s", res.Request.URL.String())
 	}
+	chapterURL = res.Request.URL.String()
+	// retrieve site config for the host of the chapter url
+	siteConfig := cfg.GetSiteConfigFromURL(res.Request.URL)
+	// if we have redirects resolve them
+	if len(siteConfig.Redirects) > 0 {
+		for _, redirect := range siteConfig.Redirects {
+			log.Debugf("resolving redirects for URL: %s", chapterURL)
+			// iterate through every redirect and update the link
+			redirectLink, exists := doc.Find(redirect).First().Attr("href")
+			// handle eventual relative URLs
+			redirectURL, err := url.Parse(redirectLink)
+			raven.CheckError(err)
+			redirectLink = res.Request.URL.ResolveReference(redirectURL).String()
+			// no redirect found use the URL from before
+			if !exists {
+				log.Debugf("could not find redirect for selector: %s", redirect)
+				break
+			}
+			// request the found redirect link and update the document we will use for the chapter extraction
+			res, err = s.session.Get(redirectLink)
+			raven.CheckError(err)
+			doc = s.session.GetDocument(res)
+			log.Debugf("got redirected to url: %s", res.Request.URL.String())
+			// break in case we got redirected to a different host
+			if res.Request.Host != siteConfig.Host {
+				break
+			}
+		}
+		// if the redirected URL has a different host resolve the redirects from the new host too
+		parsedURL, err := url.Parse(chapterURL)
+		raven.CheckError(err)
+		if parsedURL.Host != siteConfig.Host {
+			return s.extractChapterData(chapterURL, cfg, srcCfg)
+		}
+	}
+	chapterData = &ChapterData{
+		addPrefix: *srcCfg.TitleContent.AddPrefix,
+		title:     s.getChapterTitle(doc, &srcCfg.TitleContent),
+		content:   s.getChapterContent(doc, &srcCfg.ChapterContent),
+	}
+	log.Infof("extracted chapter: %s (content length: %d)", chapterData.title, len(chapterData.content))
+	return chapterData
 }
 
 // getChapterContent returns the chapter content of the passed URL based on the passed ChapterContent settings
