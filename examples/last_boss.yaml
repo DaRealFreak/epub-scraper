@@ -23,11 +23,13 @@ sites:
     pagination:
       reverse-posts: true
       next-page-selector: "div.w-blog-content div.digg_pagination > a.next_page[href]"
+  - host: "twomorefreethoughts.com"
+    redirects:
+      - "main#main > article[id*=\"post\"] > div.entry-content > h1 > a[href]"
 chapters:
   - toc:
       url: "https://www.novelupdates.com/series/a-wild-last-boss-appeared/"
-      chapter-selectors:
-        - "table#myTable > tbody > tr > td > a.chp-release[href]"
+      chapter-selector: "table#myTable > tbody > tr > td > a.chp-release[href]"
 assets:
   css:
     path: ./assets/css/stylesheet.css

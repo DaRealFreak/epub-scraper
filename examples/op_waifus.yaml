@@ -31,6 +31,8 @@ sites:
       prefix-selectors:
         - "hr"
         - "p[style=\"text-align:left;\"] > strong, strong, b"
+    redirects:
+      - "article[id*=\"post\"] > div.entry-content > p:not([style]) > a[href*=\"chapter\"]"
   - host: "fishytranslation.blog"
     title-content:
       add-prefix: true
@@ -59,11 +61,7 @@ sites:
 chapters:
   - toc:
       url: "https://yado-inn.com/op-waifus/"
-      chapter-selectors:
-        - "article[id*=\"post\"] > div.entry-content > p > a[href*=\"yado-inn.com\"]"
-        # some links in the ToC link to the post linking to the chapter instead of directly to the chapter
-        # so we check for an additional redirect (else it'll check the levels above for a content-selector match)
-        - "article[id*=\"post\"] > div.entry-content > p:not([style]) > a[href*=\"chapter\"]"
+      chapter-selector: "article[id*=\"post\"] > div.entry-content > p > a[href*=\"yado-inn.com\"]"
   - chapter:
       url: "https://yado-inn.com/op-waifus/op-waifus-chapter-17/"
   - chapter:
@@ -72,8 +70,7 @@ chapters:
       url: "https://fishytranslation.blog/op-waifus-chapter-19-translation/"
   - toc:
       url: "https://rtd.moe/category/op-waifu/"
-      chapter-selectors:
-        - "article.post.excerpt > div.readMore > a[href*=\"rtd.moe\"]"
+      chapter-selector: "article.post.excerpt > div.readMore > a[href*=\"rtd.moe\"]"
 assets:
   css:
     path: ./assets/css/stylesheet.css
