@@ -58,8 +58,10 @@ func (w *Writer) WriteEpub() {
 	w.createToC()
 	w.writeChapters()
 	// save the .epub file to the drive
-	raven.CheckError(w.Epub.Write(filepath.Clean(w.cfg.General.Title + ".epub")))
-	log.Infof("epub saved to %s", filepath.Clean(w.cfg.General.Title+".epub"))
+	path, err := filepath.Abs(filepath.Clean(w.cfg.General.Title + ".epub"))
+	raven.CheckError(err)
+	raven.CheckError(w.Epub.Write(path))
+	log.Infof("epub saved to %s", path)
 }
 
 // PolishEpub uses calibres ebook-polish command to compress images and fix possible errors
