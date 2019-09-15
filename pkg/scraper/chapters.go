@@ -58,6 +58,7 @@ func (s *Scraper) extractChapterData(
 			return s.extractChapterData(chapterURL, cfg, srcCfg)
 		}
 	}
+	log.Infof("extracting chapter from %s", res.Request.URL.String())
 	chapterData = &ChapterData{
 		addPrefix: *srcCfg.TitleContent.AddPrefix,
 		title:     s.getChapterTitle(doc, &srcCfg.TitleContent),
