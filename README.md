@@ -77,13 +77,17 @@ general:
 
 ### Sites
 Optional section with the intention to single out the chapter title and content settings by the domain.
-Especially useful in case single chapters are getting added in the chapters section.
+Especially useful in case single chapters are getting added in the chapters section.  
+Redirects are only configurable in this section. Each redirect configuration is only used if the chapter host matches the site configuration host.
+If we get redirected to a different host it'll also use use the site configuration of the new host.
 
 All available configuration options:
 ```yaml
 sites:
   - # host of site
     host: [string][required]
+    # possible redirects, it'll try to follow them as deep as possible, else it'll use the next closes URL
+    redirects: [list of strings]
     # optional configuration in case the Table of Content has multiple pages
     pagination:
       # should extracted chapters be reversed?
@@ -133,7 +137,8 @@ chapters:
       # URL to extract chapters from (and starting point of the navigation if set)
       url: [string][required]
       # CSS selector to the chapter link, has to point to an element with an "href" attribute
-      chapter-selectors: [list of strings][required]
+      # redirects are possible with the site configuration (for f.e. blog post -> chapter links)
+      chapter-selector: [string][required]
       # optional configuration in case the Table of Content has multiple pages
       pagination:
         # should extracted chapters be reversed?
@@ -168,7 +173,7 @@ chapters:
 
   # chapter element, direct link to the chapter
   - chapter:
-      # direct link to the chapter, no redirects possible contrary to ToC elements
+      # direct link to the chapter, redirects possible with the site configuration (for f.e. blog post -> chapter links)
       url: [string][required]
       # required configurations to extract the chapter titles
       title-content:
