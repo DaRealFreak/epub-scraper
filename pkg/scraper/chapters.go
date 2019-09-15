@@ -148,5 +148,5 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 			log.Fatal("capture group \"Title\" is required for the title cleanup pattern")
 		}
 	}
-	return title
+	return strings.TrimSpace(title)
 }
