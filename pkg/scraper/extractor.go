@@ -1,46 +1,58 @@
 package scraper
 
 import (
+	"fmt"
+	"net/url"
+
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
-	"net/url"
 )
 
+// tocContent contains all relevant information for extracting chapter data
+type tocContent struct {
+	toc         *config.Toc
+	cfg         *config.NovelConfig
+	chapterUrls []string
+}
+
 // handleToc handles passed Table of Content configurations to extract the Chapter data
-func (s *Scraper) handleToc(toc *config.Toc) (chapters []*ChapterData) {
-	// extract all chapters recursively from the passed ToC URL
-	var chapterUrls []string
-	s.parseTocPage(toc.URL, toc, &chapterUrls)
+func (s *Scraper) handleToc(toc *config.Toc, cfg *config.NovelConfig) (chapters []*ChapterData) {
+	content := &tocContent{
+		toc:         toc,
+		cfg:         cfg,
+		chapterUrls: []string{},
+	}
+	s.navigateThroughToc(toc.URL, content)
 
 	if *toc.Pagination.ReversePosts {
-		for i, j := 0, len(chapterUrls)-1; i < j; i, j = i+1, j-1 {
-			chapterUrls[i], chapterUrls[j] = chapterUrls[j], chapterUrls[i]
+		for i, j := 0, len(content.chapterUrls)-1; i < j; i, j = i+1, j-1 {
+			content.chapterUrls[i], content.chapterUrls[j] = content.chapterUrls[j], content.chapterUrls[i]
 		}
 	}
 
-	for _, chapterURL := range chapterUrls {
+	fmt.Println(content.chapterUrls)
+	for _, chapterURL := range content.chapterUrls {
 		chapters = append(chapters, s.extractChapterData(chapterURL, toc.TitleContent, toc.ChapterContent))
 	}
 	return chapters
 }
 
-// parseTocPage extracts chapters from the passed ToC URL
-// if a pagination is set it'll follow the pagination as long as the next page can be found.
-// it'll automatically skip if the redirected URL equals the current URL
-func (s *Scraper) parseTocPage(tocURL string, toc *config.Toc, chapterUrls *[]string) {
+// navigateThroughToc navigates through the table of content and extracts chapter links
+func (s *Scraper) navigateThroughToc(tocURL string, content *tocContent) {
 	base, err := url.Parse(tocURL)
 	raven.CheckError(err)
 	res, err := s.session.Get(base.String())
 	raven.CheckError(err)
 	doc := s.session.GetDocument(res)
 	// extract and append chapter URLs from the current page
-	s.extractChaptersFromPage(doc, toc.ChapterSelectors, *toc.ChapterContent.ContentSelector, chapterUrls)
+	log.Infof("extracting chapters from %s", tocURL)
+	s.extractChapters(base, doc, content)
 
 	// if we have a pagination check for next page and repeat the process
-	if toc.Pagination.NextPageSelector != nil {
-		doc.Find(*toc.Pagination.NextPageSelector).Each(func(i int, selection *goquery.Selection) {
+	if content.toc.Pagination.NextPageSelector != nil {
+		doc.Find(*content.toc.Pagination.NextPageSelector).Each(func(i int, selection *goquery.Selection) {
 			tocPage, exists := selection.Attr("href")
 			if !exists {
 				log.Fatal("chapter selectors have to select a link!")
@@ -52,46 +64,68 @@ func (s *Scraper) parseTocPage(tocURL string, toc *config.Toc, chapterUrls *[]st
 
 			// prevent infinite loop to same page
 			if tocURL != tocPage {
-				s.parseTocPage(tocPage, toc, chapterUrls)
+				s.navigateThroughToc(tocPage, content)
 			}
 		})
 	}
 }
 
-// extractChaptersFromPage extracts all available chapters from the passed document
-// and recursively follows possible redirects for child selectors
-// if the last level does not return any matches it'll add the closest level where the chapter content can be found
-func (s *Scraper) extractChaptersFromPage(
-	doc *goquery.Document, chapterSelectors []string, contentSelector string, chapterURLs *[]string,
-) (appendedChapter bool) {
-	doc.Find(chapterSelectors[0]).Each(func(i int, selection *goquery.Selection) {
-		// to follow a link or add a chapter link a link has to be selected, else log this as fatal and exit
-		chapterLink, exists := selection.Attr("href")
+// extractChapters extracts possible chapters from the ToC page and resolves the redirects
+func (s *Scraper) extractChapters(base *url.URL, doc *goquery.Document, content *tocContent) {
+	doc.Find(content.toc.ChapterSelector).Each(func(i int, selection *goquery.Selection) {
+		chapterURL, exists := selection.Attr("href")
 		if !exists {
-			log.Fatal("chapter selectors have to select a link!")
-		}
-		// final selector, if it has a link it should be the chapter
-		if len(chapterSelectors) == 1 {
-			*chapterURLs = append(*chapterURLs, chapterLink)
-			appendedChapter = true
+			log.Warningf("no chapter URL found in: %s", base.String())
 			return
 		}
-
-		res, err := s.session.Get(chapterLink)
+		u, err := url.Parse(chapterURL)
 		raven.CheckError(err)
-		// check if child could append chapter
-		childAppendedChapter := s.extractChaptersFromPage(
-			s.session.GetDocument(res),
-			chapterSelectors[1:],
-			contentSelector,
-			chapterURLs,
-		)
-		// if children didn't append a chapter link and we find matches with the content selector
-		// we append the current link to our chapter list and return true to the parents
-		if !childAppendedChapter && doc.Find(contentSelector).Length() > 0 {
-			*chapterURLs = append(*chapterURLs, chapterLink)
-			appendedChapter = true
-		}
+		chapterURL = base.ResolveReference(u).String()
+		chapterURL = s.resolveRedirects(chapterURL, content)
+		log.Infof("adding chapter URL to list: %s", chapterURL)
+		content.chapterUrls = append(content.chapterUrls, chapterURL)
 	})
-	return appendedChapter
+}
+
+// resolveRedirects calls the passed URL to check for any 30x status codes (redirect)
+// and resolves the redirect instructions from the configuration
+func (s *Scraper) resolveRedirects(chapterURL string, content *tocContent) (resolvedChapterURL string) {
+	res, err := s.session.Get(chapterURL)
+	raven.CheckError(err)
+	// follow redirects for f.e. exit links from novelupdates
+	chapterURL = res.Request.URL.String()
+	// retrieve site config for the host of the chapter url
+	siteConfig := content.cfg.GetSiteConfigFromURL(res.Request.URL)
+	// if we have redirects resolve them
+	if len(siteConfig.Redirects) > 0 {
+		doc := s.session.GetDocument(res)
+		for _, redirect := range siteConfig.Redirects {
+			log.Debugf("resolving redirects for URL: %s", chapterURL)
+			// iterate through every redirect and update the link
+			redirectLink, exists := doc.Find(redirect).First().Attr("href")
+			// no redirect found use the URL from before
+			if !exists {
+				log.Debugf("could not find redirect for selector: %s", redirect)
+				break
+			}
+			// request the found redirect link and update the document
+			res, err := s.session.Get(redirectLink)
+			raven.CheckError(err)
+			doc = s.session.GetDocument(res)
+			// update chapter URL from the request URL in case we get redirected
+			chapterURL = res.Request.URL.String()
+			log.Debugf("got redirected to url: %s", chapterURL)
+			// break in case we got redirected to a different host
+			if res.Request.Host != siteConfig.Host {
+				break
+			}
+		}
+		parsedURL, err := url.Parse(chapterURL)
+		raven.CheckError(err)
+		// if the redirected URL has a different host resolve the redirects from the new host too
+		if parsedURL.Host != siteConfig.Host {
+			return s.resolveRedirects(chapterURL, content)
+		}
+	}
+	return chapterURL
 }
