@@ -3,6 +3,7 @@ package scraper
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -14,7 +15,9 @@ func (s *Scraper) HandleDirectory(directoryName string) {
 		log.Fatal(err)
 	}
 	for _, filePath := range files {
-		s.HandleFile(filePath)
+		if strings.HasSuffix(filePath, ".yaml") {
+			s.HandleFile(filePath)
+		}
 	}
 }
 
