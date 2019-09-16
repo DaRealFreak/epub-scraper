@@ -56,7 +56,9 @@ func (s *Scraper) HandleFile(fileName string) {
 				cfg,
 				source.Chapter.SourceContent,
 			)
-			writer.AddChapter(chapter.title, chapter.content, chapter.addPrefix)
+			if chapter != nil {
+				writer.AddChapter(chapter.title, chapter.content, chapter.addPrefix)
+			}
 		}
 	}
 	// finally save the generated epub to the file system

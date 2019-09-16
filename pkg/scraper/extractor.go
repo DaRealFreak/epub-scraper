@@ -76,6 +76,8 @@ func (s *Scraper) extractChapters(base *url.URL, doc *goquery.Document, content 
 		raven.CheckError(err)
 		chapterURL = base.ResolveReference(u).String()
 		chapterData := s.extractChapterData(chapterURL, content.cfg, content.toc.SourceContent)
-		content.chapters = append(content.chapters, chapterData)
+		if chapterData != nil {
+			content.chapters = append(content.chapters, chapterData)
+		}
 	})
 }

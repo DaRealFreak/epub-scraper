@@ -16,6 +16,11 @@ import (
 func (s *Scraper) extractChapterData(
 	chapterURL string, cfg *config.NovelConfig, srcCfg config.SourceContent,
 ) (chapterData *ChapterData) {
+	// directly return nil if initial URL is blacklisted
+	if cfg.IsURLBlacklisted(chapterURL) {
+		return nil
+	}
+
 	res, err := s.session.Get(chapterURL)
 	raven.CheckError(err)
 	doc := s.session.GetDocument(res)
@@ -41,8 +46,8 @@ func (s *Scraper) extractChapterData(
 			raven.CheckError(err)
 			redirectLink = res.Request.URL.ResolveReference(redirectURL).String()
 			// no redirect found use the URL from before
-			if !exists {
-				log.Debugf("could not find redirect for selector: %s", redirect)
+			if !exists || cfg.IsURLBlacklisted(redirectLink) {
+				log.Debugf("URL is blacklisted or could not find any redirect for selector: %s", redirect)
 				break
 			}
 			// request the found redirect link and update the document we will use for the chapter extraction
@@ -64,7 +69,12 @@ func (s *Scraper) extractChapterData(
 			return s.extractChapterData(chapterURL, cfg, srcCfg)
 		}
 	}
-	log.Infof("extracting chapter from %s", res.Request.URL.String())
+	finalChapterURL := res.Request.URL.String()
+	if cfg.IsURLBlacklisted(finalChapterURL) {
+		log.Infof("url %s is blacklisted, skipping", finalChapterURL)
+		return nil
+	}
+	log.Infof("extracting chapter from %s", finalChapterURL)
 	chapterData = &ChapterData{
 		addPrefix: *srcCfg.TitleContent.AddPrefix,
 		title:     s.getChapterTitle(doc, &srcCfg.TitleContent),
