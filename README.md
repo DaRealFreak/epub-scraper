@@ -201,6 +201,16 @@ chapters:
         suffix-selectors: [list of strings]
 ```
 
+### Blacklist
+You can blacklist URLs of which no chapter data will be extracted. This is useful if you use multiple hosts
+to extract chapters which may overlap with each other. The blacklist will also be checked during the redirect checks.
+
+configuration:
+```yaml
+blacklist: [list of strings]
+```
+
+
 ### Assets
 The assets section contains information about the assets included in the generated .epub file.
 Added assets will be included in every added chapter automatically.
