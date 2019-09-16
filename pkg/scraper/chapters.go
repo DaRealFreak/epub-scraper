@@ -1,6 +1,7 @@
 package scraper
 
 import (
+	"github.com/DaRealFreak/epub-scraper/pkg/emojis"
 	"net/url"
 	"regexp"
 	"strings"
@@ -103,6 +104,7 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 
 	chapterContent = s.fixHTMLCode(chapterContent)
 	chapterContent = s.sanitizer.Sanitize(chapterContent)
+	chapterContent = emojis.StripUnicodeEmojis(chapterContent)
 	return chapterContent
 }
 
@@ -173,5 +175,5 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 			log.Fatal("capture group \"Title\" is required for the title cleanup pattern")
 		}
 	}
-	return strings.TrimSpace(title)
+	return emojis.StripUnicodeEmojis(strings.TrimSpace(title))
 }
