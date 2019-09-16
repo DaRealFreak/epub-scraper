@@ -57,6 +57,12 @@ chapters:
   - toc:
       url: "https://www.novelupdates.com/series/a-wild-last-boss-appeared/"
       chapter-selector: "table#myTable > tbody > tr > td > a.chp-release[href]"
+blacklist:
+  - "https://twomorefreethoughts.com/awlba-c017/"
+  - "https://twomorefreethoughts.com/awlba-c018/"
+  - "https://twomorefreethoughts.com/awlba-c019/"
+  - "https://twomorefreethoughts.com/awlba-c020/"
+  - "https://twomorefreethoughts.com/2018/11/29/a-wild-last-boss-appeared-chapter-24/"
 assets:
   css:
     path: ./assets/css/stylesheet.css
