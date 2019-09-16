@@ -1,6 +1,10 @@
 package config
 
-import "net/url"
+import (
+	"net/url"
+
+	"github.com/DaRealFreak/epub-scraper/pkg/raven"
+)
 
 // NovelConfig contains the configuration of the novel scraper
 type NovelConfig struct {
@@ -9,6 +13,7 @@ type NovelConfig struct {
 	Sites         []SiteConfiguration `yaml:"sites"`
 	Chapters      []Source            `yaml:"chapters"`
 	Assets        Assets              `yaml:"assets"`
+	BackList      []string            `yaml:"blacklist"`
 }
 
 // TitleContent contains the title selector and prefix/suffix selectors
@@ -47,4 +52,19 @@ func (s *NovelConfig) GetSiteConfigFromURL(url *url.URL) *SiteConfiguration {
 	}
 	// return empty configuration with nil values
 	return &SiteConfiguration{}
+}
+
+// IsURLBlacklisted checks if the passed URL is blacklisted
+// it parses the passed URL and the blacklisted URLs to ignore minor differences like f.e. trailing slash
+func (s *NovelConfig) IsURLBlacklisted(checkedURL string) bool {
+	check, err := url.Parse(checkedURL)
+	raven.CheckError(err)
+	for _, listItem := range s.BackList {
+		parsedListItem, err := url.Parse(listItem)
+		raven.CheckError(err)
+		if check.String() == parsedListItem.String() {
+			return true
+		}
+	}
+	return false
 }
