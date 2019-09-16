@@ -26,6 +26,33 @@ sites:
   - host: "twomorefreethoughts.com"
     redirects:
       - "main#main > article[id*=\"post\"] > div.entry-content > h1 > a[href]"
+    title-content:
+      add-prefix: false
+      title-selector: "article[id*=\"post\"] > header.entry-header > .entry-title"
+    chapter-content:
+      content-selector: "article[id*=\"post\"] > div.entry-content"
+      prefix-selectors:
+        - "a[href*=\"twomorefreethoughts.wordpress.com\"]"
+      suffix-selectors:
+        - "a[href*=\"#_ftnref\"]"
+  - host: "handofvecna.blogspot.com"
+    title-content:
+      add-prefix: true
+      title-selector: "h3.post-title.entry-title"
+      cleanup-regex: '(?m)^(?:(\s+A Wild Last Boss Appeared \d+: ?))(?P<Title>.*)'
+    chapter-content:
+      content-selector: "article.post-outer-container div[id*=\"post-body\"]"
+      suffix-selectors:
+        - "iframe"
+  - host: "shurimtranslation.com"
+    title-content:
+      add-prefix: true
+      title-selector: "article[id*=\"post\"] > header.entry-header > .entry-title"
+      cleanup-regex: '^(?:(Chapter \d+: ?))(?P<Title>.*)'
+    chapter-content:
+      content-selector: "article[id*=\"post\"] > div.entry-content"
+      suffix-selectors:
+        - "p[style=\"text-align:center;\"]"
 chapters:
   - toc:
       url: "https://www.novelupdates.com/series/a-wild-last-boss-appeared/"
