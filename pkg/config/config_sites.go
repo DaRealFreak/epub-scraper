@@ -4,9 +4,8 @@ package config
 // into one Configuration object, allowing multiple sources of the same Host to reuse them
 // Source options have a higher priority than the SiteConfiguration options
 type SiteConfiguration struct {
-	Host           string         `yaml:"host"`
-	Pagination     Pagination     `yaml:"pagination"`
-	TitleContent   TitleContent   `yaml:"title-content"`
-	ChapterContent ChapterContent `yaml:"chapter-content"`
-	Redirects      []string       `json:"redirects"`
+	Host          string     `yaml:"host"`
+	Pagination    Pagination `yaml:"pagination"`
+	SourceContent `yaml:",inline"`
+	Redirects     []string `json:"redirects"`
 }
