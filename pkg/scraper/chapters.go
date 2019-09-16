@@ -20,12 +20,16 @@ func (s *Scraper) extractChapterData(
 	raven.CheckError(err)
 	doc := s.session.GetDocument(res)
 	// follow redirects for f.e. exit links from novelupdates
-	if chapterURL != res.Request.URL.String() {
-		log.Debugf("got redirected to url: %s", res.Request.URL.String())
-	}
-	chapterURL = res.Request.URL.String()
 	// retrieve site config for the host of the chapter url
 	siteConfig := cfg.GetSiteConfigFromURL(res.Request.URL)
+
+	if chapterURL != res.Request.URL.String() {
+		// update configuration to match the new host
+		chapterURL = res.Request.URL.String()
+		srcCfg = siteConfig.SourceContent
+		log.Debugf("got redirected to url: %s", chapterURL)
+	}
+
 	// if we have redirects resolve them
 	if len(siteConfig.Redirects) > 0 {
 		for _, redirect := range siteConfig.Redirects {
@@ -55,6 +59,8 @@ func (s *Scraper) extractChapterData(
 		parsedURL, err := url.Parse(chapterURL)
 		raven.CheckError(err)
 		if parsedURL.Host != siteConfig.Host {
+			// update configuration to match the new host
+			srcCfg = siteConfig.SourceContent
 			return s.extractChapterData(chapterURL, cfg, srcCfg)
 		}
 	}
@@ -73,12 +79,16 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 	chapterContent, err := doc.Find(*content.ContentSelector).First().Html()
 	raven.CheckError(err)
 
-	for _, prefixSelector := range *content.PrefixSelectors {
-		chapterContent = s.removePrefix(chapterContent, prefixSelector)
+	if content.PrefixSelectors != nil {
+		for _, prefixSelector := range *content.PrefixSelectors {
+			chapterContent = s.removePrefix(chapterContent, prefixSelector)
+		}
 	}
 
-	for _, suffixSelector := range *content.SuffixSelectors {
-		chapterContent = s.removeSuffix(chapterContent, suffixSelector)
+	if content.SuffixSelectors != nil {
+		for _, suffixSelector := range *content.SuffixSelectors {
+			chapterContent = s.removeSuffix(chapterContent, suffixSelector)
+		}
 	}
 
 	chapterContent = s.fixHTMLCode(chapterContent)
@@ -118,12 +128,16 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 	raven.CheckError(err)
 
 	// ToDo: use document.Find(sel).First().NextAll() instead of ripping apart the HTML
-	for _, prefixSelector := range *content.PrefixSelectors {
-		titleContent = s.removePrefix(titleContent, prefixSelector)
+	if content.PrefixSelectors != nil {
+		for _, prefixSelector := range *content.PrefixSelectors {
+			titleContent = s.removePrefix(titleContent, prefixSelector)
+		}
 	}
 
-	for _, suffixSelector := range *content.SuffixSelectors {
-		titleContent = s.removeSuffix(titleContent, suffixSelector)
+	if content.SuffixSelectors != nil {
+		for _, suffixSelector := range *content.SuffixSelectors {
+			titleContent = s.removeSuffix(titleContent, suffixSelector)
+		}
 	}
 
 	doc, err = goquery.NewDocumentFromReader(strings.NewReader(titleContent))
