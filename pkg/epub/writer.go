@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"html"
 	"html/template"
+	"math/rand"
+	"mime"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/version"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/bmaupin/go-epub"
 	log "github.com/sirupsen/logrus"
 )
@@ -76,6 +80,7 @@ func (w *Writer) PolishEpub() {
 
 // AddChapter adds a chapter to the to our current chapter list
 func (w *Writer) AddChapter(title string, content string, addPrefix bool) {
+	w.extractAndImportImages(&content, len(w.chapters))
 	w.chapters = append(w.chapters, chapter{title: title, content: content, addPrefix: addPrefix})
 }
 
@@ -215,4 +220,52 @@ func (w *Writer) importAndAddCover() {
 
 	w.Epub.SetCover(internalFilePath, w.cfg.Assets.CSS.InternalPath)
 	log.Infof("set cover to: %s", w.cfg.General.Cover)
+}
+
+// extractAndImportImages extracts all external images, imports them into the epub and updates the display links
+func (w *Writer) extractAndImportImages(content *string, chapterIndex int) {
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(*content))
+	raven.CheckError(err)
+
+	doc.Find("img[src]").Each(func(i int, selection *goquery.Selection) {
+		w.importValidMimeTypeFiles(content, chapterIndex, selection, "src")
+	})
+
+	doc.Find("[href]").Each(func(i int, selection *goquery.Selection) {
+		w.importValidMimeTypeFiles(content, chapterIndex, selection, "href")
+	})
+}
+
+// importValidMimeTypeFiles checks for the mime type by the file extension
+// and imports them in case they match the allowed mime types for epub files which are documented here:
+// http://www.idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7
+func (w *Writer) importValidMimeTypeFiles(content *string, index int, selection *goquery.Selection, attrName string) {
+	link, _ := selection.Attr(attrName)
+	switch mime.TypeByExtension(filepath.Ext(link)) {
+	case "image/gif", "image/jpeg", "image/png", "image/svg+xml":
+		// retrieve the outer HTML for later replacement
+		tag, err := goquery.OuterHtml(selection)
+		raven.CheckError(err)
+
+		// generate a unique file name and import the img source into the epub
+		filename := fmt.Sprintf("%d_%s_%d%s",
+			index,
+			strings.TrimSuffix(filepath.Base(link), filepath.Ext(link)),
+			// small random integer in case the same chapter links to multiple equal named images
+			// no need for seeding, chance that we get a match is really low anyways
+			// #nosec
+			rand.Int(),
+			filepath.Ext(link),
+		)
+		internalName, err := w.Epub.AddImage(link, filename)
+		raven.CheckError(err)
+
+		// update the src to our new internal file name
+		selection.SetAttr(attrName, internalName)
+		updatedTag, err := goquery.OuterHtml(selection)
+		raven.CheckError(err)
+
+		// update our content
+		*content = strings.ReplaceAll(*content, tag, updatedTag)
+	}
 }
