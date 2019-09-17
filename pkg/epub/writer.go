@@ -238,7 +238,7 @@ func (w *Writer) extractAndImportImages(content *string, chapterIndex int) {
 
 // importValidMimeTypeFiles checks for the mime type by the file extension
 // and imports them in case they match the allowed mime types for epub files which are documented here:
-// http://www.idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7
+// https://www.w3.org/publishing/epub/epub-spec.html#sec-cmt-supported
 func (w *Writer) importValidMimeTypeFiles(content *string, index int, selection *goquery.Selection, attrName string) {
 	link, _ := selection.Attr(attrName)
 	switch mime.TypeByExtension(filepath.Ext(link)) {
