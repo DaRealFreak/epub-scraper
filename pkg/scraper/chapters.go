@@ -1,12 +1,12 @@
 package scraper
 
 import (
-	"github.com/DaRealFreak/epub-scraper/pkg/emojis"
 	"net/url"
 	"regexp"
 	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
+	"github.com/DaRealFreak/epub-scraper/pkg/emojis"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
