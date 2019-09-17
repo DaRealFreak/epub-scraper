@@ -80,7 +80,7 @@ func (w *Writer) PolishEpub() {
 
 // AddChapter adds a chapter to the to our current chapter list
 func (w *Writer) AddChapter(title string, content string, addPrefix bool) {
-	w.extractAndImportImages(&content, len(w.chapters))
+	w.extractAndImportImages(&content, len(w.chapters)+1)
 	w.chapters = append(w.chapters, chapter{title: title, content: content, addPrefix: addPrefix})
 }
 
