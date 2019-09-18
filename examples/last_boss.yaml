@@ -55,9 +55,9 @@ sites:
       cleanup-regex: '^(?:(Chapter \d+: ?))(?P<Title>.*)'
     chapter-content:
       content-selector: "article[id*=\"post\"] > div.entry-content"
-      cleanup-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)$'
+      cleanup-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)(?:(<p style="text-align:center;">\s+<a href=.*?$)|<p>・<a href=".*?">next</a></p>.*?$|<(p|span)( style="text-align:center;")?><a href=".*?">([Nn]ext|[Pp]revious)</a>.*?$|$)'
       suffix-selectors:
-        - "p[style=\"text-align:center;\"]"
+        - "div#jp-post-flair"
 chapters:
   - toc:
       url: "https://www.novelupdates.com/series/a-wild-last-boss-appeared/"
