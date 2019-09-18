@@ -55,7 +55,7 @@ sites:
       cleanup-regex: '^(?:(Chapter \d+: ?))(?P<Title>.*)'
     chapter-content:
       content-selector: "article[id*=\"post\"] > div.entry-content"
-      cleanup-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)(?:(<p style="text-align:center;">\s+<a href=.*?$)|<p>・<a href=".*?">next</a></p>.*?$|<(p|span)( style="text-align:center;")?><a href=".*?">([Nn]ext|[Pp]revious)</a>.*?$|$)'
+      cleanup-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)(?:(<p style="text-align:center;">\s+<a href=.*?$)|<p>・<a href=".*?">next</a></p>.*?$|<(p|span)( style="(text-align:center;|font-weight:400;)")?><a href=".*?">([Nn]ext|[Pp]revious)</a>.*?$|$)'
       suffix-selectors:
         - "div#jp-post-flair"
 chapters:
