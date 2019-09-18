@@ -58,6 +58,7 @@ func (s *Scraper) extractChapterData(
 			log.Debugf("got redirected to url: %s", res.Request.URL.String())
 			// break in case we got redirected to a different host
 			if res.Request.Host != siteConfig.Host {
+				srcCfg = cfg.GetSiteConfigFromURL(res.Request.URL).SourceContent
 				break
 			}
 		}
