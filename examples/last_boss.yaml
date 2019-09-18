@@ -31,6 +31,7 @@ sites:
       title-selector: "article[id*=\"post\"] > header.entry-header > .entry-title"
     chapter-content:
       content-selector: "article[id*=\"post\"] > div.entry-content"
+      cleanup-regex: '(?s)(?:.*?<p>__</p>.*?<p>__</p>\s?<p> </p>|^)(?P<Content>.{1000,}?)(?:(<p>__</p>.*?<p>__</p>)|$)'
       prefix-selectors:
         - "a[href*=\"twomorefreethoughts.wordpress.com\"]"
       suffix-selectors:
@@ -42,7 +43,7 @@ sites:
       cleanup-regex: '(?m)^(?:(\s+A Wild Last Boss Appeared \d+: ?))(?P<Title>.*)'
     chapter-content:
       content-selector: "article.post-outer-container div[id*=\"post-body\"]"
-      cleanup-regex: '(?s)^(?P<Content>.*?)(?:((<hr/>\s+?)?<h2>\s+?(Author|Translator)(&#39;|[’'',])s Notes)|$)'
+      cleanup-regex: '(?s)^(?P<Content>.*?)(?:((<hr/>\s+?)?<h2>\s+?((※ )?Author|Translator)(&#39;|[’'',])s Notes)|$)'
       prefix-selectors:
         - "div[style=\"text-align: right;\"]"
       suffix-selectors:
@@ -54,6 +55,7 @@ sites:
       cleanup-regex: '^(?:(Chapter \d+: ?))(?P<Title>.*)'
     chapter-content:
       content-selector: "article[id*=\"post\"] > div.entry-content"
+      cleanup-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)$'
       suffix-selectors:
         - "p[style=\"text-align:center;\"]"
 chapters:
