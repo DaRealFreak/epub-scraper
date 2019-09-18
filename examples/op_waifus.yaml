@@ -1,76 +1,76 @@
 general:
-  title: "Being Able to Edit Skills in Another World, I Gained OP Waifus"
-  alt-title: "Isekai de Skill wo Kaitai shitara Cheat na Yome ga Zoushoku Shimashita: Gainen Kousa no Structure"
+  title: 'Being Able to Edit Skills in Another World, I Gained OP Waifus'
+  alt-title: 'Isekai de Skill wo Kaitai shitara Cheat na Yome ga Zoushoku Shimashita: Gainen Kousa no Structure'
   author: 千月さかき
   description: |
-    Nagi who was summoned to another world acquired the「Skill Structure」skill.
-    Nagi felt the hints of black job from the king’s request 「To defeat the devil king」. He leaves the castle and starts his journey with a slave girl.
-    The small demon girl Cecyl, the melee-fighter beast girl Rita , Aine the onee-chan maid, Regii the cursed sword.
-    Rafiria the warm and fluffy elf and Iris the sea dragon shrine maiden.
+    Nagi who was summoned to another world acquired the「Skill Structure」skill.\n
+    Nagi felt the hints of black job from the king’s request 「To defeat the devil king」. He leaves the castle and starts his journey with a slave girl.\n
+    The small demon girl Cecyl, the melee-fighter beast girl Rita , Aine the onee-chan maid, Regii the cursed sword.\n
+    Rafiria the warm and fluffy elf and Iris the sea dragon shrine maiden.\n
     Nagi rewrites the girls’ skills and made them into 「cheat characters」one after another.
-  cover: "https://cdn.novelupdates.com/images/2017/09/810ho4w6AqL.jpg"
-  language: "english"
-  raw: "https://ncode.syosetu.com/n6475dd/"
+  cover: 'https://cdn.novelupdates.com/images/2017/09/810ho4w6AqL.jpg'
+  language: english
+  raw: 'https://ncode.syosetu.com/n6475dd/'
   translators:
-    - name: "Yado Inn"
-      url: "https://yado-inn.com"
-    - name: "FishyTranslation"
-      url: "https://fishytranslation.blog"
-    - name: "Raising the Dead"
-      url: "https://rtd.moe/"
+    - name: 'Yado Inn'
+      url: 'https://yado-inn.com'
+    - name: FishyTranslation
+      url: 'https://fishytranslation.blog'
+    - name: 'Raising the Dead'
+      url: 'https://rtd.moe/'
 sites:
-  - host: "yado-inn.com"
+  - host: yado-inn.com
     title-content:
       add-prefix: true
-      title-selector: "strong, b"
+      title-selector: 'strong, b'
       cleanup-regex: '^(?:(C\d+: ?|Chapter ?\d+ ?: ?)?)(?P<Title>.*)'
       prefix-selectors:
-        - "article > div.entry-content > hr"
+        - 'article > div.entry-content > hr'
     chapter-content:
-      content-selector: "article > div.entry-content"
+      content-selector: 'article > div.entry-content'
       prefix-selectors:
-        - "hr"
-        - "p[style=\"text-align:left;\"] > strong, strong, b"
+        - hr
+        - 'p[style="text-align:left;"] > strong, strong, b'
     redirects:
-      - "article[id*=\"post\"] > div.entry-content > p:not([style]) > a[href*=\"chapter\"]"
-  - host: "fishytranslation.blog"
+      - 'article[id*="post"] > div.entry-content > p:not([style]) > a[href*="chapter"]'
+  - host: fishytranslation.blog
     title-content:
       add-prefix: true
-      title-selector: "article > div.entry-content > h1, article > div.entry-content > h2"
+      title-selector: 'article > div.entry-content > h1, article > div.entry-content > h2'
     chapter-content:
-      content-selector: "article > div.entry-content"
+      content-selector: 'article > div.entry-content'
       prefix-selectors:
-        - "h1, h2"
+        - 'h1, h2'
       suffix-selectors:
-        - "p[style=\"text-align:center;\"]"
-  - host: "rtd.moe"
+        - 'p[style="text-align:center;"]'
+  - host: rtd.moe
     pagination:
       reverse-posts: true
-      next-page-selector: "div.pagination.nav-links > div.nav-previous > a[href*=\"rtd.moe\"]"
+      next-page-selector: 'div.pagination.nav-links > div.nav-previous > a[href*="rtd.moe"]'
     title-content:
       add-prefix: true
-      title-selector: "article > div[id*=\"post\"] > div > header > h1.title"
+      title-selector: 'article > div[id*="post"] > div > header > h1.title'
       cleanup-regex: '^(?:(OP Waifu: #\d+ ?))(?P<Title>.*)'
     chapter-content:
-      content-selector: "article > div[id*=\"post\"] > div.single_post > div#content"
+      content-selector: 'article > div[id*="post"] > div.single_post > div#content'
       prefix-selectors:
-        - "hr, h2#mce_0, hr.wp-block-separator"
-        - "h3, h2, h1"
+        - 'hr, h2#mce_0, hr.wp-block-separator'
+        - 'h3, h2, h1'
       suffix-selectors:
-        - "div.wp-post-navigation"
+        - div.wp-post-navigation
 chapters:
   - toc:
-      url: "https://yado-inn.com/op-waifus/"
-      chapter-selector: "article[id*=\"post\"] > div.entry-content > p > a[href*=\"yado-inn.com\"]"
+      url: 'https://yado-inn.com/op-waifus/'
+      chapter-selector: 'article[id*="post"] > div.entry-content > p > a[href*="yado-inn.com"]'
   - chapter:
-      url: "https://yado-inn.com/op-waifus/op-waifus-chapter-17/"
+      url: 'https://yado-inn.com/op-waifus/op-waifus-chapter-17/'
   - chapter:
-      url: "https://fishytranslation.blog/op-waifus-chapter-18-translation/"
+      url: 'https://fishytranslation.blog/op-waifus-chapter-18-translation/'
   - chapter:
-      url: "https://fishytranslation.blog/op-waifus-chapter-19-translation/"
+      url: 'https://fishytranslation.blog/op-waifus-chapter-19-translation/'
   - toc:
-      url: "https://rtd.moe/category/op-waifu/"
-      chapter-selector: "article.post.excerpt > div.readMore > a[href*=\"rtd.moe\"]"
+      url: 'https://rtd.moe/category/op-waifu/'
+      chapter-selector: 'article.post.excerpt > div.readMore > a[href*="rtd.moe"]'
 assets:
   css:
     path: ./assets/css/stylesheet.css

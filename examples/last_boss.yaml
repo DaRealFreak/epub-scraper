@@ -1,73 +1,73 @@
 general:
-  title: "A Wild Last Boss Appeared"
-  alt-title: "Yasei no Rasubosu ga Arawareta!"
+  title: 'A Wild Last Boss Appeared'
+  alt-title: 'Yasei no Rasubosu ga Arawareta!'
   author: 炎頭
   description: |
-    It was in the year 2800 of the Midgard calendar. Back then, there was a Overlord who once reigned supreme and had reached the very brink of subduing the world.
-    Her name was Ruphas Mafahl, a great woman dreaded as the Black-Winged Overlord.
-    She was too strong, too fast, and too beautiful…
-    However, she was defeated by Heroes who opposed her ferocity, and her ambition was brought to an end.
+    It was in the year 2800 of the Midgard calendar. Back then, there was a Overlord who once reigned supreme and had reached the very brink of subduing the world.\n
+    Her name was Ruphas Mafahl, a great woman dreaded as the Black-Winged Overlord.\n
+    She was too strong, too fast, and too beautiful…\n
+    However, she was defeated by Heroes who opposed her ferocity, and her ambition was brought to an end.\n
     ――or so went the story of our protagonist’s in-game character, whose body he now possesses for some reason in a world 200 years after Ruphas’ downfall. Follow our protagonist as he becomes unnecessarily feared by his surroundings and unnecessarily worshiped by his former subordinates as he―or now she―cheerfully travels around this fantasy world.
-  cover: "https://cdn.novelupdates.com/images/2016/05/yaseilastboss01.jpg"
-  language: "english"
-  raw: "https://ncode.syosetu.com/n2211cx/"
+  cover: 'https://cdn.novelupdates.com/images/2016/05/yaseilastboss01.jpg'
+  language: english
+  raw: 'https://ncode.syosetu.com/n2211cx/'
   translators:
-    - name: "twomorefreethoughts"
-      url: "https://twomorefreethoughts.com"
-    - name: "Hand of Vecna"
-      url: "https://handofvecna.blogspot.com"
-    - name: "Shurim’s 3am translations"
-      url: "https://shurimtranslation.com"
+    - name: twomorefreethoughts
+      url: 'https://twomorefreethoughts.com'
+    - name: 'Hand of Vecna'
+      url: 'https://handofvecna.blogspot.com'
+    - name: 'Shurim’s 3am translations'
+      url: 'https://shurimtranslation.com'
 sites:
-  - host: "www.novelupdates.com"
+  - host: www.novelupdates.com
     pagination:
       reverse-posts: true
-      next-page-selector: "div.w-blog-content div.digg_pagination > a.next_page[href]"
-  - host: "twomorefreethoughts.com"
+      next-page-selector: 'div.w-blog-content div.digg_pagination > a.next_page[href]'
+  - host: twomorefreethoughts.com
     redirects:
-      - "main#main > article[id*=\"post\"] > div.entry-content > h1 > a[href]"
+      - 'main#main > article[id*="post"] > div.entry-content > h1 > a[href]'
     title-content:
       add-prefix: false
-      title-selector: "article[id*=\"post\"] > header.entry-header > .entry-title"
+      title-selector: 'article[id*="post"] > header.entry-header > .entry-title'
     chapter-content:
-      content-selector: "article[id*=\"post\"] > div.entry-content"
-      cleanup-regex: '(?s)(?:.*?<p>__</p>.*?<p>__</p>\s?<p> </p>|^)(?P<Content>.{1000,}?)(?:(<p>__</p>.*?<p>__</p>)|$)'
+      content-selector: 'article[id*="post"] > div.entry-content'
+      cleanup-regex: '(?s)(?:.*?<p>__</p>.*?<p>__</p>\s?<p> </p>|^)(?P<Content>.{1000,}?)(?:(<p>__</p>.*?<p>__</p>)|$)'
       prefix-selectors:
-        - "a[href*=\"twomorefreethoughts.wordpress.com\"]"
+        - 'a[href*="twomorefreethoughts.wordpress.com"]'
       suffix-selectors:
-        - "a[href*=\"#_ftnref\"]"
-  - host: "handofvecna.blogspot.com"
+        - 'a[href*="#_ftnref"]'
+  - host: handofvecna.blogspot.com
     title-content:
       add-prefix: true
-      title-selector: "h3.post-title.entry-title"
+      title-selector: h3.post-title.entry-title
       cleanup-regex: '(?m)^(?:(\s+A Wild Last Boss Appeared \d+: ?))(?P<Title>.*)'
     chapter-content:
-      content-selector: "article.post-outer-container div[id*=\"post-body\"]"
+      content-selector: 'article.post-outer-container div[id*="post-body"]'
       cleanup-regex: '(?s)^(?P<Content>.*?)(?:((<hr/>\s+?)?<h2>\s+?((※ )?Author|Translator)(&#39;|[’'',])s Notes)|$)'
       prefix-selectors:
-        - "div[style=\"text-align: right;\"]"
+        - 'div[style="text-align: right;"]'
       suffix-selectors:
-        - "iframe"
-  - host: "shurimtranslation.com"
+        - iframe
+  - host: shurimtranslation.com
     title-content:
       add-prefix: true
-      title-selector: "article[id*=\"post\"] > header.entry-header > .entry-title"
+      title-selector: 'article[id*="post"] > header.entry-header > .entry-title'
       cleanup-regex: '^(?:(Chapter \d+: ?))(?P<Title>.*)'
     chapter-content:
-      content-selector: "article[id*=\"post\"] > div.entry-content"
+      content-selector: 'article[id*="post"] > div.entry-content'
       cleanup-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)(?:(<p style="text-align:center;">\s+<a href=.*?$)|<p>・<a href=".*?">next</a></p>.*?$|<(p|span)( style="(text-align:center;|font-weight:400;)")?><a href=".*?">([Nn]ext|[Pp]revious)</a>.*?$|$)'
       suffix-selectors:
-        - "div#jp-post-flair"
+        - 'div#jp-post-flair'
 chapters:
   - toc:
-      url: "https://www.novelupdates.com/series/a-wild-last-boss-appeared/"
-      chapter-selector: "table#myTable > tbody > tr > td > a.chp-release[href]"
+      url: 'https://www.novelupdates.com/series/a-wild-last-boss-appeared/'
+      chapter-selector: 'table#myTable > tbody > tr > td > a.chp-release[href]'
 blacklist:
-  - "https://twomorefreethoughts.com/awlba-c017/"
-  - "https://twomorefreethoughts.com/awlba-c018/"
-  - "https://twomorefreethoughts.com/awlba-c019/"
-  - "https://twomorefreethoughts.com/awlba-c020/"
-  - "https://twomorefreethoughts.com/2018/11/29/a-wild-last-boss-appeared-chapter-24/"
+  - 'https://twomorefreethoughts.com/awlba-c017/'
+  - 'https://twomorefreethoughts.com/awlba-c018/'
+  - 'https://twomorefreethoughts.com/awlba-c019/'
+  - 'https://twomorefreethoughts.com/awlba-c020/'
+  - 'https://twomorefreethoughts.com/2018/11/29/a-wild-last-boss-appeared-chapter-24/'
 assets:
   css:
     path: ./assets/css/stylesheet.css
