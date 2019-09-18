@@ -107,12 +107,14 @@ sites:
       # possibility to narrow down title selection by cutting of suffix
       # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
       suffix-selectors: [list of strings]
-      # option to clean up the extracted title using regular expressions
+      # option to clean up the extracted title using regular expressions, requires the capture group "Title"
       cleanup-regex: [string]
     # required configuration to extract the chapter content
     chapter-content:
       # CSS selector for the chapter content
       content-selector: [string][required]
+      # option to clean up the extracted chapter content using regular expressions, requires the capture group "Content"
+      cleanup-regex: [string]
       # possibility to narrow down title selection by cutting of prefix
       # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
       prefix-selectors: [list of strings]
@@ -158,12 +160,14 @@ chapters:
         # possibility to narrow down title selection by cutting of suffix
         # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
         suffix-selectors: [list of strings]
-        # option to clean up the extracted title using regular expressions
+        # option to clean up the extracted title using regular expressions, requires the capture group "Title"
         cleanup-regex: [string]
       # required configuration to extract the chapter content
       chapter-content:
         # CSS selector for the chapter content
         content-selector: [string][required]
+        # option to clean up the extracted chapter content using regular expressions, requires the capture group "Content"
+        cleanup-regex: [string]
         # possibility to narrow down title selection by cutting of prefix
         # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
         prefix-selectors: [list of strings]
@@ -187,12 +191,14 @@ chapters:
         # possibility to narrow down title selection by cutting of suffix
         # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
         suffix-selectors: [list of strings]
-        # option to clean up the extracted title using regular expressions
+        # option to clean up the extracted title using regular expressions, requires the capture group "Title"
         cleanup-regex: [string]
       # required configuration to extract the chapter content
       chapter-content:
         # CSS selector for the chapter content
         content-selector: [string][required]
+        # option to clean up the extracted chapter content using regular expressions, requires the capture group "Content"
+        cleanup-regex: [string]
         # possibility to narrow down title selection by cutting of prefix
         # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
         prefix-selectors: [list of strings]
@@ -222,6 +228,115 @@ assets:
   font:
     # path relative to YAML file to the font file used in the generated Epub
     path: [string]
+```
+
+### Templates
+Aside from the CSS and font files you can also modify the used templates to create your own individually styled epub.
+These can be configured in the templates section of the YAML configuration:
+```yaml
+templates:
+  # all configurations related to the table of content
+  toc:
+    # this is the full HTML page template of the table of content page
+    content: [string]
+    # alt title template used as sub headline
+    alt-title: [string]
+    # this is the HTML string of the chained list of translators
+    translator: [string]
+  # all configurations related to the HTML content of the extracted chapters
+  chapter:
+    # this is the full HTML page template of the extracted chapter pages
+    content: [string]
+    # chapter title used in chapter displays (title/headline/optional ToC content)
+    title: [string]
+```
+
+Every template can use multiple variables using the template Syntax `{{.variableName}}`.  
+
+---
+**toc.content**:  
+| Name | Description | Related Configuration |
+|:---|:---|:---|
+|title|Title of the generated Epub|general.title|
+|altTitle|Alternative Title/Subtitle generated from the templates.toc.alt-title template|-|
+|rawUrl|URL to the untranslated chapters|general.raw|
+|author|Author name|general.author|
+|*toc*|*Table of Contents, generated from the chapter list, not used by default*|*-*|
+|translators|List of translators using the templates.toc.translator template|-|
+|epubScraperCredits|Credit for the Epub Scraper project including link to the repository|-|
+
+*default*:
+```html
+<div>
+    <h3>{{.title}}</h3>
+    {{.altTitle}}
+    <div class="center">
+        <p><a href="{{.rawUrl}}">Original Webnovel</a> by {{.author}}</p>
+        {{.toc}}
+    </div>
+    <div class="small-font bottom-align center">
+        <p>Visit the translators at:<br/>
+            {{.translators}}
+        </p>
+        <p>
+            {{.epubScraperCredits}}
+        </p>
+    </div>
+</div>
+```
+
+---
+**toc.alt-title**
+| Name | Description | Related Configuration |
+|:---|:---|:---|
+|altTitle|Alternative Title|general.alt-title|
+
+*default*
+```html
+<h4>
+    <i>- {{.altTitle}} -</i>
+</h4>
+```
+
+---
+**toc.translator**
+| Name | Description | Related Configuration |
+|:---|:---|:---|
+|translatorURL|URL to Website of the Translator|general.translators.[i].url|
+|translatorName|Name of the Translator/Translator Group|general.translators.[i].name|
+
+*default*
+```html
+<a href="{{.translatorURL}}">{{.translatorName}}</a>
+<br/>
+```
+
+---
+**chapter.content**
+| Name | Description |
+|:---|:---|
+|chapterTitle|Title Text of the Chapter generated with the chapter.title template|
+|content|HTML Content of the Chapter|
+
+*default*
+```html
+<div class="left" style="text-align:left;text-indent:0;">
+    <h3>{{.chapterTitle}}</h3>
+    <hr/>
+    {{.content}}
+</div>
+```
+
+---
+**chapter.title**
+| Name | Description |
+|:---|:---|
+|chapterIndex|Numeric index of the chapter starting with 1|
+|chapterTitle|Title Text extracted from the chapter|
+
+*default*
+```html
+Chapter {{.chapterIndex}} - {{.chapterTitle}}
 ```
 
 ## License
