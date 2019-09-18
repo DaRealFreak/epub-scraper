@@ -29,7 +29,7 @@ func (s *Scraper) extractChapterData(
 	// retrieve site config for the host of the chapter url
 	siteConfig := cfg.GetSiteConfigFromURL(res.Request.URL)
 
-	if chapterURL != res.Request.URL.String() {
+	if !s.isURLEqual(chapterURL, res.Request.URL.String()) {
 		// update configuration to match the new host
 		chapterURL = res.Request.URL.String()
 		srcCfg = siteConfig.SourceContent
@@ -196,4 +196,17 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 		}
 	}
 	return emojis.StripUnicodeEmojis(strings.TrimSpace(title))
+}
+
+// isURLEqual compares the passed URLs for equality ignoring scheme differences
+func (s *Scraper) isURLEqual(url1 string, url2 string) bool {
+	parsedURL1, err1 := url.Parse(url1)
+	parsedURL2, err2 := url.Parse(url2)
+	if err1 != nil || err2 != nil {
+		return false
+	}
+	// set both URL schemes to https to ignore https redirects
+	parsedURL1.Scheme = "https"
+	parsedURL2.Scheme = "https"
+	return parsedURL1.String() == parsedURL2.String()
 }
