@@ -243,6 +243,8 @@ func (w *Writer) importValidMimeTypeFiles(content *string, index int, selection 
 	link, _ := selection.Attr(attrName)
 	switch mime.TypeByExtension(filepath.Ext(link)) {
 	case "image/gif", "image/jpeg", "image/png", "image/svg+xml":
+		log.Debugf("importing external resource: %s", link)
+
 		// retrieve the outer HTML for later replacement
 		tag, err := goquery.OuterHtml(selection)
 		raven.CheckError(err)
