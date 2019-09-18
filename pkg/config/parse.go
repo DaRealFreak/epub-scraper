@@ -97,6 +97,9 @@ func (p *Parser) updateChapterContent(sourceConfig *ChapterContent, siteConfig *
 		}
 		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
 	}
+	if sourceConfig.CleanupRegex == "" && siteConfig.CleanupRegex != "" {
+		sourceConfig.CleanupRegex = siteConfig.CleanupRegex
+	}
 }
 
 func (p *Parser) updateTitleContent(sourceConfig *TitleContent, siteConfig *TitleContent) {

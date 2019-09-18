@@ -32,6 +32,7 @@ type ChapterContent struct {
 	ContentSelector *string   `yaml:"content-selector"`
 	PrefixSelectors *[]string `yaml:"prefix-selectors"`
 	SuffixSelectors *[]string `yaml:"suffix-selectors"`
+	CleanupRegex    string    `yaml:"cleanup-regex"`
 }
 
 // Pagination contains all implemented options for paginations of websites

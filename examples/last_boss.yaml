@@ -42,6 +42,9 @@ sites:
       cleanup-regex: '(?m)^(?:(\s+A Wild Last Boss Appeared \d+: ?))(?P<Title>.*)'
     chapter-content:
       content-selector: "article.post-outer-container div[id*=\"post-body\"]"
+      cleanup-regex: '(?s)^(?P<Content>.*?)(?:((<hr/>\s+?)?<h2>\s+?(Author|Translator)(&#39;|[’'',])s Notes)|$)'
+      prefix-selectors:
+        - "div[style=\"text-align: right;\"]"
       suffix-selectors:
         - "iframe"
   - host: "shurimtranslation.com"

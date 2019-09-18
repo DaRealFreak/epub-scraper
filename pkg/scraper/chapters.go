@@ -102,6 +102,25 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 		}
 	}
 
+	// cleanup title if cleanup regular expression is given in the configuration
+	if content.CleanupRegex != "" {
+		re := regexp.MustCompile(content.CleanupRegex)
+		matches := re.FindStringSubmatch(chapterContent)
+
+		paramsMap := make(map[string]string)
+		for i, name := range re.SubexpNames() {
+			if i > 0 && i <= len(matches) {
+				paramsMap[name] = matches[i]
+			}
+		}
+
+		if val, ok := paramsMap["Content"]; ok {
+			chapterContent = val
+		} else {
+			log.Fatal("capture group \"Content\" is required for the chapter content cleanup pattern")
+		}
+	}
+
 	chapterContent = s.fixHTMLCode(chapterContent)
 	chapterContent = s.sanitizer.Sanitize(chapterContent)
 	chapterContent = emojis.StripUnicodeEmojis(chapterContent)
