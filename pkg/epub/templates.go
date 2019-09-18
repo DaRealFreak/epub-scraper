@@ -53,10 +53,10 @@ func (w *Writer) getAltTitle() string {
 	// since alt title is optional we set it only if not empty
 	altTitle := ""
 	if w.cfg.General.AltTitle != "" {
-		if w.cfg.Templates.AltTitle == "" {
-			w.cfg.Templates.AltTitle = `<h4><i>- {{.altTitle}} -</i></h4>`
+		if w.cfg.Templates.ToC.AltTitle == "" {
+			w.cfg.Templates.ToC.AltTitle = `<h4><i>- {{.altTitle}} -</i></h4>`
 		}
-		altTitleTemplate := template.Must(template.New("").Parse(w.cfg.Templates.AltTitle))
+		altTitleTemplate := template.Must(template.New("").Parse(w.cfg.Templates.ToC.AltTitle))
 		buffer := new(bytes.Buffer)
 		raven.CheckError(altTitleTemplate.Execute(buffer, map[string]interface{}{
 			"altTitle": html.EscapeString(w.cfg.General.AltTitle),
