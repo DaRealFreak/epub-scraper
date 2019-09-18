@@ -14,6 +14,7 @@ type NovelConfig struct {
 	Chapters      []Source            `yaml:"chapters"`
 	Assets        Assets              `yaml:"assets"`
 	BackList      []string            `yaml:"blacklist"`
+	Templates     Templates           `yaml:"templates"`
 }
 
 // TitleContent contains the title selector and prefix/suffix selectors

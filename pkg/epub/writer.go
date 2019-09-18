@@ -3,7 +3,6 @@ package epub
 import (
 	"bytes"
 	"fmt"
-	"html"
 	"html/template"
 	"math/rand"
 	"mime"
@@ -13,7 +12,6 @@ import (
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
-	"github.com/DaRealFreak/epub-scraper/pkg/version"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bmaupin/go-epub"
 	log "github.com/sirupsen/logrus"
@@ -87,11 +85,12 @@ func (w *Writer) AddChapter(title string, content string, addPrefix bool) {
 // createToC creates a table of contents page to jump directly to chapters
 // uses the previously appended chapters to link them
 func (w *Writer) createToC() {
-	t := template.Must(template.New("").Parse(`
+	if w.cfg.Templates.ToC.Content == "" {
+		w.cfg.Templates.ToC.Content = `
 		<div>
             <h3>{{.title}}</h3>
             {{.altTitle}}
-			<div class="left">
+			<div class="center">
 				<p><a href="{{.rawUrl}}">Original Webnovel</a> by {{.author}}</p>
     			{{.toc}}
 			</div>
@@ -99,49 +98,26 @@ func (w *Writer) createToC() {
 				<p>Visit the translators at:<br/>
 					{{.translators}}
 				</p>
-				<p>Epub created by: <br/>
-					DaRealFreak <a href="https://github.com/{{.repositoryUrl}}">(Epub Creator Project)</a>
+				<p>
+					{{.epubScraperCredits}}
 				</p>
 			</div>
-        </div>`))
-
-	toc := ""
-	for index, savedChapter := range w.chapters {
-		chapterTitle := savedChapter.title
-		// add prefix if requested (optional since many add it already in the ToC)
-		if savedChapter.addPrefix {
-			chapterTitle = fmt.Sprintf("Chapter %d - %s", index+1, chapterTitle)
-		}
-		toc += fmt.Sprintf(
-			`<p><a href="chapter%04d.xhtml">%s</a></p>`,
-			index+1,
-			chapterTitle,
-		)
+        </div>`
 	}
+	t := template.Must(template.New("").Parse(w.cfg.Templates.ToC.Content))
 
-	// since alt title is optional we set it only if not empty
-	altTitle := ""
-	if w.cfg.General.AltTitle != "" {
-		altTitle = fmt.Sprintf(`<h4><i>- %s -</i></h4>`, html.EscapeString(w.cfg.General.AltTitle))
-	}
-
-	translators := ""
-	for _, translator := range w.cfg.General.Translators {
-		translators += fmt.Sprintf(
-			`<a href="%s">%s</a><br/>`, translator.URL, html.EscapeString(translator.Name),
-		)
-	}
+	toc := w.getToC()
 
 	contentBuffer := new(bytes.Buffer)
 	// #nosec
 	raven.CheckError(t.Execute(contentBuffer, map[string]interface{}{
-		"title":         w.cfg.General.Title,
-		"altTitle":      template.HTML(altTitle),
-		"rawUrl":        w.cfg.General.Raw,
-		"author":        w.cfg.General.Author,
-		"toc":           template.HTML(toc),
-		"translators":   template.HTML(translators),
-		"repositoryUrl": version.RepositoryURL,
+		"title":              w.cfg.General.Title,
+		"altTitle":           template.HTML(w.getAltTitle()),
+		"rawUrl":             w.cfg.General.Raw,
+		"author":             w.cfg.General.Author,
+		"toc":                template.HTML(toc),
+		"translators":        template.HTML(w.getTranslators()),
+		"epubScraperCredits": template.HTML(w.getEpubScraperCredits()),
 	}))
 	_, err := w.Epub.AddSection(
 		contentBuffer.String(),
@@ -155,17 +131,16 @@ func (w *Writer) createToC() {
 // writeChapters writes all appended chapters to the epub file
 func (w *Writer) writeChapters() {
 	for index, savedChapter := range w.chapters {
-		chapterTitle := savedChapter.title
-		// add prefix if requested (optional since many add it already in the ToC)
-		if savedChapter.addPrefix {
-			chapterTitle = fmt.Sprintf("Chapter %d - %s", index+1, chapterTitle)
+		chapterTitle := w.getChapterTitle(savedChapter, index)
+		if w.cfg.Templates.Chapter.Content == "" {
+			w.cfg.Templates.Chapter.Content = `
+				<div class="left" style="text-align:left;text-indent:0;">
+					<h3>{{.chapterTitle}}</h3>
+					<hr/>
+					{{.content}}
+				</div>`
 		}
-		t := template.Must(template.New("").Parse(`
-			<div class="left" style="text-align:left;text-indent:0;">
-				<h3>{{.chapterTitle}}</h3>
-				<hr/>
-				{{.content}}
-			</div>`))
+		t := template.Must(template.New("").Parse(w.cfg.Templates.Chapter.Content))
 
 		contentBuffer := new(bytes.Buffer)
 		raven.CheckError(t.Execute(contentBuffer, map[string]interface{}{
