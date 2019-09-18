@@ -255,13 +255,14 @@ Every template can use multiple variables using the template Syntax `{{.variable
 
 ---
 **toc.content**:  
+
 | Name | Description | Related Configuration |
 |:---|:---|:---|
 |title|Title of the generated Epub|general.title|
 |altTitle|Alternative Title/Subtitle generated from the templates.toc.alt-title template|-|
 |rawUrl|URL to the untranslated chapters|general.raw|
 |author|Author name|general.author|
-|*toc*|*Table of Contents, generated from the chapter list, not used by default*|*-*|
+|toc|Table of Contents, generated from the chapter list, **this variable is not used by default**|-|
 |translators|List of translators using the templates.toc.translator template|-|
 |epubScraperCredits|Credit for the Epub Scraper project including link to the repository|-|
 
@@ -287,6 +288,7 @@ Every template can use multiple variables using the template Syntax `{{.variable
 
 ---
 **toc.alt-title**
+
 | Name | Description | Related Configuration |
 |:---|:---|:---|
 |altTitle|Alternative Title|general.alt-title|
@@ -300,6 +302,7 @@ Every template can use multiple variables using the template Syntax `{{.variable
 
 ---
 **toc.translator**
+
 | Name | Description | Related Configuration |
 |:---|:---|:---|
 |translatorURL|URL to Website of the Translator|general.translators.[i].url|
@@ -313,6 +316,7 @@ Every template can use multiple variables using the template Syntax `{{.variable
 
 ---
 **chapter.content**
+
 | Name | Description |
 |:---|:---|
 |chapterTitle|Title Text of the Chapter generated with the chapter.title template|
@@ -329,6 +333,7 @@ Every template can use multiple variables using the template Syntax `{{.variable
 
 ---
 **chapter.title**
+
 | Name | Description |
 |:---|:---|
 |chapterIndex|Numeric index of the chapter starting with 1|
