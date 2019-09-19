@@ -4,6 +4,7 @@ import (
 	"net/url"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
+	log "github.com/sirupsen/logrus"
 )
 
 // NovelConfig contains the configuration of the novel scraper
@@ -65,6 +66,7 @@ func (s *NovelConfig) IsURLBlacklisted(checkedURL string) bool {
 		parsedListItem, err := url.Parse(listItem)
 		raven.CheckError(err)
 		if check.String() == parsedListItem.String() {
+			log.Infof("url %s is blacklisted, skipping", check.String())
 			return true
 		}
 	}

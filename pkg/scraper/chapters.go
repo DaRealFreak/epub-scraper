@@ -73,7 +73,6 @@ func (s *Scraper) extractChapterData(
 	}
 	finalChapterURL := res.Request.URL.String()
 	if cfg.IsURLBlacklisted(finalChapterURL) {
-		log.Infof("url %s is blacklisted, skipping", finalChapterURL)
 		return nil
 	}
 	log.Infof("extracting chapter from %s", finalChapterURL)
