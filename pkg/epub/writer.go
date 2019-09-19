@@ -100,7 +100,6 @@ func (w *Writer) createToC() {
             {{.altTitle}}
 			<div class="center">
 				<p><a href="{{.rawUrl}}">Original Webnovel</a> by {{.author}}</p>
-    			{{.toc}}
 			</div>
 			<div class="small-font bottom-align center">
 				<p>Visit the translators at:<br/>
