@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
-	"github.com/DaRealFreak/epub-scraper/pkg/emojis"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
+	"github.com/DaRealFreak/epub-scraper/pkg/unicode"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
 )
@@ -90,6 +90,8 @@ func (s *Scraper) extractChapterData(
 func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.ChapterContent) string {
 	chapterContent, err := doc.Find(*content.ContentSelector).First().Html()
 	raven.CheckError(err)
+	// replace all special space characters with a normal space
+	chapterContent = unicode.SanitizeSpaces(chapterContent)
 
 	if content.PrefixSelectors != nil {
 		for _, prefixSelector := range *content.PrefixSelectors {
@@ -124,7 +126,7 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 
 	chapterContent = s.fixHTMLCode(chapterContent)
 	chapterContent = s.sanitizer.Sanitize(chapterContent)
-	chapterContent = emojis.StripUnicodeEmojis(chapterContent)
+	chapterContent = unicode.StripUnicodeEmojis(chapterContent)
 	return chapterContent
 }
 
@@ -158,6 +160,8 @@ func (s *Scraper) removeSuffix(chapterContent string, selector string) string {
 func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleContent) string {
 	titleContent, err := doc.Html()
 	raven.CheckError(err)
+	// replace all special space characters with a normal space
+	titleContent = unicode.SanitizeSpaces(titleContent)
 
 	// ToDo: use document.Find(sel).First().NextAll() instead of ripping apart the HTML
 	if content.PrefixSelectors != nil {
@@ -195,7 +199,7 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 			log.Fatal("capture group \"Title\" is required for the title cleanup pattern")
 		}
 	}
-	return emojis.StripUnicodeEmojis(strings.TrimSpace(title))
+	return unicode.StripUnicodeEmojis(strings.TrimSpace(title))
 }
 
 // isURLEqual compares the passed URLs for equality ignoring scheme differences

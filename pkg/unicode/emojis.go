@@ -1,4 +1,4 @@
-package emojis
+package unicode
 
 import (
 	"fmt"
@@ -19,8 +19,8 @@ import (
 // - make failing silently optional
 // - add configurability before loading/updating the unicode codes
 
-// UnicodeEmojiDataURL is the emoji data we want to parse
-const UnicodeEmojiDataURL = "https://unicode.org/Public/emoji/latest/emoji-data.txt"
+// EmojiDataURL is the emoji data we want to parse
+const EmojiDataURL = "https://unicode.org/Public/emoji/latest/emoji-data.txt"
 
 // nolint: gochecknoglobals
 var (
@@ -33,17 +33,17 @@ var (
 // getCurrentUnicodeEmojiPattern fetches the latest emoji data from the official unicode page
 // and parses them into a regular expression, on errors it return nil
 func getCurrentUnicodeEmojiPattern() *string {
-	res, err := http.Get(UnicodeEmojiDataURL)
+	res, err := http.Get(EmojiDataURL)
 	if err != nil {
 		log.Warningf(
-			"could not retrieve emoji data from %s, emojis will not get replaced", UnicodeEmojiDataURL,
+			"could not retrieve emoji data from %s, emojis will not get replaced", EmojiDataURL,
 		)
 		return nil
 	}
 	content, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Warningf(
-			"could not read response from %s, emojis will not get replaced", UnicodeEmojiDataURL,
+			"could not read response from %s, emojis will not get replaced", EmojiDataURL,
 		)
 		return nil
 	}
