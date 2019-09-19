@@ -1,0 +1,59 @@
+general:
+  title: 'Kanna no Kanna Itanshoukansha wa Scenario Breaker'
+  alt-title: 'Kanna no Kanna'
+  author: 'Nakanomura Ayasuke'
+  description: |
+    Kamishiro Kanna was summoned to another world to be a hero, but the one who summoned him was a scheming princess, and when his mana measurement showed 0, he was to be gotten rid of. Together with an half-elf kyonyuu silver haired bishoujo he met in the palace’s prison, they escaped on a dragon she summoned.
+    The thing Kanna didn’t know was that 3 days after his escape from the palace, the princess did another summoning and summoned 3 high school students who happened to be his close friends.
+  cover: 'https://cdn.novelupdates.com/images/2017/03/Kanna-no-Kanna-01.jpg'
+  language: english
+  raw: 'https://ncode.syosetu.com/n3877cq/'
+  translators:
+    - name: 'Futile Struggle'
+      url: 'https://mudanaagakiwo.wordpress.com'
+    - name: Scarletmadness
+      url: 'http://www.scarletmadness.org/'
+    - name: sairennohebitranslations
+      url: 'https://sairennohebitranslations.wordpress.com/'
+    - name: 'Kujou no Kyuukeijo'
+      url: 'https://kujourestarea.wordpress.com/'
+sites:
+  - host: www.novelupdates.com
+    pagination:
+      reverse-posts: true
+      next-page-selector: 'div.w-blog-content div.digg_pagination > a.next_page[href]'
+  - host: kujourestarea.wordpress.com
+    title-content:
+      add-prefix: true
+      title-selector: 'article[id*="post"] div.entry-content > p.has-medium-font-size, article[id*="post"] div.entry-content > p > strong'
+    chapter-content:
+      content-selector: 'article[id*="post"] div.entry-content'
+      prefix-selectors:
+        - 'p[style="text-align:right;"]'
+        - "p.has-text-color"
+        - "p.has-text-color"
+      suffix-selectors:
+        - 'p > a[href*="kujourestarea.wordpress.com"]'
+  - host: sairennohebitranslations.wordpress.com
+    title-content:
+      add-prefix: true
+      title-selector: 'article[id*="post"] div.entry-content > h3'
+    chapter-content:
+      content-selector: 'article[id*="post"] div.entry-content'
+      cleanup-regex: '(?m)(?s)(?:.*?<h(3|2).*?h(3|2)>|^)?(?P<Content>.*)'
+      prefix-selectors:
+        - 'h3, h2, hr'
+      suffix-selectors:
+        - 'div[id*="atatags"]'
+chapters:
+  - toc:
+      url: 'https://www.novelupdates.com/series/kanna-no-kanna/?pg=2'
+      chapter-selector: 'table#myTable > tbody > tr > td > a.chp-release[href]'
+blacklist:
+  - "https://www.novelupdates.com/extnu/2969208/"
+assets:
+  css:
+    path: ./assets/css/stylesheet.css
+templates:
+  chapter:
+    title: 'Chapter {{.chapterIndex}}'
