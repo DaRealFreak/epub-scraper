@@ -206,7 +206,7 @@ func (w *Writer) importAndAddCover() {
 
 // extractAndImportImages extracts all external images, imports them into the epub and updates the display links
 func (w *Writer) extractAndImportImages(content *string, chapterIndex int) {
-	log.Info("importing external assets into epub")
+	log.Infof("importing external assets into epub for chapter %d", chapterIndex)
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(*content))
 	raven.CheckError(err)
 
