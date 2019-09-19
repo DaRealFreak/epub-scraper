@@ -2,6 +2,7 @@ package epub
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"html/template"
 	"math/rand"
@@ -9,12 +10,14 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bmaupin/go-epub"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/time/rate"
 )
 
 // chapter contains all relevant of the added chapters
@@ -29,12 +32,17 @@ type Writer struct {
 	Epub     *epub.Epub
 	chapters []chapter
 	cfg      *config.NovelConfig
+	// rate limiter for importing assets
+	RateLimiter *rate.Limiter
+	ctx         context.Context
 }
 
 // NewWriter returns a Writer struct
 func NewWriter(cfg *config.NovelConfig) *Writer {
 	writer := &Writer{
-		cfg: cfg,
+		cfg:         cfg,
+		RateLimiter: rate.NewLimiter(rate.Every(1500*time.Millisecond), 1),
+		ctx:         context.Background(),
 	}
 	writer.createEpub()
 	writer.importAssets()
@@ -199,6 +207,7 @@ func (w *Writer) importAndAddCover() {
 
 // extractAndImportImages extracts all external images, imports them into the epub and updates the display links
 func (w *Writer) extractAndImportImages(content *string, chapterIndex int) {
+	log.Info("importing external assets into epub")
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(*content))
 	raven.CheckError(err)
 
@@ -218,7 +227,8 @@ func (w *Writer) importValidMimeTypeFiles(content *string, index int, selection 
 	link, _ := selection.Attr(attrName)
 	switch mime.TypeByExtension(filepath.Ext(link)) {
 	case "image/gif", "image/jpeg", "image/png", "image/svg+xml":
-		log.Debugf("importing external resource: %s", link)
+		log.Debugf("importing external resource %s for chapter index %d", link, index)
+		w.applyRateLimit()
 
 		// retrieve the outer HTML for later replacement
 		tag, err := goquery.OuterHtml(selection)
@@ -244,5 +254,15 @@ func (w *Writer) importValidMimeTypeFiles(content *string, index int, selection 
 
 		// update our content
 		*content = strings.ReplaceAll(*content, tag, updatedTag)
+	}
+}
+
+// applyRateLimit waits for the leaky bucket to fill again
+func (w *Writer) applyRateLimit() {
+	// if no rate limiter is defined we don't have to wait
+	if w.RateLimiter != nil {
+		// wait for request to stay within the rate limit
+		err := w.RateLimiter.Wait(w.ctx)
+		raven.CheckError(err)
 	}
 }
