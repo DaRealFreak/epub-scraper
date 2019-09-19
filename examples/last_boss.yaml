@@ -31,7 +31,7 @@ sites:
       title-selector: 'article[id*="post"] > header.entry-header > .entry-title'
     chapter-content:
       content-selector: 'article[id*="post"] > div.entry-content'
-      cleanup-regex: '(?s)(?:.*?<p>__</p>.*?<p>__</p>\s?<p> </p>|^)(?P<Content>.{1000,}?)(?:(<p>__</p>.*?<p>__</p>)|$)'
+      cleanup-regex: '(?m)(?s)(?:.*?<p>__</p>.*?<p>__</p>\s?<p> </p>|.*?<p>__<br/>.*?Any constructive feedback is appreciated.</p> <p>__</p>|^).*?(?P<Content>.{1000,}?)(?:(<p>__</p>.*?<p>__</p>)|$)'
       prefix-selectors:
         - 'a[href*="twomorefreethoughts.wordpress.com"]'
       suffix-selectors:
@@ -67,7 +67,7 @@ blacklist:
   - 'https://twomorefreethoughts.com/awlba-c018/'
   - 'https://twomorefreethoughts.com/awlba-c019/'
   - 'https://twomorefreethoughts.com/awlba-c020/'
-  - 'https://twomorefreethoughts.com/2018/11/29/a-wild-last-boss-appeared-chapter-24/'
+  - 'https://www.novelupdates.com/extnu/2090164/'
 assets:
   css:
     path: ./assets/css/stylesheet.css
