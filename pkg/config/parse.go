@@ -97,8 +97,8 @@ func (p *Parser) updateChapterContent(sourceConfig *ChapterContent, siteConfig *
 		}
 		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
 	}
-	if sourceConfig.CleanupRegex == "" && siteConfig.CleanupRegex != "" {
-		sourceConfig.CleanupRegex = siteConfig.CleanupRegex
+	if sourceConfig.StripRegex == "" && siteConfig.StripRegex != "" {
+		sourceConfig.StripRegex = siteConfig.StripRegex
 	}
 }
 
@@ -131,7 +131,7 @@ func (p *Parser) updateTitleContent(sourceConfig *TitleContent, siteConfig *Titl
 		}
 		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
 	}
-	if sourceConfig.CleanupRegex == "" && siteConfig.CleanupRegex != "" {
-		sourceConfig.CleanupRegex = siteConfig.CleanupRegex
+	if sourceConfig.StripRegex == "" && siteConfig.StripRegex != "" {
+		sourceConfig.StripRegex = siteConfig.StripRegex
 	}
 }

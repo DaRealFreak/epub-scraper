@@ -25,7 +25,7 @@ type TitleContent struct {
 	TitleSelector   *string   `yaml:"title-selector"`
 	PrefixSelectors *[]string `yaml:"prefix-selectors"`
 	SuffixSelectors *[]string `yaml:"suffix-selectors"`
-	CleanupRegex    string    `yaml:"cleanup-regex"`
+	StripRegex      string    `yaml:"strip-regex"`
 }
 
 // ChapterContent contains the content selector and the author note end selector
@@ -34,7 +34,7 @@ type ChapterContent struct {
 	ContentSelector *string   `yaml:"content-selector"`
 	PrefixSelectors *[]string `yaml:"prefix-selectors"`
 	SuffixSelectors *[]string `yaml:"suffix-selectors"`
-	CleanupRegex    string    `yaml:"cleanup-regex"`
+	StripRegex      string    `yaml:"strip-regex"`
 }
 
 // Pagination contains all implemented options for paginations of websites

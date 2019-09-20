@@ -31,7 +31,7 @@ sites:
       title-selector: 'article[id*="post"] > header.entry-header > .entry-title'
     chapter-content:
       content-selector: 'article[id*="post"] > div.entry-content'
-      cleanup-regex: '(?m)(?s)(?:.*?<p>__</p>.*?<p>__</p>\s?<p> </p>|.*?<p>__<br/>.*?Any constructive feedback is appreciated.</p> <p>__</p>|^).*?(?P<Content>.{1000,}?)(?:(<p>__</p>.*?<p>__</p>)|$)'
+      strip-regex: '(?m)(?s)(?:.*?<p>__</p>.*?<p>__</p>\s?<p> </p>|.*?<p>__<br/>.*?Any constructive feedback is appreciated.</p> <p>__</p>|^).*?(?P<Content>.{1000,}?)(?:(<p>__</p>.*?<p>__</p>)|$)'
       prefix-selectors:
         - 'a[href*="twomorefreethoughts.wordpress.com"]'
       suffix-selectors:
@@ -40,10 +40,10 @@ sites:
     title-content:
       add-prefix: true
       title-selector: h3.post-title.entry-title
-      cleanup-regex: '(?m)^(?:(\s+A Wild Last Boss Appeared \d+: ?))(?P<Title>.*)'
+      strip-regex: '(?m)^(?:(\s+A Wild Last Boss Appeared \d+: ?))(?P<Title>.*)'
     chapter-content:
       content-selector: 'article.post-outer-container div[id*="post-body"]'
-      cleanup-regex: '(?s)^(?P<Content>.*?)(?:((<hr/>\s+?)?<h2>\s+?((※ )?Author|Translator)(&#39;|[’'',])s Notes)|$)'
+      strip-regex: '(?s)^(?P<Content>.*?)(?:((<hr/>\s+?)?<h2>\s+?((※ )?Author|Translator)(&#39;|[’'',])s Notes)|$)'
       prefix-selectors:
         - 'div[style="text-align: right;"]'
       suffix-selectors:
@@ -52,10 +52,10 @@ sites:
     title-content:
       add-prefix: true
       title-selector: 'article[id*="post"] > header.entry-header > .entry-title'
-      cleanup-regex: '^(?:(Chapter \d+: ?))(?P<Title>.*)'
+      strip-regex: '^(?:(Chapter \d+: ?))(?P<Title>.*)'
     chapter-content:
       content-selector: 'article[id*="post"] > div.entry-content'
-      cleanup-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)(?:(<p style="text-align:center;">\s+<a href=.*?$)|<p>・<a href=".*?">next</a></p>.*?$|<(p|span)( style="(text-align:center;|font-weight:400;)")?><a href=".*?">([Nn]ext|[Pp]revious)</a>.*?$|$)'
+      strip-regex: '(?s)(?:.{0,1000}?<hr/>|^)(?P<Content>.{1000,}?)(?:(<p style="text-align:center;">\s+<a href=.*?$)|<p>・<a href=".*?">next</a></p>.*?$|<(p|span)( style="(text-align:center;|font-weight:400;)")?><a href=".*?">([Nn]ext|[Pp]revious)</a>.*?$|$)'
       suffix-selectors:
         - 'div#jp-post-flair'
 chapters:

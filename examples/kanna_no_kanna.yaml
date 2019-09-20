@@ -40,7 +40,7 @@ sites:
       title-selector: 'article[id*="post"] div.entry-content > h3'
     chapter-content:
       content-selector: 'article[id*="post"] div.entry-content'
-      cleanup-regex: '(?m)(?s)(?:.*?<h(3|2).*?h(3|2)>|^)?(?P<Content>.*)'
+      strip-regex: '(?m)(?s)(?:.*?<h(3|2).*?h(3|2)>|^)?(?P<Content>.*)'
       prefix-selectors:
         - 'h3, h2, hr'
       suffix-selectors:

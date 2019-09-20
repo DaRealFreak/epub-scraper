@@ -105,8 +105,8 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 	}
 
 	// cleanup title if cleanup regular expression is given in the configuration
-	if content.CleanupRegex != "" {
-		re := regexp.MustCompile(content.CleanupRegex)
+	if content.StripRegex != "" {
+		re := regexp.MustCompile(content.StripRegex)
 		matches := re.FindStringSubmatch(chapterContent)
 
 		paramsMap := make(map[string]string)
@@ -181,8 +181,8 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 	title := doc.Find(*content.TitleSelector).First().Text()
 
 	// cleanup title if cleanup regular expression is given in the configuration
-	if content.CleanupRegex != "" {
-		re := regexp.MustCompile(content.CleanupRegex)
+	if content.StripRegex != "" {
+		re := regexp.MustCompile(content.StripRegex)
 		matches := re.FindStringSubmatch(title)
 
 		paramsMap := make(map[string]string)

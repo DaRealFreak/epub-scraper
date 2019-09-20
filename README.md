@@ -107,14 +107,16 @@ sites:
       # possibility to narrow down title selection by cutting of suffix
       # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
       suffix-selectors: [list of strings]
-      # option to clean up the extracted title using regular expressions, requires the capture group "Title"
-      cleanup-regex: [string]
+      # option to further strip the extracted title from unwanted content using regular expressions
+      # requires the capture group "Title"
+      strip-regex: [string]
     # required configuration to extract the chapter content
     chapter-content:
       # CSS selector for the chapter content
       content-selector: [string][required]
-      # option to clean up the extracted chapter content using regular expressions, requires the capture group "Content"
-      cleanup-regex: [string]
+      # option to further strip the extracted chapter from unwanted content using regular expressions
+      # requires the capture group "Content"
+      strip-regex: [string]
       # possibility to narrow down title selection by cutting of prefix
       # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
       prefix-selectors: [list of strings]
@@ -160,14 +162,16 @@ chapters:
         # possibility to narrow down title selection by cutting of suffix
         # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
         suffix-selectors: [list of strings]
-        # option to clean up the extracted title using regular expressions, requires the capture group "Title"
-        cleanup-regex: [string]
+        # option to further strip the extracted title from unwanted content using regular expressions
+        # requires the capture group "Title"
+        strip-regex: [string]
       # required configuration to extract the chapter content
       chapter-content:
         # CSS selector for the chapter content
         content-selector: [string][required]
-        # option to clean up the extracted chapter content using regular expressions, requires the capture group "Content"
-        cleanup-regex: [string]
+        # option to further strip the extracted chapter from unwanted content using regular expressions
+        # requires the capture group "Content"
+        strip-regex: [string]
         # possibility to narrow down title selection by cutting of prefix
         # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
         prefix-selectors: [list of strings]
@@ -191,14 +195,16 @@ chapters:
         # possibility to narrow down title selection by cutting of suffix
         # cut off will only occur after first match, so use 2x same suffix if you want to select before 2nd last occurrence
         suffix-selectors: [list of strings]
-        # option to clean up the extracted title using regular expressions, requires the capture group "Title"
-        cleanup-regex: [string]
+        # option to further strip the extracted title from unwanted content using regular expressions
+        # requires the capture group "Title"
+        strip-regex: [string]
       # required configuration to extract the chapter content
       chapter-content:
         # CSS selector for the chapter content
         content-selector: [string][required]
-        # option to clean up the extracted chapter content using regular expressions, requires the capture group "Content"
-        cleanup-regex: [string]
+        # option to further strip the extracted chapter from unwanted content using regular expressions
+        # requires the capture group "Content"
+        strip-regex: [string]
         # possibility to narrow down title selection by cutting of prefix
         # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
         prefix-selectors: [list of strings]

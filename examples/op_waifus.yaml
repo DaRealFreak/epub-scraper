@@ -23,7 +23,7 @@ sites:
     title-content:
       add-prefix: true
       title-selector: 'strong, b'
-      cleanup-regex: '^(?:(C\d+: ?|Chapter ?\d+ ?: ?)?)(?P<Title>.*)'
+      strip-regex: '^(?:(C\d+: ?|Chapter ?\d+ ?: ?)?)(?P<Title>.*)'
       prefix-selectors:
         - 'article > div.entry-content > hr'
     chapter-content:
@@ -50,7 +50,7 @@ sites:
     title-content:
       add-prefix: true
       title-selector: 'article > div[id*="post"] > div > header > h1.title'
-      cleanup-regex: '^(?:(OP Waifu: #\d+ ?))(?P<Title>.*)'
+      strip-regex: '^(?:(OP Waifu: #\d+ ?))(?P<Title>.*)'
     chapter-content:
       content-selector: 'article > div[id*="post"] > div.single_post > div#content'
       prefix-selectors:
