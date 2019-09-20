@@ -110,6 +110,9 @@ sites:
       # option to further strip the extracted title from unwanted content using regular expressions
       # requires the capture group "Title"
       strip-regex: [string]
+      # option to remove content from title using regular expressions
+      # everything matching will be replaced with empty string
+      cleanup-regex: [string]
     # required configuration to extract the chapter content
     chapter-content:
       # CSS selector for the chapter content
@@ -117,6 +120,9 @@ sites:
       # option to further strip the extracted chapter from unwanted content using regular expressions
       # requires the capture group "Content"
       strip-regex: [string]
+      # option to remove content from chapter content using regular expressions
+      # everything matching will be replaced with empty string
+      cleanup-regex: [string]
       # possibility to narrow down title selection by cutting of prefix
       # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
       prefix-selectors: [list of strings]
@@ -165,6 +171,9 @@ chapters:
         # option to further strip the extracted title from unwanted content using regular expressions
         # requires the capture group "Title"
         strip-regex: [string]
+        # option to remove content from title using regular expressions
+        # everything matching will be replaced with empty string
+        cleanup-regex: [string]
       # required configuration to extract the chapter content
       chapter-content:
         # CSS selector for the chapter content
@@ -172,6 +181,9 @@ chapters:
         # option to further strip the extracted chapter from unwanted content using regular expressions
         # requires the capture group "Content"
         strip-regex: [string]
+        # option to remove content from chapter content using regular expressions
+        # everything matching will be replaced with empty string
+        cleanup-regex: [string]
         # possibility to narrow down title selection by cutting of prefix
         # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
         prefix-selectors: [list of strings]
@@ -198,6 +210,9 @@ chapters:
         # option to further strip the extracted title from unwanted content using regular expressions
         # requires the capture group "Title"
         strip-regex: [string]
+        # option to remove content from title using regular expressions
+        # everything matching will be replaced with empty string
+        cleanup-regex: [string]
       # required configuration to extract the chapter content
       chapter-content:
         # CSS selector for the chapter content
@@ -205,6 +220,9 @@ chapters:
         # option to further strip the extracted chapter from unwanted content using regular expressions
         # requires the capture group "Content"
         strip-regex: [string]
+        # option to remove content from chapter content using regular expressions
+        # everything matching will be replaced with empty string
+        cleanup-regex: [string]
         # possibility to narrow down title selection by cutting of prefix
         # cut off will only occur at first match, so use 2x same prefix if you want to select after the 2nd occurrence
         prefix-selectors: [list of strings]
