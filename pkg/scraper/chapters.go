@@ -104,7 +104,8 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 		}
 	}
 
-	// cleanup title if cleanup regular expression is given in the configuration
+	// strip content with regular expressions if set in the related configuration
+	// (for f.e. leftover notes on selected level)
 	if content.StripRegex != "" {
 		re := regexp.MustCompile(content.StripRegex)
 		matches := re.FindStringSubmatch(chapterContent)
@@ -121,6 +122,12 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 		} else {
 			log.Fatal("capture group \"Content\" is required for the chapter content cleanup pattern")
 		}
+	}
+
+	// clean up content with regular expressions if set in the related configuration (for f.e. translator notes)
+	if content.CleanupRegex != "" {
+		re := regexp.MustCompile(content.CleanupRegex)
+		chapterContent = re.ReplaceAllString(chapterContent, "")
 	}
 
 	chapterContent = s.fixHTMLCode(chapterContent)
@@ -179,8 +186,11 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 	raven.CheckError(err)
 
 	title := doc.Find(*content.TitleSelector).First().Text()
+	// strip unicode emojis from the title and trim the text before parsing with the regular expressions
+	title = strings.TrimSpace(unicode.StripUnicodeEmojis(unicode.SanitizeSpaces(title)))
 
-	// cleanup title if cleanup regular expression is given in the configuration
+	// strip title with regular expressions if set in the related configuration
+	// (for f.e. additional notes or we have to select title from main content)
 	if content.StripRegex != "" {
 		re := regexp.MustCompile(content.StripRegex)
 		matches := re.FindStringSubmatch(title)
@@ -198,7 +208,14 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 			log.Fatal("capture group \"Title\" is required for the title cleanup pattern")
 		}
 	}
-	return unicode.StripUnicodeEmojis(strings.TrimSpace(title))
+
+	// clean up content with regular expressions if set in the related configuration (for f.e. translator notes)
+	if content.CleanupRegex != "" {
+		re := regexp.MustCompile(content.CleanupRegex)
+		title = re.ReplaceAllString(title, "")
+	}
+
+	return title
 }
 
 // isURLEqual compares the passed URLs for equality ignoring scheme differences

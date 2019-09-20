@@ -18,23 +18,25 @@ type NovelConfig struct {
 	Templates     Templates           `yaml:"templates"`
 }
 
-// TitleContent contains the title selector and prefix/suffix selectors
-// also offers a regular expression cleanup of the title
+// TitleContent contains the title selector and the title cleanup options
 type TitleContent struct {
-	AddPrefix       *bool     `yaml:"add-prefix"`
-	TitleSelector   *string   `yaml:"title-selector"`
-	PrefixSelectors *[]string `yaml:"prefix-selectors"`
-	SuffixSelectors *[]string `yaml:"suffix-selectors"`
-	StripRegex      string    `yaml:"strip-regex"`
+	AddPrefix      *bool   `yaml:"add-prefix"`
+	TitleSelector  *string `yaml:"title-selector"`
+	CleanupOptions `yaml:",inline"`
 }
 
-// ChapterContent contains the content selector and the author note end selector
-// nearly always at the start of the chapter, so start f.e. on the title
+// ChapterContent contains the content selector the content cleanup options
 type ChapterContent struct {
-	ContentSelector *string   `yaml:"content-selector"`
+	ContentSelector *string `yaml:"content-selector"`
+	CleanupOptions  `yaml:",inline"`
+}
+
+// CleanupOptions are all options related to cleaning up the extracted content of titles and chapters
+type CleanupOptions struct {
 	PrefixSelectors *[]string `yaml:"prefix-selectors"`
 	SuffixSelectors *[]string `yaml:"suffix-selectors"`
 	StripRegex      string    `yaml:"strip-regex"`
+	CleanupRegex    string    `yaml:"cleanup-regex"`
 }
 
 // Pagination contains all implemented options for paginations of websites
