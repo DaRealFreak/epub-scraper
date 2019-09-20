@@ -47,8 +47,11 @@ func (s *Scraper) extractChapterData(
 			raven.CheckError(err)
 			redirectLink = res.Request.URL.ResolveReference(redirectURL).String()
 			// no redirect found use the URL from before
-			if !exists || cfg.IsURLBlacklisted(redirectLink) {
-				log.Debugf("URL is blacklisted or could not find any redirect for selector: %s", redirect)
+			if !exists {
+				log.Debugf("could not find any redirect for selector: %s", redirect)
+				break
+			}
+			if cfg.IsURLBlacklisted(redirectLink) {
 				break
 			}
 			// request the found redirect link and update the document we will use for the chapter extraction
