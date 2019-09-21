@@ -28,6 +28,7 @@ sites:
       title-selector: 'article[id*="post"] div.entry-content > p.has-medium-font-size, article[id*="post"] div.entry-content > p > strong'
     chapter-content:
       content-selector: 'article[id*="post"] div.entry-content'
+      cleanup-regex: '(?s)<em(\s|>).*?</em>'
       prefix-selectors:
         - 'p[style="text-align:right;"]'
         - "p.has-text-color"
