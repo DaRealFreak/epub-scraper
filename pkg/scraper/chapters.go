@@ -95,22 +95,22 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 	// replace all special space characters with a normal space
 	chapterContent = unicode.SanitizeSpaces(chapterContent)
 
-	if content.PrefixSelectors != nil {
-		for _, prefixSelector := range *content.PrefixSelectors {
+	if content.CleanupOptions.PrefixSelectors != nil {
+		for _, prefixSelector := range *content.CleanupOptions.PrefixSelectors {
 			chapterContent = s.removePrefix(chapterContent, prefixSelector)
 		}
 	}
 
-	if content.SuffixSelectors != nil {
-		for _, suffixSelector := range *content.SuffixSelectors {
+	if content.CleanupOptions.SuffixSelectors != nil {
+		for _, suffixSelector := range *content.CleanupOptions.SuffixSelectors {
 			chapterContent = s.removeSuffix(chapterContent, suffixSelector)
 		}
 	}
 
 	// strip content with regular expressions if set in the related configuration
 	// (for f.e. leftover notes on selected level)
-	if content.StripRegex != "" {
-		re := regexp.MustCompile(content.StripRegex)
+	if content.CleanupOptions.StripRegex != "" {
+		re := regexp.MustCompile(content.CleanupOptions.StripRegex)
 		matches := re.FindStringSubmatch(chapterContent)
 
 		paramsMap := make(map[string]string)
@@ -128,8 +128,8 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 	}
 
 	// clean up content with regular expressions if set in the related configuration (for f.e. translator notes)
-	if content.CleanupRegex != "" {
-		re := regexp.MustCompile(content.CleanupRegex)
+	if content.CleanupOptions.CleanupRegex != "" {
+		re := regexp.MustCompile(content.CleanupOptions.CleanupRegex)
 		chapterContent = re.ReplaceAllString(chapterContent, "")
 	}
 
@@ -173,14 +173,14 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 	titleContent = unicode.SanitizeSpaces(titleContent)
 
 	// ToDo: use document.Find(sel).First().NextAll() instead of ripping apart the HTML
-	if content.PrefixSelectors != nil {
-		for _, prefixSelector := range *content.PrefixSelectors {
+	if content.CleanupOptions.PrefixSelectors != nil {
+		for _, prefixSelector := range *content.CleanupOptions.PrefixSelectors {
 			titleContent = s.removePrefix(titleContent, prefixSelector)
 		}
 	}
 
-	if content.SuffixSelectors != nil {
-		for _, suffixSelector := range *content.SuffixSelectors {
+	if content.CleanupOptions.SuffixSelectors != nil {
+		for _, suffixSelector := range *content.CleanupOptions.SuffixSelectors {
 			titleContent = s.removeSuffix(titleContent, suffixSelector)
 		}
 	}
@@ -194,8 +194,8 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 
 	// strip title with regular expressions if set in the related configuration
 	// (for f.e. additional notes or we have to select title from main content)
-	if content.StripRegex != "" {
-		re := regexp.MustCompile(content.StripRegex)
+	if content.CleanupOptions.StripRegex != "" {
+		re := regexp.MustCompile(content.CleanupOptions.StripRegex)
 		matches := re.FindStringSubmatch(title)
 
 		paramsMap := make(map[string]string)
@@ -213,8 +213,8 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 	}
 
 	// clean up content with regular expressions if set in the related configuration (for f.e. translator notes)
-	if content.CleanupRegex != "" {
-		re := regexp.MustCompile(content.CleanupRegex)
+	if content.CleanupOptions.CleanupRegex != "" {
+		re := regexp.MustCompile(content.CleanupOptions.CleanupRegex)
 		title = re.ReplaceAllString(title, "")
 	}
 

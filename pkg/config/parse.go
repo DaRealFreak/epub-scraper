@@ -83,22 +83,25 @@ func (p *Parser) updateChapterContent(sourceConfig *ChapterContent, siteConfig *
 		}
 		sourceConfig.ContentSelector = siteConfig.ContentSelector
 	}
-	if sourceConfig.PrefixSelectors == nil {
-		if siteConfig.PrefixSelectors == nil {
+	if sourceConfig.CleanupOptions.PrefixSelectors == nil {
+		if siteConfig.CleanupOptions.PrefixSelectors == nil {
 			var siteConfigDefault []string
-			siteConfig.PrefixSelectors = &siteConfigDefault
+			siteConfig.CleanupOptions.PrefixSelectors = &siteConfigDefault
 		}
-		sourceConfig.PrefixSelectors = siteConfig.PrefixSelectors
+		sourceConfig.CleanupOptions.PrefixSelectors = siteConfig.CleanupOptions.PrefixSelectors
 	}
-	if sourceConfig.SuffixSelectors == nil {
-		if siteConfig.SuffixSelectors == nil {
+	if sourceConfig.CleanupOptions.SuffixSelectors == nil {
+		if siteConfig.CleanupOptions.SuffixSelectors == nil {
 			var siteConfigDefault []string
-			siteConfig.SuffixSelectors = &siteConfigDefault
+			siteConfig.CleanupOptions.SuffixSelectors = &siteConfigDefault
 		}
-		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
+		sourceConfig.CleanupOptions.SuffixSelectors = siteConfig.CleanupOptions.SuffixSelectors
 	}
-	if sourceConfig.StripRegex == "" && siteConfig.StripRegex != "" {
-		sourceConfig.StripRegex = siteConfig.StripRegex
+	if sourceConfig.CleanupOptions.StripRegex == "" && siteConfig.CleanupOptions.StripRegex != "" {
+		sourceConfig.CleanupOptions.StripRegex = siteConfig.CleanupOptions.StripRegex
+	}
+	if sourceConfig.CleanupOptions.CleanupRegex == "" && siteConfig.CleanupOptions.CleanupRegex != "" {
+		sourceConfig.CleanupOptions.CleanupRegex = siteConfig.CleanupOptions.CleanupRegex
 	}
 }
 
@@ -117,21 +120,24 @@ func (p *Parser) updateTitleContent(sourceConfig *TitleContent, siteConfig *Titl
 		}
 		sourceConfig.TitleSelector = siteConfig.TitleSelector
 	}
-	if sourceConfig.PrefixSelectors == nil {
-		if siteConfig.PrefixSelectors == nil {
+	if sourceConfig.CleanupOptions.PrefixSelectors == nil {
+		if siteConfig.CleanupOptions.PrefixSelectors == nil {
 			var siteConfigDefault []string
-			siteConfig.PrefixSelectors = &siteConfigDefault
+			siteConfig.CleanupOptions.PrefixSelectors = &siteConfigDefault
 		}
-		sourceConfig.PrefixSelectors = siteConfig.PrefixSelectors
+		sourceConfig.CleanupOptions.PrefixSelectors = siteConfig.CleanupOptions.PrefixSelectors
 	}
-	if sourceConfig.SuffixSelectors == nil {
-		if siteConfig.SuffixSelectors == nil {
+	if sourceConfig.CleanupOptions.SuffixSelectors == nil {
+		if siteConfig.CleanupOptions.SuffixSelectors == nil {
 			var siteConfigDefault []string
-			siteConfig.SuffixSelectors = &siteConfigDefault
+			siteConfig.CleanupOptions.SuffixSelectors = &siteConfigDefault
 		}
-		sourceConfig.SuffixSelectors = siteConfig.SuffixSelectors
+		sourceConfig.CleanupOptions.SuffixSelectors = siteConfig.CleanupOptions.SuffixSelectors
 	}
-	if sourceConfig.StripRegex == "" && siteConfig.StripRegex != "" {
-		sourceConfig.StripRegex = siteConfig.StripRegex
+	if sourceConfig.CleanupOptions.StripRegex == "" && siteConfig.CleanupOptions.StripRegex != "" {
+		sourceConfig.CleanupOptions.StripRegex = siteConfig.CleanupOptions.StripRegex
+	}
+	if sourceConfig.CleanupOptions.CleanupRegex == "" && siteConfig.CleanupOptions.CleanupRegex != "" {
+		sourceConfig.CleanupOptions.CleanupRegex = siteConfig.CleanupOptions.CleanupRegex
 	}
 }
