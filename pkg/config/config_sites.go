@@ -7,5 +7,5 @@ type SiteConfiguration struct {
 	Host          string     `yaml:"host"`
 	Pagination    Pagination `yaml:"pagination"`
 	SourceContent `yaml:",inline"`
-	Redirects     []string `json:"redirects"`
+	Redirects     []string `yaml:"redirects"`
 }
