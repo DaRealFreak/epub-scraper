@@ -151,7 +151,7 @@ func (w *Writer) writeChapters() {
 
 		contentBuffer := new(bytes.Buffer)
 		raven.CheckError(t.Execute(contentBuffer, map[string]interface{}{
-			"chapterTitle": chapterTitle,
+			"chapterTitle": template.HTML(chapterTitle),
 			// #nosec
 			"content": template.HTML(savedChapter.content),
 		}))
