@@ -88,6 +88,14 @@ sites:
     host: [string][required]
     # possible redirects, it'll try to follow them as deep as possible, else it'll use the next closes URL
     redirects: [list of strings]
+    # configurations related to the wayback machine in case the website doesn't exist anymore
+    wayback-machine:
+      # to enable or disable the usage of the wayback machine, default value is false
+      use: [boolean]
+      # version of the wayback machine to use:
+      # 0 is the oldest entry
+      # 2 is the newest entry
+      version: [integer]
     # optional configuration in case the Table of Content has multiple pages
     pagination:
       # should extracted chapters be reversed?
