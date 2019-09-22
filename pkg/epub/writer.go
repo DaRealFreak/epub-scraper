@@ -16,6 +16,7 @@ import (
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bmaupin/go-epub"
+	"github.com/microcosm-cc/bluemonday"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
 )
@@ -35,6 +36,7 @@ type Writer struct {
 	// rate limiter for importing assets
 	RateLimiter *rate.Limiter
 	ctx         context.Context
+	sanitizer   *bluemonday.Policy
 }
 
 // NewWriter returns a Writer struct
@@ -43,6 +45,7 @@ func NewWriter(cfg *config.NovelConfig) *Writer {
 		cfg:         cfg,
 		RateLimiter: rate.NewLimiter(rate.Every(1500*time.Millisecond), 1),
 		ctx:         context.Background(),
+		sanitizer:   bluemonday.UGCPolicy(),
 	}
 	writer.createEpub()
 	writer.importAssets()
@@ -119,12 +122,12 @@ func (w *Writer) createToC() {
 	// #nosec
 	raven.CheckError(t.Execute(contentBuffer, map[string]interface{}{
 		"title":              w.cfg.General.Title,
-		"altTitle":           template.HTML(w.getAltTitle()),
+		"altTitle":           template.HTML(w.sanitizer.Sanitize(w.getAltTitle())),
 		"rawUrl":             w.cfg.General.Raw,
 		"author":             w.cfg.General.Author,
-		"toc":                template.HTML(toc),
-		"translators":        template.HTML(w.getTranslators()),
-		"epubScraperCredits": template.HTML(w.getEpubScraperCredits()),
+		"toc":                template.HTML(w.sanitizer.Sanitize(toc)),
+		"translators":        template.HTML(w.sanitizer.Sanitize(w.getTranslators())),
+		"epubScraperCredits": template.HTML(w.sanitizer.Sanitize(w.getEpubScraperCredits())),
 	}))
 	_, err := w.Epub.AddSection(
 		contentBuffer.String(),
@@ -150,10 +153,11 @@ func (w *Writer) writeChapters() {
 		t := template.Must(template.New("").Parse(w.cfg.Templates.Chapter.Content))
 
 		contentBuffer := new(bytes.Buffer)
+		// #nosec
 		raven.CheckError(t.Execute(contentBuffer, map[string]interface{}{
-			"chapterTitle": template.HTML(chapterTitle),
+			"chapterTitle": template.HTML(w.sanitizer.Sanitize(chapterTitle)),
 			// #nosec
-			"content": template.HTML(savedChapter.content),
+			"content": template.HTML(w.sanitizer.Sanitize(savedChapter.content)),
 		}))
 
 		_, err := w.Epub.AddSection(

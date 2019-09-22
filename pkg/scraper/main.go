@@ -8,7 +8,6 @@ import (
 	"github.com/DaRealFreak/epub-scraper/pkg/epub"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/DaRealFreak/epub-scraper/pkg/session"
-	"github.com/microcosm-cc/bluemonday"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/html"
 )
@@ -17,7 +16,6 @@ import (
 type Scraper struct {
 	configParser *config.Parser
 	session      session.Session
-	sanitizer    *bluemonday.Policy
 }
 
 // ChapterData contains all relevant chapter data for writing them into the epub
@@ -31,7 +29,6 @@ type ChapterData struct {
 func NewScraper() *Scraper {
 	return &Scraper{
 		configParser: config.NewParser(),
-		sanitizer:    bluemonday.UGCPolicy(),
 	}
 }
 

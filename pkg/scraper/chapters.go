@@ -94,7 +94,7 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 	raven.CheckError(err)
 
 	chapterContent = s.applyCleanupOptions(chapterContent, &content.CleanupOptions, "Content")
-	return unicode.StripUnicodeEmojis(s.sanitizer.Sanitize(s.fixHTMLCode(chapterContent)))
+	return unicode.StripUnicodeEmojis(s.fixHTMLCode(chapterContent))
 }
 
 // getChapterTitle returns the chapter title of the passed URL based on the passed ChapterContent settings
