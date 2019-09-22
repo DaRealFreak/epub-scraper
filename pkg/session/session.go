@@ -17,8 +17,16 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// Session is the interface for the implemented HTTP client
+type Session interface {
+	Get(uri string) (response *http.Response, err error)
+	Post(uri string, data url.Values) (response *http.Response, err error)
+	GetDocument(response *http.Response) *goquery.Document
+	ApplyRateLimit()
+}
+
 // Session is an extension to the implemented SessionInterface for HTTP sessions
-type Session struct {
+type session struct {
 	Client      *http.Client
 	RateLimiter *rate.Limiter
 	MaxRetries  int
@@ -33,20 +41,24 @@ type UseWaybackMachineError struct {
 }
 
 // NewSession initializes a new session and sets all the required headers etc
-func NewSession() *Session {
+func NewSession(novelConfig *config.NovelConfig) Session {
 	jar, _ := cookiejar.New(nil)
 
-	app := Session{
+	app := session{
 		Client:      &http.Client{Jar: jar},
 		RateLimiter: rate.NewLimiter(rate.Every(1500*time.Millisecond), 1),
 		MaxRetries:  5,
 		ctx:         context.Background(),
 	}
-	return &app
+
+	return &WaybackMachineWrapper{
+		session: app,
+		cfg:     novelConfig,
+	}
 }
 
 // Get sends a GET request, returns the occurred error if something went wrong even after multiple tries
-func (s *Session) Get(uri string) (response *http.Response, err error) {
+func (s *session) Get(uri string) (response *http.Response, err error) {
 	// access the passed url and return the data or the error which persisted multiple retries
 	// post the request with the retries option
 	for try := 1; try <= s.MaxRetries; try++ {
@@ -72,7 +84,7 @@ func (s *Session) Get(uri string) (response *http.Response, err error) {
 // handleWaybackMachineError checks if the returned error is indicating that we should use the wayback machine
 // if yes we return the request using the wayback machine and replace the request URL to the original URL
 // to keep host settings
-func (s *Session) handleWaybackMachineError(response *http.Response, err error) (*http.Response, bool, error) {
+func (s *session) handleWaybackMachineError(response *http.Response, err error) (*http.Response, bool, error) {
 	if response != nil && err != nil {
 		// can't use .(type) outside of switch case, so we have to use single case switch case here
 		// nolint: gocritic
@@ -93,7 +105,7 @@ func (s *Session) handleWaybackMachineError(response *http.Response, err error) 
 }
 
 // Post sends a POST request, returns the occurred error if something went wrong even after multiple tries
-func (s *Session) Post(uri string, data url.Values) (response *http.Response, err error) {
+func (s *session) Post(uri string, data url.Values) (response *http.Response, err error) {
 	// post the request with the retries option
 	for try := 1; try <= s.MaxRetries; try++ {
 		s.ApplyRateLimit()
@@ -113,7 +125,7 @@ func (s *Session) Post(uri string, data url.Values) (response *http.Response, er
 }
 
 // GetDocument converts the http response to a *goquery.Document
-func (s *Session) GetDocument(response *http.Response) *goquery.Document {
+func (s *session) GetDocument(response *http.Response) *goquery.Document {
 	var reader io.ReadCloser
 	switch response.Header.Get("Content-Encoding") {
 	case "gzip":
@@ -128,7 +140,7 @@ func (s *Session) GetDocument(response *http.Response) *goquery.Document {
 }
 
 // ApplyRateLimit waits for the leaky bucket to fill again
-func (s *Session) ApplyRateLimit() {
+func (s *session) ApplyRateLimit() {
 	// if no rate limiter is defined we don't have to wait
 	if s.RateLimiter != nil {
 		// wait for request to stay within the rate limit

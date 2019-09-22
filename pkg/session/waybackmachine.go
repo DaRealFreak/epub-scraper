@@ -1,4 +1,4 @@
-package scraper
+package session
 
 import (
 	"errors"
@@ -6,17 +6,24 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
-	"github.com/DaRealFreak/epub-scraper/pkg/session"
 	log "github.com/sirupsen/logrus"
 )
 
+// WaybackMachineWrapper contains wayback machine related variables like the session and the novel configuration
+type WaybackMachineWrapper struct {
+	session
+	cfg             *config.NovelConfig
+	sessionRedirect func(req *http.Request, via []*http.Request) error
+}
+
 // checkRedirect checks the passed request for token fragments and returns http.ErrUseLastResponse if found
 // this causes the client to not follow the redirect, enabling us to use non-existing URLs as redirect URL
-func (s *WaybackMachineWrapper) checkRedirect(req *http.Request, via []*http.Request) error {
-	siteConfig := s.cfg.GetSiteConfigFromURL(req.URL)
+func (w *WaybackMachineWrapper) checkRedirect(req *http.Request, via []*http.Request) error {
+	siteConfig := w.cfg.GetSiteConfigFromURL(req.URL)
 	if siteConfig.WaybackMachine.Use {
-		return &session.UseWaybackMachineError{
+		return &UseWaybackMachineError{
 			Handling: &siteConfig.WaybackMachine,
 			URL:      req.URL,
 		}
@@ -24,8 +31,8 @@ func (s *WaybackMachineWrapper) checkRedirect(req *http.Request, via []*http.Req
 	log.Infof(req.URL.String())
 
 	// return the previously set redirect function
-	if s.sessionRedirect != nil {
-		return s.sessionRedirect(req, via)
+	if w.sessionRedirect != nil {
+		return w.sessionRedirect(req, via)
 	}
 	// session redirect can be nil too, fallback to default http.Client -> defaultCheckRedirect
 	if len(via) >= 10 {
@@ -35,21 +42,21 @@ func (s *WaybackMachineWrapper) checkRedirect(req *http.Request, via []*http.Req
 }
 
 // Get performs a normal GET request but checks the redirects to a host which should use the wayback machine
-func (s *WaybackMachineWrapper) Get(uri string) (response *http.Response, err error) {
+func (w *WaybackMachineWrapper) Get(uri string) (response *http.Response, err error) {
 	// save original check redirect function and replace it with our custom one
-	s.sessionRedirect = s.session.Client.CheckRedirect
-	s.session.Client.CheckRedirect = s.checkRedirect
+	w.sessionRedirect = w.session.Client.CheckRedirect
+	w.session.Client.CheckRedirect = w.checkRedirect
 
 	// check direct passed URL for wayback machine host option and update url if required
 	parsedURL, err := url.Parse(uri)
 	raven.CheckError(err)
-	siteConfig := s.cfg.GetSiteConfigFromURL(parsedURL)
+	siteConfig := w.cfg.GetSiteConfigFromURL(parsedURL)
 	if siteConfig.WaybackMachine.Use {
 		uri = fmt.Sprintf("https://web.archive.org/web/%s/%s", siteConfig.WaybackMachine.Version, uri)
 	}
 
 	// make the get request
-	response, err = s.session.Get(uri)
+	response, err = w.session.Get(uri)
 
 	// if we previously updated the uri we restore the original request URL again for host settings
 	if response != nil && siteConfig.WaybackMachine.Use {
@@ -57,6 +64,6 @@ func (s *WaybackMachineWrapper) Get(uri string) (response *http.Response, err er
 	}
 
 	// restore original check redirect function
-	s.session.Client.CheckRedirect = s.sessionRedirect
+	w.session.Client.CheckRedirect = w.sessionRedirect
 	return response, err
 }

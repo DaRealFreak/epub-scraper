@@ -22,7 +22,7 @@ func (s *Scraper) extractChapterData(
 		return nil
 	}
 
-	res, err := s.waybackMachineWrapper.Get(chapterURL)
+	res, err := s.session.Get(chapterURL)
 	raven.CheckError(err)
 	doc := s.session.GetDocument(res)
 	// follow redirects for f.e. exit links from novelupdates
@@ -55,7 +55,7 @@ func (s *Scraper) extractChapterData(
 				break
 			}
 			// request the found redirect link and update the document we will use for the chapter extraction
-			res, err = s.waybackMachineWrapper.Get(redirectLink)
+			res, err = s.session.Get(redirectLink)
 			raven.CheckError(err)
 			doc = s.session.GetDocument(res)
 			log.Debugf("got redirected to url: %s", res.Request.URL.String())
