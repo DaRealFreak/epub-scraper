@@ -22,10 +22,10 @@ sites:
   - host: yado-inn.com
     title-content:
       add-prefix: true
-      title-selector: 'strong, b'
-      strip-regex: '^(?:(C\d+: ?|Chapter ?\d+ ?: ?)?)(?P<Title>.*)'
+      title-selector: 'article > div.entry-content'
+      strip-regex: '<(strong|b)>\s?(?:(C\d+: ?|Chapter ?\d+ ?: ?)?)(?P<Title>.*?)\s?</(strong|b)>'
       prefix-selectors:
-        - 'article > div.entry-content > hr'
+        - hr
     chapter-content:
       content-selector: 'article > div.entry-content'
       prefix-selectors:

@@ -19,7 +19,8 @@ chapters:
       chapter-selector: '#site-content div.post-content a[href*="tseirptranslations.com"]:not([target="_blank"]):not([rel="nofollow"]):not([href*="uploads"])'
       title-content:
         add-prefix: false
-        title-selector: '#site-content div.post-content > p > strong'
+        title-selector: '#site-content div.post-content'
+        strip-regex: '(?s)<p>(?P<Title><strong>.*?)</p>'
       chapter-content:
         content-selector: '#site-content div.post-content'
         prefix-selectors:
