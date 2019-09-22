@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
@@ -22,6 +23,13 @@ type Session struct {
 	RateLimiter *rate.Limiter
 	MaxRetries  int
 	ctx         context.Context
+}
+
+// UseWaybackMachineError custom error if we get redirected on a URL configured to use the wayback machine
+type UseWaybackMachineError struct {
+	error
+	Handling *config.WaybackMachine
+	URL      *url.URL
 }
 
 // NewSession initializes a new session and sets all the required headers etc
@@ -45,17 +53,43 @@ func (s *Session) Get(uri string) (response *http.Response, err error) {
 		s.ApplyRateLimit()
 		log.Debug(fmt.Sprintf("opening GET uri \"%s\" (try: %d)", uri, try))
 		response, err = s.Client.Get(uri)
-		switch {
-		case err == nil && response.StatusCode < 400:
+		if err == nil && response.StatusCode < 400 {
 			// if no error occurred and status code is okay too break out of the loop
 			// 4xx & 5xx are client/server error codes, so we check for < 400
 			return response, err
-		default:
-			// any other error falls into the retry clause
-			time.Sleep(time.Duration(try+1) * time.Second)
 		}
+
+		if waybackResponse, done, err := s.handleWaybackMachineError(response, err); done {
+			return waybackResponse, err
+		}
+
+		// any other error falls into the retry clause
+		time.Sleep(time.Duration(try+1) * time.Second)
 	}
 	return response, err
+}
+
+// handleWaybackMachineError checks if the returned error is indicating that we should use the wayback machine
+// if yes we return the request using the wayback machine and replace the request URL to the original URL
+// to keep host settings
+func (s *Session) handleWaybackMachineError(response *http.Response, err error) (*http.Response, bool, error) {
+	if response != nil && err != nil {
+		// can't use .(type) outside of switch case, so we have to use single case switch case here
+		// nolint: gocritic
+		switch v := err.(type) {
+		case *url.Error:
+			switch c := v.Err.(type) {
+			case *UseWaybackMachineError:
+				newURL := fmt.Sprintf("https://web.archive.org/web/%s/%s", c.Handling.Version, c.URL.String())
+				newRes, err := s.Get(newURL)
+				if newRes != nil {
+					newRes.Request.URL = response.Request.URL
+					return newRes, true, err
+				}
+			}
+		}
+	}
+	return nil, false, nil
 }
 
 // Post sends a POST request, returns the occurred error if something went wrong even after multiple tries

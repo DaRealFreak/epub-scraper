@@ -2,6 +2,7 @@ package scraper
 
 import (
 	"bytes"
+	"net/http"
 	"strings"
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
@@ -15,9 +16,10 @@ import (
 
 // Scraper is the main functionality struct
 type Scraper struct {
-	configParser *config.Parser
-	session      *session.Session
-	sanitizer    *bluemonday.Policy
+	configParser          *config.Parser
+	session               *session.Session
+	sanitizer             *bluemonday.Policy
+	waybackMachineWrapper *WaybackMachineWrapper
 }
 
 // ChapterData contains all relevant chapter data for writing them into the epub
@@ -25,6 +27,13 @@ type ChapterData struct {
 	addPrefix bool
 	title     string
 	content   string
+}
+
+// WaybackMachineWrapper contains wayback machine related variables like the session and the novel configuration
+type WaybackMachineWrapper struct {
+	session         *session.Session
+	cfg             *config.NovelConfig
+	sessionRedirect func(req *http.Request, via []*http.Request) error
 }
 
 // NewScraper returns a new scraper struct
@@ -41,6 +50,11 @@ func (s *Scraper) HandleFile(fileName string) {
 	cfg, err := s.configParser.ReadConfigurationFile(fileName)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	s.waybackMachineWrapper = &WaybackMachineWrapper{
+		session: s.session,
+		cfg:     cfg,
 	}
 
 	writer := epub.NewWriter(cfg)
