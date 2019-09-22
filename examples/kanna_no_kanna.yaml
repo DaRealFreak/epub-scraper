@@ -39,6 +39,7 @@ sites:
     title-content:
       add-prefix: true
       title-selector: 'article[id*="post"] div.entry-content > h3'
+      cleanup-regex: '(?s)(Kanna (?:no Kanna )?\d+(?: : |)?)'
     chapter-content:
       content-selector: 'article[id*="post"] div.entry-content'
       strip-regex: '(?m)(?s)(?:.*?<h(3|2).*?h(3|2)>|^)?(?P<Content>.*)'
@@ -46,9 +47,40 @@ sites:
         - 'h3, h2, hr'
       suffix-selectors:
         - 'div[id*="atatags"]'
+  - host: www.scarletmadness.org
+    wayback-machine:
+      use: true
+      version: 2
+    title-content:
+      add-prefix: false
+      title-selector: 'article[id*="post"] div.entry-content'
+      strip-regex: '(?s).*?<p>(?P<Title>Chapter.*?)</p>.*'
+      prefix-selectors:
+        - 'span[id*="more"]'
+        - 'hr'
+      suffix-selectors:
+        - 'div[id*="relatedposts"]'
+    chapter-content:
+      content-selector: 'article[id*="post"] div.entry-content'
+      strip-regex: '(?s)(.*?<p>Chapter.*?</p>|^)(?P<Content>.*)'
+      prefix-selectors:
+        - 'span[id*="more"]'
+        - 'hr'
+      suffix-selectors:
+        - 'div[id*="relatedposts"]'
+  - host: mudanaagakiwo.wordpress.com
+    title-content:
+      add-prefix: true
+      title-selector: 'article[id*="post"] div.entry-content'
+      strip-regex: '(?m)(?s).*<p><strong>.*?</strong>.*?<em>(?P<Title>.*?)</em>'
+    chapter-content:
+      content-selector: 'article[id*="post"] div.entry-content'
+      strip-regex: '(?m)(?s)(?P<Content>.*?)(?:<hr>)?<a href=.*?>(previous|main index)<\/a>'
+      prefix-selectors:
+        - 'hr'
 chapters:
   - toc:
-      url: 'https://www.novelupdates.com/series/kanna-no-kanna/?pg=2'
+      url: 'https://www.novelupdates.com/series/kanna-no-kanna/'
       chapter-selector: 'table#myTable > tbody > tr > td > a.chp-release[href]'
 blacklist:
   - "https://www.novelupdates.com/extnu/2969208/"
@@ -57,4 +89,4 @@ assets:
     path: ./assets/css/stylesheet.css
 templates:
   chapter:
-    title: 'Chapter {{.chapterIndex}}'
+    title: 'Chapter {{.chapterIndex}} {{.chapterTitle}}'
