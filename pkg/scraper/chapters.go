@@ -92,51 +92,26 @@ func (s *Scraper) extractChapterData(
 func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.ChapterContent) string {
 	chapterContent, err := doc.Find(*content.ContentSelector).First().Html()
 	raven.CheckError(err)
-	// replace all special space characters with a normal space
-	chapterContent = unicode.SanitizeSpaces(chapterContent)
 
-	if content.CleanupOptions.PrefixSelectors != nil {
-		for _, prefixSelector := range *content.CleanupOptions.PrefixSelectors {
-			chapterContent = s.removePrefix(chapterContent, prefixSelector)
-		}
+	chapterContent = s.applyCleanupOptions(chapterContent, &content.CleanupOptions, "Content")
+	return unicode.StripUnicodeEmojis(s.sanitizer.Sanitize(s.fixHTMLCode(chapterContent)))
+}
+
+// getChapterTitle returns the chapter title of the passed URL based on the passed ChapterContent settings
+func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleContent) string {
+	// if we only use the prefix the title selector can be nil too
+	if content.TitleSelector == nil {
+		return ""
 	}
 
-	if content.CleanupOptions.SuffixSelectors != nil {
-		for _, suffixSelector := range *content.CleanupOptions.SuffixSelectors {
-			chapterContent = s.removeSuffix(chapterContent, suffixSelector)
-		}
-	}
+	titleContent, err := doc.Find(*content.TitleSelector).First().Html()
+	raven.CheckError(err)
 
-	// strip content with regular expressions if set in the related configuration
-	// (for f.e. leftover notes on selected level)
-	if content.CleanupOptions.StripRegex != "" {
-		re := regexp.MustCompile(content.CleanupOptions.StripRegex)
-		matches := re.FindStringSubmatch(chapterContent)
+	titleContent = s.applyCleanupOptions(titleContent, &content.CleanupOptions, "Title")
 
-		paramsMap := make(map[string]string)
-		for i, name := range re.SubexpNames() {
-			if i > 0 && i <= len(matches) {
-				paramsMap[name] = matches[i]
-			}
-		}
-
-		if val, ok := paramsMap["Content"]; ok {
-			chapterContent = val
-		} else {
-			log.Fatal("capture group \"Content\" is required for the chapter content cleanup pattern")
-		}
-	}
-
-	// clean up content with regular expressions if set in the related configuration (for f.e. translator notes)
-	if content.CleanupOptions.CleanupRegex != "" {
-		re := regexp.MustCompile(content.CleanupOptions.CleanupRegex)
-		chapterContent = re.ReplaceAllString(chapterContent, "")
-	}
-
-	chapterContent = s.fixHTMLCode(chapterContent)
-	chapterContent = s.sanitizer.Sanitize(chapterContent)
-	chapterContent = unicode.StripUnicodeEmojis(chapterContent)
-	return chapterContent
+	doc, err = goquery.NewDocumentFromReader(strings.NewReader(titleContent))
+	raven.CheckError(err)
+	return strings.TrimSpace(unicode.StripUnicodeEmojis(doc.Text()))
 }
 
 // removePrefix removes the author block of the extracted chapter content based on the selector
@@ -165,43 +140,29 @@ func (s *Scraper) removeSuffix(chapterContent string, selector string) string {
 	return chapterContent
 }
 
-// getChapterTitle returns the chapter title of the passed URL based on the passed ChapterContent settings
-func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleContent) string {
-	// if we only use the prefix the title selector can be nil too
-	if content.TitleSelector == nil {
-		return ""
-	}
-
-	titleContent, err := doc.Html()
-	raven.CheckError(err)
-	// replace all special space characters with a normal space
-	titleContent = unicode.SanitizeSpaces(titleContent)
+// applyCleanupOptions applies the cleanup options to the passed html before returning it again
+func (s *Scraper) applyCleanupOptions(htmlContent string, options *config.CleanupOptions, captureGroup string) string {
+	// strip unicode emojis from the title and trim the text before parsing with the regular expressions
+	htmlContent = unicode.SanitizeSpaces(htmlContent)
 
 	// ToDo: use document.Find(sel).First().NextAll() instead of ripping apart the HTML
-	if content.CleanupOptions.PrefixSelectors != nil {
-		for _, prefixSelector := range *content.CleanupOptions.PrefixSelectors {
-			titleContent = s.removePrefix(titleContent, prefixSelector)
+	if options.PrefixSelectors != nil {
+		for _, prefixSelector := range *options.PrefixSelectors {
+			htmlContent = s.removePrefix(htmlContent, prefixSelector)
 		}
 	}
 
-	if content.CleanupOptions.SuffixSelectors != nil {
-		for _, suffixSelector := range *content.CleanupOptions.SuffixSelectors {
-			titleContent = s.removeSuffix(titleContent, suffixSelector)
+	if options.SuffixSelectors != nil {
+		for _, suffixSelector := range *options.SuffixSelectors {
+			htmlContent = s.removeSuffix(htmlContent, suffixSelector)
 		}
 	}
-
-	doc, err = goquery.NewDocumentFromReader(strings.NewReader(titleContent))
-	raven.CheckError(err)
-
-	title := doc.Find(*content.TitleSelector).First().Text()
-	// strip unicode emojis from the title and trim the text before parsing with the regular expressions
-	title = strings.TrimSpace(unicode.StripUnicodeEmojis(unicode.SanitizeSpaces(title)))
 
 	// strip title with regular expressions if set in the related configuration
 	// (for f.e. additional notes or we have to select title from main content)
-	if content.CleanupOptions.StripRegex != "" {
-		re := regexp.MustCompile(content.CleanupOptions.StripRegex)
-		matches := re.FindStringSubmatch(title)
+	if options.StripRegex != "" {
+		re := regexp.MustCompile(options.StripRegex)
+		matches := re.FindStringSubmatch(htmlContent)
 
 		paramsMap := make(map[string]string)
 		for i, name := range re.SubexpNames() {
@@ -210,20 +171,20 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 			}
 		}
 
-		if val, ok := paramsMap["Title"]; ok {
-			title = val
+		if val, ok := paramsMap[captureGroup]; ok {
+			htmlContent = val
 		} else {
-			log.Fatal("capture group \"Title\" is required for the title cleanup pattern")
+			log.Fatalf("capture group %s is required for the title cleanup pattern", captureGroup)
 		}
 	}
 
 	// clean up content with regular expressions if set in the related configuration (for f.e. translator notes)
-	if content.CleanupOptions.CleanupRegex != "" {
-		re := regexp.MustCompile(content.CleanupOptions.CleanupRegex)
-		title = re.ReplaceAllString(title, "")
+	if options.CleanupRegex != "" {
+		re := regexp.MustCompile(options.CleanupRegex)
+		htmlContent = re.ReplaceAllString(htmlContent, "")
 	}
 
-	return title
+	return htmlContent
 }
 
 // isURLEqual compares the passed URLs for equality ignoring scheme differences
