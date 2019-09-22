@@ -8,7 +8,6 @@ import (
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
-	log "github.com/sirupsen/logrus"
 )
 
 // WaybackMachineWrapper contains wayback machine related variables like the session and the novel configuration
@@ -28,7 +27,6 @@ func (w *WaybackMachineWrapper) checkRedirect(req *http.Request, via []*http.Req
 			URL:      req.URL,
 		}
 	}
-	log.Infof(req.URL.String())
 
 	// return the previously set redirect function
 	if w.sessionRedirect != nil {

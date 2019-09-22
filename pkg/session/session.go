@@ -95,7 +95,7 @@ func (s *session) handleWaybackMachineError(response *http.Response, err error) 
 				newURL := fmt.Sprintf("https://web.archive.org/web/%s/%s", c.Handling.Version, c.URL.String())
 				newRes, err := s.Get(newURL)
 				if newRes != nil {
-					newRes.Request.URL = response.Request.URL
+					newRes.Request.URL = c.URL
 					return newRes, true, err
 				}
 			}
