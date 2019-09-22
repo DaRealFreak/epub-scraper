@@ -167,6 +167,11 @@ func (s *Scraper) removeSuffix(chapterContent string, selector string) string {
 
 // getChapterTitle returns the chapter title of the passed URL based on the passed ChapterContent settings
 func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleContent) string {
+	// if we only use the prefix the title selector can be nil too
+	if content.TitleSelector == nil {
+		return ""
+	}
+
 	titleContent, err := doc.Html()
 	raven.CheckError(err)
 	// replace all special space characters with a normal space
