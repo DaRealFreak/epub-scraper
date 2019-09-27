@@ -39,7 +39,7 @@ sites:
     title-content:
       add-prefix: true
       title-selector: 'article[id*="post"] div.entry-content > h3'
-      cleanup-regex: '(?s)(Kanna (?:no Kanna )?\d+(?: : |)?)'
+      cleanup-regex: '(?s)((K|k)anna (?:no (K|k)anna )?\d+(?: : |)?)'
     chapter-content:
       content-selector: 'article[id*="post"] div.entry-content'
       strip-regex: '(?m)(?s)(?:.*?<h(3|2).*?h(3|2)>|^)?(?P<Content>.*)'
