@@ -23,6 +23,8 @@ sites:
       reverse-posts: true
       next-page-selector: 'div.w-blog-content div.digg_pagination > a.next_page[href]'
   - host: kujourestarea.wordpress.com
+    redirects:
+      - 'article[id*="post"] > div.entry-wrapper > div.entry-content > p:not([class]):nth-child(2) > a[href*="kanna-50"]'
     title-content:
       add-prefix: true
       title-selector: 'article[id*="post"] div.entry-content > p.has-medium-font-size, article[id*="post"] div.entry-content > p > strong'
