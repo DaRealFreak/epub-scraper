@@ -15,6 +15,7 @@ type NovelConfig struct {
 	Chapters      []Source            `yaml:"chapters"`
 	Assets        Assets              `yaml:"assets"`
 	BackList      []string            `yaml:"blacklist"`
+	Replacements  []Replacement       `yaml:"replacements"`
 	Templates     Templates           `yaml:"templates"`
 }
 
@@ -73,4 +74,19 @@ func (s *NovelConfig) IsURLBlacklisted(checkedURL string) bool {
 		}
 	}
 	return false
+}
+
+// DoURLReplacements checks if the passed URL is getting replaced through the configuration
+func (s *NovelConfig) DoURLReplacements(checkedURL string) (chapterUrl string, changed bool) {
+	check, err := url.Parse(checkedURL)
+	raven.CheckError(err)
+	for _, replacement := range s.Replacements {
+		parsedReplacementURL, err := url.Parse(replacement.Url)
+		raven.CheckError(err)
+		if check.String() == parsedReplacementURL.String() {
+			log.Infof("url %s is getting replaced to %s", check.String(), replacement.ReplacementURL)
+			return replacement.ReplacementURL, true
+		}
+	}
+	return check.String(), false
 }

@@ -1,6 +1,7 @@
 package scraper
 
 import (
+	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
@@ -17,23 +18,19 @@ import (
 func (s *Scraper) extractChapterData(
 	chapterURL string, cfg *config.NovelConfig, srcCfg config.SourceContent,
 ) (chapterData *ChapterData) {
+	chapterURL, _ = cfg.DoURLReplacements(chapterURL)
 	// directly return nil if initial URL is blacklisted
 	if cfg.IsURLBlacklisted(chapterURL) {
 		return nil
 	}
 
-	res, err := s.session.Get(chapterURL)
-	raven.CheckError(err)
-	doc := s.session.GetDocument(res)
-	// follow redirects for f.e. exit links from novelupdates
-	// retrieve site config for the host of the chapter url
-	siteConfig := cfg.GetSiteConfigFromURL(res.Request.URL)
+	// open chapter URL and retrieve chapter content
+	res, chapterURL, doc, siteConfig, srcCfg := s.openChapterURL(chapterURL, cfg, srcCfg)
 
-	if !s.isURLEqual(chapterURL, res.Request.URL.String()) {
-		// update configuration to match the new host
-		chapterURL = res.Request.URL.String()
-		srcCfg = siteConfig.SourceContent
-		log.Debugf("got redirected to url: %s", chapterURL)
+	// follow replacement and retrieve new chapter content
+	replacementURL, changed := cfg.DoURLReplacements(chapterURL)
+	if changed {
+		res, chapterURL, doc, siteConfig, srcCfg = s.openChapterURL(replacementURL, cfg, srcCfg)
 	}
 
 	// if we have redirects resolve them
@@ -51,6 +48,7 @@ func (s *Scraper) extractChapterData(
 				log.Debugf("could not find any redirect for selector: %s", redirect)
 				break
 			}
+			redirectLink, _ = cfg.DoURLReplacements(redirectLink)
 			if cfg.IsURLBlacklisted(redirectLink) {
 				break
 			}
@@ -86,6 +84,24 @@ func (s *Scraper) extractChapterData(
 	}
 	log.Infof("extracted chapter: %s (content length: %d)", chapterData.title, len(chapterData.content))
 	return chapterData
+}
+
+func (s *Scraper) openChapterURL(chapterURL string, cfg *config.NovelConfig, srcCfg config.SourceContent) (
+	*http.Response, string, *goquery.Document, *config.SiteConfiguration, config.SourceContent,
+) {
+	res, err := s.session.Get(chapterURL)
+	raven.CheckError(err)
+	doc := s.session.GetDocument(res)
+	// follow redirects for f.e. exit links from novelupdates
+	// retrieve site config for the host of the chapter url
+	siteConfig := cfg.GetSiteConfigFromURL(res.Request.URL)
+	if !s.isURLEqual(chapterURL, res.Request.URL.String()) {
+		// update configuration to match the new host
+		chapterURL = res.Request.URL.String()
+		srcCfg = siteConfig.SourceContent
+		log.Debugf("got redirected to url: %s", chapterURL)
+	}
+	return res, chapterURL, doc, siteConfig, srcCfg
 }
 
 // getChapterContent returns the chapter content of the passed URL based on the passed ChapterContent settings
