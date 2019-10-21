@@ -1,0 +1,51 @@
+general:
+  title: 'Ankoku Kishi Monogatari ~Yuusha wo Taosu Tameni Maou ni Shoukansaremashita~'
+  alt-title: 'Ankoku Kishi Monogatari'
+  author: 'Nezaki Takeru'
+  description: |
+    This legend tells the tale of the protagonist, Kuroki summoned to protect the demon king from the hero.
+    Kuroki, unbeknownst to him, suddenly came to another world. He was summoned by the demon king, Modes. The territory which the demon king overrules was in the midst of being destroyed because of the hero. He had no choice but to bow before Kuroki.
+    “Please save us, Savior Dono!”
+    Kuroki nodded, deciding to save the demon king due to an unexpected turn of event.
+  cover: 'https://cdn.novelupdates.com/images/2018/06/AKM.jpg'
+  language: english
+  raw: 'https://ncode.syosetu.com/n8961ch/'
+  translators:
+    - name: 'wordexcerpt'
+      url: 'https://wordexcerpt.com/'
+sites:
+  - host: www.novelupdates.com
+    pagination:
+      reverse-posts: true
+      next-page-selector: 'div.w-blog-content div.digg_pagination > a.next_page[href]'
+  - host: wordexcerpt.com
+    redirects:
+      - 'div[id^="post-"] > div.entry-content > div.entry-content_wrap > h2 > a[href*="wordexcerpt"]'
+    title-content:
+      add-prefix: false
+      title-selector: 'div.reading-content > div.text-left > p > strong'
+    chapter-content:
+      content-selector: 'div.reading-content > div.text-left'
+      strip-regex: '(?m)(?s)(?P<Content>.*?)(?:(\(~’\.’\)~To Be Continue In The Next Release Xp~\(‘\.’~\)|$))'
+      suffix-selectors:
+        - 'a[href="https://www.patreon.com/cnine"]'
+chapters:
+  - toc:
+      url: 'https://www.novelupdates.com/series/ankoku-kishi-monogatari-yuusha-wo-taosu-tameni-maou-ni-shoukansaremashita/'
+      chapter-selector: 'table#myTable > tbody > tr > td > a.chp-release[href]'
+blacklist:
+  - "https://www.novelupdates.com/extnu/2926809/"
+replacements:
+  - url: "https://wordexcerpt.com/chapter-26-2-dark-fog/"
+    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-2-the-horn-of-holy-dragon-king/chapter-26-2/"
+  - url: "https://wordexcerpt.com/chapter-19-2-under-the-skies-of-nargol/"
+    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-2-the-horn-of-holy-dragon-king/chapter-19-2_1/"
+  - url: "https://wordexcerpt.com/chapter-19-1-under-the-skies-of-nargol/"
+    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-2-the-horn-of-holy-dragon-king/chapter-19-1_1/"
+  - url: "https://wordexcerpt.com/chapter-18-2-their-impressions/"
+    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-1-the-enigmatic-dark-knight/chapter-18-2/"
+  - url: "https://wordexcerpt.com/chapter-18-part-1-their-impressions/"
+    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-1-the-enigmatic-dark-knight/chapter-18-part-1/"
+assets:
+  css:
+    path: ./assets/css/stylesheet.css
