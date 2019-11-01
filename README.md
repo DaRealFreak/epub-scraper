@@ -262,6 +262,18 @@ assets:
     path: [string]
 ```
 
+### Replacements
+In case of some renamed domains or the like you have the possibility to replace found URIs.
+This also applies for redirects and can be configured in the replacements section of the YAMl configuration:
+```yaml
+replacements:
+  # list of replacements
+    # url is the found URI to be redirected
+  - url: [string]
+    # replacement is the URI to replace the found URI with
+    replacement: [string]
+```
+
 ### Templates
 Aside from the CSS and font files you can also modify the used templates to create your own individually styled epub.
 These can be configured in the templates section of the YAML configuration:
