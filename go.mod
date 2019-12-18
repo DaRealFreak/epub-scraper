@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/bmaupin/go-epub v0.5.3
-	github.com/getsentry/sentry-go v0.3.0
+	github.com/getsentry/sentry-go v0.3.1
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
