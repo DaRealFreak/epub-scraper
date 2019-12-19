@@ -12,7 +12,7 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2
 	github.com/pingcap/errors v0.11.4 // indirect
-	github.com/rhysd/go-github-selfupdate v1.1.0
+	github.com/rhysd/go-github-selfupdate v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v0.0.5
 	github.com/tcnksm/go-gitconfig v0.1.2
