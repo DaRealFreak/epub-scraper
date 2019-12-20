@@ -159,6 +159,8 @@ github.com/rhysd/go-github-selfupdate v1.1.0 h1:+aMomy69YCYxJ6kr13nYIgAJWSB1kHK5
 github.com/rhysd/go-github-selfupdate v1.1.0/go.mod h1:jbfShZ+Nl3IHUgr77kwQjObcWf1z961UAoD6p5LrPBU=
 github.com/rhysd/go-github-selfupdate v1.2.0 h1:3jivcC23qxbL5xwnf6S6oC9d/0IIjD5zQH1Kk5+y95M=
 github.com/rhysd/go-github-selfupdate v1.2.0/go.mod h1:BZHw2H9JIH7wdyda/btlRRD+sgudn1RO1NbnvY27/Ng=
+github.com/rhysd/go-github-selfupdate v1.2.1 h1:CpU7O4BcHhvcXEBsQSKD50uQ1o4/qv/15Ev6TPAtU3s=
+github.com/rhysd/go-github-selfupdate v1.2.1/go.mod h1:BZHw2H9JIH7wdyda/btlRRD+sgudn1RO1NbnvY27/Ng=
 github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
 github.com/ryanuber/columnize v2.1.0+incompatible/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
 github.com/sergi/go-diff v1.0.0/go.mod h1:0CfEIISq7TuYL3j771MWULgwwjU+GofnZX9QAmXWZgo=
