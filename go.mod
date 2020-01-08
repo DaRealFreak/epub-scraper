@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0
+	github.com/andybalholm/cascadia v1.1.0 // indirect
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/bmaupin/go-epub v0.5.3
 	github.com/getsentry/sentry-go v0.4.0
@@ -11,17 +12,18 @@ require (
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2
-	github.com/pingcap/errors v0.11.4 // indirect
 	github.com/rhysd/go-github-selfupdate v1.2.1
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v0.0.5
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tcnksm/go-gitconfig v0.1.2
 	github.com/ulikunitz/xz v0.5.6 // indirect
-	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297
-	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45 // indirect
-	golang.org/x/sys v0.0.0-20190907184412-d223b2b6db03 // indirect
-	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
-	google.golang.org/appengine v1.6.2 // indirect
+	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
+	golang.org/x/sys v0.0.0-20200107162124-548cf772de50 // indirect
+	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
+	golang.org/x/tools v0.0.0-20190606124116-d0a3d012864b // indirect
+	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.2.7
 )
