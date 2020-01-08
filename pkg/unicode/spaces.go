@@ -2,17 +2,16 @@ package unicode
 
 import (
 	"strings"
-	"unicode"
 )
 
-// SanitizeSpaces replaces all space characters with normal spaces
-// since f.e. regex doesn't match \s with the non breaking space (0x00A0)
+// SanitizeSpaces replaces NBSP with normal spaces (0x20) since f.e. regex \s doesn't match with NBSP (0xA0)
 func SanitizeSpaces(s string) string {
-	const normalSpace = '\u0020'
 	return strings.Map(func(r rune) rune {
-		if unicode.IsSpace(r) {
-			return normalSpace
+		// replace NBSP with normal space due to display problems in some e-book readers
+		if uint32(r) == 0xA0 {
+			return 0x20
 		}
+
 		return r
 	}, s)
 }
