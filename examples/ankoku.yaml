@@ -17,7 +17,10 @@ sites:
   - host: wordexcerpt.com
     title-content:
       add-prefix: false
-      title-selector: 'div.reading-content > div.text-left > p > strong'
+      title-selector: 'div.reading-content > div.text-left'
+      strip-regex: '(?ms)<(?:strong|b|h3|span .*?)>(?P<Title>Chapter .*?)</(?:strong|b|h3|span)>'
+      suffix-selectors:
+        - 'a[href="https://www.patreon.com/cnine"]'
     chapter-content:
       content-selector: 'div.reading-content > div.text-left'
       strip-regex: '(?m)(?s)(?P<Content>.*?)(?:(\(~’\.’\)~To Be Continue In The Next Release Xp~\(‘\.’~\)|$))'
