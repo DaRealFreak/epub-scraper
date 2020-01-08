@@ -14,13 +14,7 @@ general:
     - name: 'wordexcerpt'
       url: 'https://wordexcerpt.com/'
 sites:
-  - host: www.novelupdates.com
-    pagination:
-      reverse-posts: true
-      next-page-selector: 'div.w-blog-content div.digg_pagination > a.next_page[href]'
   - host: wordexcerpt.com
-    redirects:
-      - 'div[id^="post-"] > div.entry-content > div.entry-content_wrap > h2 > a[href*="wordexcerpt"]'
     title-content:
       add-prefix: false
       title-selector: 'div.reading-content > div.text-left > p > strong'
@@ -29,23 +23,13 @@ sites:
       strip-regex: '(?m)(?s)(?P<Content>.*?)(?:(\(~’\.’\)~To Be Continue In The Next Release Xp~\(‘\.’~\)|$))'
       suffix-selectors:
         - 'a[href="https://www.patreon.com/cnine"]'
+      cleanup-regex: '(?s)(<sup(\s|>).*?</sup>|<b>\s?Disclaimer:.*?</b>)'
 chapters:
   - toc:
-      url: 'https://www.novelupdates.com/series/ankoku-kishi-monogatari-yuusha-wo-taosu-tameni-maou-ni-shoukansaremashita/'
-      chapter-selector: 'table#myTable > tbody > tr > td > a.chp-release[href]'
-blacklist:
-  - "https://www.novelupdates.com/extnu/2926809/"
-replacements:
-  - url: "https://wordexcerpt.com/chapter-26-2-dark-fog/"
-    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-2-the-horn-of-holy-dragon-king/chapter-26-2/"
-  - url: "https://wordexcerpt.com/chapter-19-2-under-the-skies-of-nargol/"
-    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-2-the-horn-of-holy-dragon-king/chapter-19-2_1/"
-  - url: "https://wordexcerpt.com/chapter-19-1-under-the-skies-of-nargol/"
-    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-2-the-horn-of-holy-dragon-king/chapter-19-1_1/"
-  - url: "https://wordexcerpt.com/chapter-18-2-their-impressions/"
-    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-1-the-enigmatic-dark-knight/chapter-18-2/"
-  - url: "https://wordexcerpt.com/chapter-18-part-1-their-impressions/"
-    replacement: "https://wordexcerpt.com/series/ankoku-kishi-monogatari/act-1-the-enigmatic-dark-knight/chapter-18-part-1/"
+      url: 'https://wordexcerpt.com/series/ankoku-kishi-monogatari/'
+      chapter-selector: 'div[id="mangaTabs"] div.listing-chapters_wrap li.wp-manga-chapter > a[href]:not([href*="/re/"])'
+      pagination:
+        reverse-posts: true
 assets:
   css:
     path: ./assets/css/stylesheet.css
