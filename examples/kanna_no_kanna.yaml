@@ -24,16 +24,16 @@ sites:
       next-page-selector: 'div.w-blog-content div.digg_pagination > a.next_page[href]'
   - host: kujourestarea.wordpress.com
     redirects:
-      - 'article[id*="post"] > div.entry-wrapper > div.entry-content > p:not([class]):nth-child(2) > a[href*="kanna-50"]'
+      - 'article[id*="post"] > div.entry-wrapper > div.entry-content a[href*="kanna-toc/kanna"]'
     title-content:
       add-prefix: true
-      title-selector: 'article[id*="post"] div.entry-content > p.has-medium-font-size, article[id*="post"] div.entry-content > p > strong'
+      title-selector: 'article[id*="post"] div.entry-content > p.has-medium-font-size, article[id*="post"] div.entry-content hr.wp-block-separator ~ p > strong'
     chapter-content:
       content-selector: 'article[id*="post"] div.entry-content'
       cleanup-regex: '(?s)(<em(\s|>).*?</em>|<p (class="has-text-color"|style="color:#3e4244;").*?>.*?</p>)'
       prefix-selectors:
         - 'p[style="text-align:right;"]'
-        - "p.has-text-color"
+        - "hr.wp-block-separator"
         - "p.has-text-color"
       suffix-selectors:
         - 'p > a[href*="kujourestarea.wordpress.com"]'
