@@ -8,7 +8,6 @@ import (
 
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
-	"github.com/DaRealFreak/epub-scraper/pkg/unicode"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
 )
@@ -101,6 +100,7 @@ func (s *Scraper) openChapterURL(chapterURL string, cfg *config.NovelConfig, src
 		srcCfg = siteConfig.SourceContent
 		log.Debugf("got redirected to url: %s", chapterURL)
 	}
+
 	return res, chapterURL, doc, siteConfig, srcCfg
 }
 
@@ -110,7 +110,8 @@ func (s *Scraper) getChapterContent(doc *goquery.Document, content *config.Chapt
 	raven.CheckError(err)
 
 	chapterContent = s.applyCleanupOptions(chapterContent, &content.CleanupOptions, "Content")
-	return unicode.StripUnicodeEmojis(s.fixHTMLCode(chapterContent))
+
+	return s.sanitizer.StripUnicodeEmojis(s.fixHTMLCode(chapterContent))
 }
 
 // getChapterTitle returns the chapter title of the passed URL based on the passed ChapterContent settings
@@ -127,7 +128,8 @@ func (s *Scraper) getChapterTitle(doc *goquery.Document, content *config.TitleCo
 
 	doc, err = goquery.NewDocumentFromReader(strings.NewReader(titleContent))
 	raven.CheckError(err)
-	return strings.TrimSpace(unicode.StripUnicodeEmojis(doc.Text()))
+
+	return strings.TrimSpace(s.sanitizer.StripUnicodeEmojis(doc.Text()))
 }
 
 // removePrefix removes the author block of the extracted chapter content based on the selector
@@ -156,10 +158,22 @@ func (s *Scraper) removeSuffix(chapterContent string, selector string) string {
 	return chapterContent
 }
 
+// sanitizeSpaces replaces NBSP with normal spaces (0x20) since f.e. regex \s doesn't match with NBSP (0xA0)
+func (s *Scraper) sanitizeSpaces(content string) string {
+	return strings.Map(func(r rune) rune {
+		// replace NBSP with normal space due to display problems in some e-book readers
+		if uint32(r) == 0xA0 {
+			return 0x20
+		}
+
+		return r
+	}, content)
+}
+
 // applyCleanupOptions applies the cleanup options to the passed html before returning it again
 func (s *Scraper) applyCleanupOptions(htmlContent string, options *config.CleanupOptions, captureGroup string) string {
 	// strip unicode emojis from the title and trim the text before parsing with the regular expressions
-	htmlContent = unicode.SanitizeSpaces(htmlContent)
+	htmlContent = s.sanitizeSpaces(htmlContent)
 
 	// ToDo: use document.Find(sel).First().NextAll() instead of ripping apart the HTML
 	if options.PrefixSelectors != nil {

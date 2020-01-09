@@ -29,7 +29,11 @@ func NewScraper() *Scraper {
 			Version: version.VERSION,
 			Args:    cobra.MinimumNArgs(1),
 			Run: func(cmd *cobra.Command, args []string) {
-				app := scraper.NewScraper()
+				app, err := scraper.NewScraper()
+				if err != nil {
+					log.Fatal(err)
+				}
+
 				for _, s := range args {
 					if _, err := os.Stat(s); os.IsNotExist(err) {
 						log.Fatalf("%s is neither a file or directory", s)

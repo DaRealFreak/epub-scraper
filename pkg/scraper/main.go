@@ -2,8 +2,10 @@ package scraper
 
 import (
 	"bytes"
+	"github.com/DaRealFreak/emoji-sanitizer/pkg/sanitizer/options"
 	"strings"
 
+	"github.com/DaRealFreak/emoji-sanitizer/pkg/sanitizer"
 	"github.com/DaRealFreak/epub-scraper/pkg/config"
 	"github.com/DaRealFreak/epub-scraper/pkg/epub"
 	"github.com/DaRealFreak/epub-scraper/pkg/raven"
@@ -15,6 +17,7 @@ import (
 // Scraper is the main functionality struct
 type Scraper struct {
 	configParser *config.Parser
+	sanitizer    *sanitizer.Sanitizer
 	session      session.Session
 }
 
@@ -26,10 +29,19 @@ type ChapterData struct {
 }
 
 // NewScraper returns a new scraper struct
-func NewScraper() *Scraper {
-	return &Scraper{
+func NewScraper() (_ *Scraper, err error) {
+	scraper := &Scraper{
 		configParser: config.NewParser(),
 	}
+	scraper.sanitizer, err = sanitizer.NewSanitizer(
+		options.UnicodeVersion(sanitizer.VersionLatest),
+		options.LoadFromOnline(true),
+		options.UseFallbackToOffline(true),
+		// allow common emojis implemented everywhere: "#", "*", "[0-9]", "©", "®", "‼", "™"
+		options.AllowEmojiCodes([]string{"0023", "002A", "0030..0039", "00A9", "00AE", "203C", "2122"}),
+	)
+
+	return scraper, err
 }
 
 // HandleFile handles a single passed configuration file
