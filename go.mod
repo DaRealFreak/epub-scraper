@@ -7,7 +7,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/bmaupin/go-epub v0.5.3
-	github.com/getsentry/sentry-go v0.6.1
+	github.com/getsentry/sentry-go v0.7.0
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
 	github.com/microcosm-cc/bluemonday v1.0.3
 	github.com/rhysd/go-github-selfupdate v1.2.2
