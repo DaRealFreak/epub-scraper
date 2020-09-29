@@ -9,7 +9,7 @@ require (
 	github.com/bmaupin/go-epub v0.5.3
 	github.com/getsentry/sentry-go v0.6.1
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
-	github.com/microcosm-cc/bluemonday v1.0.3
+	github.com/microcosm-cc/bluemonday v1.0.4
 	github.com/rhysd/go-github-selfupdate v1.2.2
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/cobra v0.0.7
