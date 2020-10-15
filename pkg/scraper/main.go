@@ -34,7 +34,7 @@ func NewScraper() (_ *Scraper, err error) {
 		configParser: config.NewParser(),
 	}
 	scraper.sanitizer, err = sanitizer.NewSanitizer(
-		options.UnicodeVersion(sanitizer.VersionLatest),
+		options.UnicodeVersion(sanitizer.Version131),
 		options.LoadFromOnline(true),
 		options.UseFallbackToOffline(true),
 		// allow common emojis implemented everywhere: "#", "*", "[0-9]", "©", "®", "‼", "™"
