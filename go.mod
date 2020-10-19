@@ -14,7 +14,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.4
 	github.com/rhysd/go-github-selfupdate v1.2.2
 	github.com/sirupsen/logrus v1.7.0
-	github.com/spf13/cobra v1.1.0
+	github.com/spf13/cobra v1.1.1
 	github.com/tcnksm/go-gitconfig v0.1.2
 	github.com/ulikunitz/xz v0.5.8 // indirect
 	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee // indirect
