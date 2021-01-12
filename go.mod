@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/DaRealFreak/emoji-sanitizer v1.0.2
-	github.com/PuerkitoBio/goquery v1.6.0
+	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/bmaupin/go-epub v0.5.3
