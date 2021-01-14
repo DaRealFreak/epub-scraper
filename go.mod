@@ -12,12 +12,10 @@ require (
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.4
-	github.com/rhysd/go-github-selfupdate v1.2.2
+	github.com/rhysd/go-github-selfupdate v1.2.3
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/cobra v1.1.1
 	github.com/tcnksm/go-gitconfig v0.1.2
-	github.com/ulikunitz/xz v0.5.8 // indirect
-	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee // indirect
 	golang.org/x/net v0.0.0-20201010224723-4f7140c49acb
 	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43 // indirect
 	golang.org/x/sys v0.0.0-20201015000850-e3ed0017c211 // indirect
