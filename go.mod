@@ -7,7 +7,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.6.0
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/bmaupin/go-epub v0.5.3
+	github.com/bmaupin/go-epub v0.7.2
 	github.com/getsentry/sentry-go v0.7.0
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
